@@ -1,6 +1,7 @@
 ﻿@model ShopCartViewModel
 <div>
-    @foreach(var el in Model.ShopCart.ListShopItems)
+    <h1>Корзина</h1>
+    @foreach (var el in Model.ShopCart.ListShopItems)
     {
         <div class="alert alert-warning mt-3">
             <b>Автомобиль</b>@el.Car.Name<br />
@@ -10,3 +11,8 @@
     <hr />
     <div class="btn btn-danger" asp-controller="Order">Оплатить</div>
 </div>
+<footer class="container">
+    <p class="float-end"><a href="#">Back to top</a></p>
+    <p>© 2017-2021 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+</footer>
+<script src="~/js/bootstrap.min.js"></script>
