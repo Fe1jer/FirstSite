@@ -11,12 +11,12 @@ namespace WebApplication1.Data
 {
     public class DBObjects
     {
-        public static void Initial(AppDBContent context)
+        public static void Initial(AppDBContext context)
         {
-            /*context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();
-            context.Category.RemoveRange(context.Category);
-            context.SaveChanges(); 
+/*            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();*/
+/*            context.Category.RemoveRange(context.Category);
+            context.SaveChanges();
             context.Car.RemoveRange(context.Car);
             context.SaveChanges();*/
 

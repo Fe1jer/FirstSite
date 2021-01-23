@@ -7,14 +7,15 @@ using WebApplication1.Data.Models;
 
 namespace WebApplication1.Data
 {
-    public class AppDBContent :DbContext
+    public class AppDBContext :DbContext
     {
-        public AppDBContent(DbContextOptions<AppDBContent> option): base(option)
+        public AppDBContext(DbContextOptions<AppDBContext> option): base(option)
         {
 
         }
         
         public DbSet<Car> Car { get; set; }
         public DbSet<Category> Category { get; set; }
+        public DbSet<ShopCartItem> ShopCartItem { get; set; }
     }
 }

@@ -7,6 +7,8 @@ using WebApplication1.Data.Interfaces;
 using Microsoft.EntityFrameworkCore.SqlServer;
 using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data.Repository;
+using Microsoft.AspNetCore.Http;
+using WebApplication1.Data.Models;
 
 namespace WebApplication1
 {
@@ -24,10 +26,16 @@ namespace WebApplication1
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
-            services.AddDbContext<AppDBContent>(option => option.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
+            services.AddDbContext<AppDBContext>(option => option.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
             services.AddTransient<IAllCars, CarRepository>();
             services.AddTransient<ICarsCategory, CategoryRepository>();
+
+            services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped(sp => ShopCart.GetCart(sp));
+            
             services.AddMvc(options => options.EnableEndpointRouting = false);
+            services.AddMemoryCache();
+            services.AddSession();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -36,11 +44,12 @@ namespace WebApplication1
             app.UseDeveloperExceptionPage();
             app.UseStatusCodePages();
             app.UseStaticFiles();
+            app.UseSession();
             app.UseMvcWithDefaultRoute();
 
             using (var scope = app.ApplicationServices.CreateScope())
             {
-                AppDBContent context = scope.ServiceProvider.GetRequiredService<AppDBContent>();
+                AppDBContext context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
                 DBObjects.Initial(context);
             }
 
