@@ -10,7 +10,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <main>
+    <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">Автосалон</a>
@@ -36,9 +36,11 @@
                 </div>
             </div>
         </nav>
-    </main>
-    <div class="container pt-4 my-md-3 pt-md-5 border-top">
+    </header>
+    <div class="container">
         @RenderBody()
+        <script src="~/js/bootstrap.min.js"></script>
+
     </div>
 </body>
 </html>

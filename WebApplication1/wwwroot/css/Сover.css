@@ -1,0 +1,10 @@
+﻿body {
+    background-position: center;
+    background-image: url(/img/Home\ image.jpg); /* Путь к фоновому изображению */
+    background-size: 120%;
+    transition: 1s;
+}
+
+    body:hover {
+        background-size: 100%;
+    }

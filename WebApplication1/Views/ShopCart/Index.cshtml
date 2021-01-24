@@ -1,5 +1,5 @@
 ﻿@model ShopCartViewModel
-<div>
+<div class=" pt-5 mt-2">
     <h1>Корзина</h1>
     @foreach (var el in Model.ShopCart.ListShopItems)
     {
@@ -12,7 +12,6 @@
     <div class="btn btn-danger" asp-controller="Order">Оплатить</div>
 </div>
 <footer class="container">
-    <p class="float-end"><a href="#">Back to top</a></p>
-    <p>© 2017-2021 Company, Inc. · <a href="#">Privacy</a> · <a href="#">Terms</a></p>
+    <p class="float-end"><a href="#">Подняться</a></p>
+    <p>© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
 </footer>
-<script src="~/js/bootstrap.min.js"></script>

@@ -19,7 +19,7 @@ namespace WebApplication1.Data.Repository
 
         public IEnumerable<Car> Cars => appDBContent.Car.Include(c => c.Category);
 
-        public IEnumerable<Car> GetFavCars => appDBContent.Car.Where(p => p.IsFavourite).Include(c => c.Category);
+        public IEnumerable<Car> GetFavCars => appDBContent.Car.Where(p => p.IsFavourite).Select(c => c);
 
         public Car GetObjectCar(int carId) => appDBContent.Car.FirstOrDefault(p => p.Id == carId);
     }
