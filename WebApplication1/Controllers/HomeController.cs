@@ -30,7 +30,7 @@ namespace WebApplication1.Controllers
         {
             var homeCars = new HomeViewModel
             {
-                Img = new HomeCar[]
+                AutoOnTheCover = new HomeCar[]
                 {
                     new HomeCar
                      {
@@ -53,10 +53,14 @@ namespace WebApplication1.Controllers
                 },
                 FavCars = _carRep.GetFavCars
             };
+            ViewBag.Title = "Главная страница";
+
             return View(homeCars);
         }
         public ViewResult Index()
         {
+            ViewBag.Title = "Обложка";
+
             return View();
         }
     }

@@ -30,6 +30,9 @@ namespace WebApplication1.Controllers
                 ShopCart = _shopCart
             };
 
+
+            ViewBag.Title = "Корзина";
+
             return View(obj);
         }
 

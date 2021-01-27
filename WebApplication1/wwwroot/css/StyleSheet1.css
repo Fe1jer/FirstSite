@@ -1,0 +1,99 @@
+﻿li.toc-entry a {
+    display: block;
+    padding: .300rem .5rem;
+    color: #77757a;
+}
+
+h2 {
+    margin-right: 15px;
+    white-space: nowrap;
+}
+
+button.position-right {
+    float: right
+}
+
+.i {
+    width: 29px;
+    height: 29px;
+    color: #007bff;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+#l0_b1 {
+    display: block;
+    float: left;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    padding-left: 0
+}
+    #myInput:focus {
+        outline: 3px solid #ddd;
+    }
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+.dropdown a:hover {
+    background-color: #ddd
+}
+
+.show {
+    display: block;
+}
+
+.schema-tags__item:after {
+    content: '×';
+    opacity: .5;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    speak: none;
+}
+
+.schema-tags__item {
+    --bs-gutter-x: 1.5rem;
+    max-width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    vertical-align: top;
+    cursor: pointer;
+    border-radius: 2px;
+    -o-transition: background-color .1s ease-in-out;
+    transition: background-color .1s ease-in-out;
+}
+
+.schema-tags__text {
+    background: #eee;
+    padding: 4px 20px 4px 10px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}

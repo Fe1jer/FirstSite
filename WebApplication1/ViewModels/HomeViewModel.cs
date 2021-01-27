@@ -10,6 +10,6 @@ namespace WebApplication1.ViewModels
     public class HomeViewModel
     {
         public IEnumerable<Car> FavCars { get; set; }
-        public IEnumerable<HomeCar> Img { get; set; }
+        public IEnumerable<HomeCar> AutoOnTheCover { get; set; }
     }
 }

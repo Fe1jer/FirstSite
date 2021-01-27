@@ -10,6 +10,7 @@ h3{
     margin: 0em;
 }
 
+
 .scale {
     display: inline-block; /* Строчно-блочный элемент */
     overflow: hidden; /* Скрываем всё за контуром */

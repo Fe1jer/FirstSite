@@ -34,7 +34,7 @@ namespace WebApplication1.Data
                          Price = 20000,
                          IsFavourite = true,
                          Available = true,
-                         Category = Categories["Классические машины"]
+                         Category = Categories["Автомобили с ДВС"]
                      },
                     new Car
                     {
@@ -45,7 +45,7 @@ namespace WebApplication1.Data
                         Price = 60000,
                         IsFavourite = true,
                         Available = true,
-                        Category = Categories["Классические машины"]
+                        Category = Categories["Автомобили с ДВС"]
                     },
                     new Car
                     {
@@ -67,7 +67,7 @@ namespace WebApplication1.Data
                         Price = 45000,
                         IsFavourite = true,
                         Available = false,
-                        Category = Categories["Классические машины"]
+                        Category = Categories["Автомобили с ДВС"]
                     }
                     ) ;
             context.SaveChanges();
@@ -84,7 +84,7 @@ namespace WebApplication1.Data
                     var list = new Category[]
                     {
                         new Category { CategoryName = "Электромобили", Desc = "Современный вид транспорта" },
-                        new Category { CategoryName = "Классические машины", Desc = "Машины с двигателем внутреннего сгорания" }
+                        new Category { CategoryName = "Автомобили с ДВС", Desc = "Машины с двигателем внутреннего сгорания" }
 
                     };
                     Category = new Dictionary<string, Category>();
