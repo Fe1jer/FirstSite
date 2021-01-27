@@ -10,7 +10,8 @@ namespace WebApplication1.Data.Models
         public int Id { get; set; }
         public Car Car { get; set; }
         public int Price { get; set; }
-        
+
+        public Category Category { set; get; }
         public string ShopCartId { get; set; }
     }
 }

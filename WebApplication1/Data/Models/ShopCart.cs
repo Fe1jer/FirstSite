@@ -35,7 +35,8 @@ namespace WebApplication1.Data.Models
             {
                 ShopCartId = ShopCartId,
                 Car = car,
-                Price = car.Price
+                Price = car.Price,
+                Category = car.Category
             });
 
             appDBContent.SaveChanges();
@@ -43,7 +44,7 @@ namespace WebApplication1.Data.Models
 
         public List<ShopCartItem> GetShopItems()
         {
-            return appDBContent.ShopCartItem.Where(c => c.ShopCartId == ShopCartId).Include(s => s.Car).ToList();
+            return appDBContent.ShopCartItem.Where(c => c.ShopCartId == ShopCartId).Include(s => s.Car).Include(q => q.Category).ToList();
         }
     }
 }

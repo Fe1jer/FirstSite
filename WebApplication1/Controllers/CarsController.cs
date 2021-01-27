@@ -35,12 +35,12 @@ namespace WebApplication1.Controlles
             {
                 if (string.Equals("Electro", category, StringComparison.OrdinalIgnoreCase))
                 {
-                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Электромобили")).OrderBy(i => i.Id); ;
+                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Электромобиль")).OrderBy(i => i.Id);
                     currCategory = "Электромобили";
                 }
                 else if (string.Equals("Fuel", category, StringComparison.OrdinalIgnoreCase))
                 {
-                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Автомобили с ДВС")).OrderBy(i => i.Id); ;
+                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Автомобили с ДВС")).OrderBy(i => i.Id);
                     currCategory = "Автомобили с ДВС";
                 }
             }

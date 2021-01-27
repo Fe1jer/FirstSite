@@ -15,10 +15,10 @@ namespace WebApplication1.Data
         {
 /*            context.Database.EnsureDeleted();
             context.Database.EnsureCreated();*/
-/*            context.Category.RemoveRange(context.Category);
-            context.SaveChanges();
-            context.Car.RemoveRange(context.Car);
-            context.SaveChanges();*/
+            /*            context.Category.RemoveRange(context.Category);
+                        context.SaveChanges();
+                        context.Car.RemoveRange(context.Car);
+                        context.SaveChanges();*/
 
             if (!context.Category.Any())
                 context.Category.AddRange(Categories.Select(c => c.Value));
@@ -56,7 +56,7 @@ namespace WebApplication1.Data
                         Price = 65000,
                         IsFavourite = false,
                         Available = true,
-                        Category = Categories["Электромобили"]
+                        Category = Categories["Электромобиль"]
                     },
                     new Car
                     {
@@ -83,7 +83,7 @@ namespace WebApplication1.Data
                 {
                     var list = new Category[]
                     {
-                        new Category { CategoryName = "Электромобили", Desc = "Современный вид транспорта" },
+                        new Category { CategoryName = "Электромобиль", Desc = "Современный вид транспорта" },
                         new Category { CategoryName = "Автомобили с ДВС", Desc = "Машины с двигателем внутреннего сгорания" }
 
                     };
