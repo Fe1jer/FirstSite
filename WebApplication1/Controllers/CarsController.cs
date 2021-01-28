@@ -13,11 +13,14 @@ namespace WebApplication1.Controlles
     {
         private readonly IAllCars _allCars;
         private readonly ICarsCategory _allCategory;
+        private readonly ShopCart _shopCart;
 
-        public CarsController(IAllCars iAllCars, ICarsCategory iCarsCat)
+
+        public CarsController(IAllCars iAllCars, ICarsCategory iCarsCat, ShopCart shopCart)
         {
             _allCars = iAllCars;
             _allCategory = iCarsCat;
+            _shopCart = shopCart;
         }
 
         [Route("Cars/List")]
@@ -40,7 +43,7 @@ namespace WebApplication1.Controlles
                 }
                 else if (string.Equals("Fuel", category, StringComparison.OrdinalIgnoreCase))
                 {
-                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Автомобили с ДВС")).OrderBy(i => i.Id);
+                    cars = _allCars.Cars.Where(i => i.Category.CategoryName.Equals("Автомобиль с ДВС")).OrderBy(i => i.Id);
                     currCategory = "Автомобили с ДВС";
                 }
             }
@@ -48,12 +51,31 @@ namespace WebApplication1.Controlles
             var carObj = new CarsListViewModel
             {
                 AllCars = cars,
-                CurrCategory = currCategory
+                CurrCategory = currCategory,
+                ShopCart = _shopCart
             };
 
             ViewBag.Title = "Страница с автомобилями";
 
             return View(carObj);
+        }
+
+        public RedirectToActionResult AddToCart(int id)
+        {
+            var item = _allCars.Cars.FirstOrDefault(i => i.Id == id);
+            if (item != null)
+            {
+                _shopCart.AddToCart(item);
+            }
+
+            return RedirectToAction("List");
+        }
+
+        public RedirectToActionResult RemoveToCart(string id)
+        {
+            _shopCart.RemoveToCart(id);
+
+            return RedirectToAction("List");
         }
     }
 }

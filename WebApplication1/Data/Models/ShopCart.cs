@@ -18,6 +18,7 @@ namespace WebApplication1.Data.Models
 
         public string ShopCartId { get; set; }
         public List<ShopCartItem> ListShopItems { get; set; }
+
         public static ShopCart GetCart(IServiceProvider services)
         {
             ISession session = services.GetRequiredService<IHttpContextAccessor>()?.HttpContext.Session;
@@ -39,6 +40,23 @@ namespace WebApplication1.Data.Models
                 Category = car.Category
             });
 
+            appDBContent.SaveChanges();
+        }
+
+        public void RemoveToCart(string id)
+        {
+            ShopCartItem order = appDBContent.ShopCartItem.Where(o => o.ShopCartId == id).FirstOrDefault();
+
+            appDBContent.ShopCartItem.Remove(order);
+            appDBContent.SaveChanges();
+        }
+
+        public void EmptyTheCart(List<ShopCartItem> items)
+        {
+            foreach(ShopCartItem item in items)
+            {
+                appDBContent.ShopCartItem.Remove(item);
+            }            
             appDBContent.SaveChanges();
         }
 

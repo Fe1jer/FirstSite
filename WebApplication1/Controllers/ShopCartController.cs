@@ -36,13 +36,9 @@ namespace WebApplication1.Controllers
             return View(obj);
         }
 
-        public RedirectToActionResult AddToCart(int id)
+        public RedirectToActionResult RemoveToCart(string id)
         {
-            var item = _carRep.Cars.FirstOrDefault(i => i.Id == id);
-            if(item != null)
-            {
-                _shopCart.AddToCart(item);
-            }
+            _shopCart.RemoveToCart(id);
 
             return RedirectToAction("Index");
         }

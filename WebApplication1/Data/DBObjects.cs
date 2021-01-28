@@ -11,14 +11,17 @@ namespace WebApplication1.Data
 {
     public class DBObjects
     {
+        private const string FuelCategory = "Автомобиль с ДВС";
+        private const string ElectroCategory = "Электромобиль";
+
         public static void Initial(AppDBContext context)
         {
-/*            context.Database.EnsureDeleted();
+/*          context.Database.EnsureDeleted();
             context.Database.EnsureCreated();*/
-            /*            context.Category.RemoveRange(context.Category);
-                        context.SaveChanges();
-                        context.Car.RemoveRange(context.Car);
-                        context.SaveChanges();*/
+/*          context.Category.RemoveRange(context.Category);
+            context.SaveChanges();
+            context.Car.RemoveRange(context.Car);
+            context.SaveChanges();*/
 
             if (!context.Category.Any())
                 context.Category.AddRange(Categories.Select(c => c.Value));
@@ -34,7 +37,7 @@ namespace WebApplication1.Data
                          Price = 20000,
                          IsFavourite = true,
                          Available = true,
-                         Category = Categories["Автомобили с ДВС"]
+                         Category = Categories[FuelCategory]
                      },
                     new Car
                     {
@@ -45,7 +48,7 @@ namespace WebApplication1.Data
                         Price = 60000,
                         IsFavourite = true,
                         Available = true,
-                        Category = Categories["Автомобили с ДВС"]
+                        Category = Categories[FuelCategory]
                     },
                     new Car
                     {
@@ -56,7 +59,7 @@ namespace WebApplication1.Data
                         Price = 65000,
                         IsFavourite = false,
                         Available = true,
-                        Category = Categories["Электромобиль"]
+                        Category = Categories[ElectroCategory]
                     },
                     new Car
                     {
@@ -67,7 +70,7 @@ namespace WebApplication1.Data
                         Price = 45000,
                         IsFavourite = true,
                         Available = false,
-                        Category = Categories["Автомобили с ДВС"]
+                        Category = Categories[FuelCategory]
                     }
                     ) ;
             context.SaveChanges();
@@ -83,8 +86,8 @@ namespace WebApplication1.Data
                 {
                     var list = new Category[]
                     {
-                        new Category { CategoryName = "Электромобиль", Desc = "Современный вид транспорта" },
-                        new Category { CategoryName = "Автомобили с ДВС", Desc = "Машины с двигателем внутреннего сгорания" }
+                        new Category { CategoryName = ElectroCategory, Desc = "Современный вид транспорта" },
+                        new Category { CategoryName = FuelCategory, Desc = "Машины с двигателем внутреннего сгорания" }
 
                     };
                     Category = new Dictionary<string, Category>();

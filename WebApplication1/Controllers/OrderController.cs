@@ -66,6 +66,8 @@ namespace WebApplication1.Controllers
 
         public IActionResult Complete()
         {
+            shopCart.ListShopItems = shopCart.GetShopItems();
+            shopCart.EmptyTheCart(shopCart.ListShopItems);
             ViewBag.Message = "Заказ успешно обработан";
             return View();
         }
