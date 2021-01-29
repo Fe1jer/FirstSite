@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
@@ -24,13 +22,16 @@ namespace WebApplication1.Controlles
             _allCategory = iProductsCat;
             _shopCart = shopCart;
             _filters = _allCategory.AllCategories.Select(p => p.CategoryName).ToArray();
+            _filters = _allCategory.AllCategories.Select(p => p.CategoryName).ToArray();
         }
 
         [Route("Products/List")]
         [Route("Products/List/{category}")]
         public ViewResult List(string filter)
         {
-            _filter = filter?.Split('_');
+
+            foreach (Сompany company in _allCategory.AllCategories.Select(p => p.Сompany))
+                _filter = filter?.Split('_');
             IEnumerable<Product> products = null;
             if (filter == null)
             {

@@ -4,7 +4,6 @@ using Microsoft.Extensions.DependencyInjection;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApplication1.Data.Models
 {
@@ -54,10 +53,10 @@ namespace WebApplication1.Data.Models
 
         public void EmptyTheCart(List<ShopCartItem> items)
         {
-            foreach(ShopCartItem item in items)
+            foreach (ShopCartItem item in items)
             {
                 appDBContent.ShopCartItem.Remove(item);
-            }            
+            }
             appDBContent.SaveChanges();
         }
 

@@ -2,8 +2,6 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace WebApplication1.Data.Models
 {
@@ -11,28 +9,28 @@ namespace WebApplication1.Data.Models
     {
         [BindNever]
         public int Id { get; set; }
-        
+
         [Display(Name = "Имя")]
         [StringLength(10)]
-        [Required(ErrorMessage ="Введите имя")]
+        [Required(ErrorMessage = "Введите имя")]
         public string Name { get; set; }
-        
+
         [Display(Name = "Фамилия")]
         [StringLength(10)]
         [Required(ErrorMessage = "Введите фамилию")]
         public string Surname { get; set; }
-        
+
         [Display(Name = "Адрес")]
         [StringLength(40, MinimumLength = 7)]
         [Required(ErrorMessage = "Длина адреса не менее 7 символов")]
         public string Adress { get; set; }
-        
+
         [Display(Name = "Номер телефона")]
         [DataType(DataType.PhoneNumber)]
         [StringLength(13, MinimumLength = 3)]
         [Required(ErrorMessage = "Длина номера не менее 7 символов")]
         public string Phone { get; set; }
-        
+
         [Display(Name = "Электронная почта")]
         [DataType(DataType.EmailAddress)]
         [StringLength(25, MinimumLength = 7)]

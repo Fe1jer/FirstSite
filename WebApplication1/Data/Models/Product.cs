@@ -1,9 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-
-namespace WebApplication1.Data.Models
+﻿namespace WebApplication1.Data.Models
 {
     public class Product
     {
@@ -16,6 +11,8 @@ namespace WebApplication1.Data.Models
         public bool IsFavourite { set; get; }
         public bool Available { set; get; }
         public int CategoryID { set; get; }
-        public Category Category{ set; get; }
+        public int СompanyID { set; get; }
+        public Category Category { set; get; }
+        public Сompany Сompany { set; get; }
     }
 }

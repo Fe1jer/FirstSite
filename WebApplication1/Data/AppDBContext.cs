@@ -1,19 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using Microsoft.EntityFrameworkCore;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data.Models;
 
 namespace WebApplication1.Data
 {
-    public class AppDBContext :DbContext
+    public class AppDBContext : DbContext
     {
-        public AppDBContext(DbContextOptions<AppDBContext> option): base(option)
+        public AppDBContext(DbContextOptions<AppDBContext> option) : base(option)
         {
 
         }
-        
+
         public DbSet<Product> Product { get; set; }
         public DbSet<Category> Category { get; set; }
         public DbSet<ShopCartItem> ShopCartItem { get; set; }

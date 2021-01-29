@@ -1,11 +1,6 @@
-﻿using Microsoft.AspNetCore.Builder;
-using Microsoft.Extensions.DependencyInjection;
-using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApplication1.Data.Models;
-using System.Data.Entity;
 
 namespace WebApplication1.Data
 {
@@ -40,7 +35,8 @@ namespace WebApplication1.Data
                          Price = 20000,
                          IsFavourite = true,
                          Available = true,
-                         Category = Categories[FuelCategory]
+                         Category = Categories[FuelCategory],
+                         Сompany = Сompanies[0]
                      },
                     new Product
                     {
@@ -51,7 +47,9 @@ namespace WebApplication1.Data
                         Price = 60000,
                         IsFavourite = true,
                         Available = true,
-                        Category = Categories[FuelCategory]
+                        Category = Categories[FuelCategory],
+                        Сompany = Сompanies[0]
+
                     },
                     new Product
                     {
@@ -62,7 +60,8 @@ namespace WebApplication1.Data
                         Price = 65000,
                         IsFavourite = false,
                         Available = true,
-                        Category = Categories[ElectroCategory]
+                        Category = Categories[ElectroCategory],
+                        Сompany = Сompanies[0]
                     },
                     new Product
                     {
@@ -73,9 +72,10 @@ namespace WebApplication1.Data
                         Price = 45000,
                         IsFavourite = true,
                         Available = false,
-                        Category = Categories[FuelCategory]
+                        Category = Categories[FuelCategory],
+                        Сompany = Сompanies[0]
                     }
-                    ) ;
+                    );
             context.SaveChanges();
         }
 
@@ -91,6 +91,8 @@ namespace WebApplication1.Data
                     {
                         new Category { CategoryName = "Телевизоры", Desc = "Современный вид транспорта" },
                         new Category { CategoryName = "Телефоны", Desc = "Машины с двигателем внутреннего сгорания" },
+                        new Category { CategoryName = "Наушники", Desc = "Машины с двигателем внутреннего сгорания" },
+                        new Category { CategoryName = "Ноутбуки", Desc = "Машины с двигателем внутреннего сгорания" },
 
                     };
                     Category = new Dictionary<string, Category>();

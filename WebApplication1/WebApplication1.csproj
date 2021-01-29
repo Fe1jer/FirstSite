@@ -6,8 +6,6 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Data\Mocks\MockCars.cs" />
-    <Compile Remove="Data\Mocks\MockCategory.cs" />
     <Compile Remove="Views\Products\Index.cshtml.cs" />
   </ItemGroup>
 
@@ -32,10 +30,6 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.4" />
-  </ItemGroup>
-
-  <ItemGroup>
-    <Folder Include="Data\Mocks\" />
   </ItemGroup>
 
 </Project>

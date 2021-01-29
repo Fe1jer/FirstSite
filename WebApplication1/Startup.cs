@@ -1,14 +1,13 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using WebApplication1.Data;
 using WebApplication1.Data.Interfaces;
-using Microsoft.EntityFrameworkCore.SqlServer;
-using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data.Repository;
-using Microsoft.AspNetCore.Http;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Repository;
 
 namespace WebApplication1
 {
@@ -17,7 +16,7 @@ namespace WebApplication1
 
         private readonly IConfigurationRoot _confString;
 
-        public Startup(IHostingEnvironment hostEnv) 
+        public Startup(IHostingEnvironment hostEnv)
         {
             _confString = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
         }
@@ -33,7 +32,7 @@ namespace WebApplication1
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShopCart.GetCart(sp));
-            
+
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddMemoryCache();
             services.AddSession();

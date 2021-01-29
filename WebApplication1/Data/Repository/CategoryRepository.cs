@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 
@@ -17,5 +14,6 @@ namespace WebApplication1.Data.Repository
         }
 
         public IEnumerable<Category> AllCategories => appDBContent.Category;
+        public IEnumerable<Сompany> AllCompany => appDBContent.Сompany;
     }
 }

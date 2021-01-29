@@ -1,7 +1,4 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 
@@ -26,7 +23,7 @@ namespace WebApplication1.Data.Repository
 
             var items = shopCart.ListShopItems;
 
-            foreach(var el in items)
+            foreach (var el in items)
             {
                 var orderDetail = new OrderDetail()
                 {
