@@ -1,0 +1,166 @@
+﻿@model ProductsListViewModel
+<html>
+<head>
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" />
+</head>
+<body>
+    <div class="pt-5 mt-2 row">
+        <header class="navbar navbar-expand-lg navbar-light bg-light rounded flex-md-nowrap p-2 shadow">
+            <h2 class="">Все автомобили</h2>
+            <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <div class="w-100">
+                @{if (Model.Filter != null)
+                    {
+                        string i;
+                        foreach (string nameFilt in Model.Filter)
+                        {
+                            string[] filter = Model.Filter.Where(val => val != nameFilt).ToArray();
+                            i = filter == null ? nameFilt : string.Join('_', filter);
+
+                                <div class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Тип двигателя" id="l0_b1">
+                                    <a class="navbar-nav schema-tags__text" asp-controller="Products" asp-action="List" asp-route-filter="@i">@nameFilt</a>
+                                </div>
+                            }
+                        }
+                    }
+            </div>
+        </header>
+        <div class="container-fluid">
+            <div class="row">
+                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
+                    <div class="position-sticky pt-3 bg-light">
+                        <ul class="nav flex-column">
+
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List">
+                                    <img class="i" src="/img/icon/AllCars.png">
+                                    Все автомобили
+                                </a>
+                            </li>
+                        </ul>
+                        <label>
+                            @{foreach (string nameFilt in Model.FilterSort)
+                                {
+                                    string i = null;
+                                    string isChecked = "";
+                                    if (Model.Filter != null)
+                                    {
+                                        foreach (string item in Model.Filter)
+                                        {
+                                            if (item == nameFilt)
+                                            {
+                                                string[] filter = Model.Filter.Where(val => val != nameFilt).ToArray();
+                                                i = filter == null ? nameFilt : string.Join('_', filter);
+                                                isChecked = "checked";
+                                                break;
+                                            }
+                                            else
+                                            {
+
+                                                i = Model.Filter == null ? nameFilt : string.Join('_', Model.Filter) + '_' + nameFilt;
+                                                if ((i.Split('_')).Count() == Model.FilterSort.Count())
+                                                {
+                                                    i = "";
+                                                }
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        i = nameFilt;
+                                    }
+                                    <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List" asp-route-filter="@i">
+                                        <input type="checkbox" @isChecked />
+                                        @nameFilt
+@*                                      <span class="badge bg-light text-dark rounded-pill align-text-bottom"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">27</font></font></span>
+*@                                    </a>
+                                }
+                            }
+
+                        </label>
+
+                    </div>
+                </nav>
+
+                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4">
+                    <div class="row mt-3">
+                        @foreach (Product product in Model.AllProducts)
+                        {
+                            bool itemInCart = false;
+                            ShopCartItem checkShopCart = null;
+                            @*@Html.Partial("AllCars", product)*@
+                            <div class="col-lg-4 mt-2 mb-4">
+                                <div class="col">
+                                    <div class="card shadow-sm">
+                                        <div class="scale">
+                                            <img class="scale card-img-top w-100" src="@product.img" alt="@product.Name" />
+                                        </div>
+                                        <div class="card-body">
+                                            <h4>Модель: @product.Name</h4>
+                                            <p>@product.ShortDesc</p>
+                                            <p>Цена: @product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</p>
+                                            <div class="d-flex justify-content-between align-items-center">
+                                                <a type="button" class="btn btn-outline-warning" href="#">
+                                                    <font style="vertical-align: inherit;">
+                                                        <font style="vertical-align: inherit;">
+                                                            Подробнее
+                                                        </font>
+                                                    </font>
+                                                </a>
+                                                @foreach (ShopCartItem shopCart in Model.ShopCart.GetShopItems())
+                                                {
+                                                    if (shopCart.Product == product)
+                                                    {
+                                                        checkShopCart = shopCart;
+                                                        itemInCart = true;
+                                                        break;
+                                                    }
+                                                }
+                                                @{string str = Model.Filter == null ? null : string.Join('_', Model.Filter);
+                                                    if (itemInCart)
+                                                    {
+
+                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="RemoveToCart" asp-route-IdProduct="@checkShopCart.ShopCartId" asp-route-filter=@str>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
+                                                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
+                                                            </svg>
+                                                            <font style="vertical-align: inherit;">
+                                                                <font style="vertical-align: inherit;">В корзине</font>
+                                                            </font>
+                                                        </a>
+                                                    }
+                                                    else
+                                                    {
+                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="AddToCart" asp-route-IdProduct="@product.Id" asp-route-filter=@str>
+                                                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
+                                                                <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z" />
+                                                                <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
+                                                            </svg>
+                                                            <font style="vertical-align: inherit;">
+                                                                <font style="vertical-align: inherit;">В корзину</font>
+                                                            </font>
+                                                        </a>
+                                                    }
+                                                }
+                                            </div>
+                                        </div>
+                                    </div>
+                                </div>
+                            </div>
+                        }
+                    </div>
+                </main>
+            </div>
+        </div>
+    </div>
+
+    <hr class="featurette-heading">
+    <footer class="container">
+        <p class="float-end"><a href="#">Подняться</a></p>
+        <p>© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
+    </footer>
+</body>
+</html>

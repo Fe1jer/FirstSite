@@ -14,12 +14,12 @@
                         {
                             <li class="list-group-item d-flex justify-content-between lh-sm">
                                 <div>
-                                    <h6 class="my-0"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Car.Name</font></font></h6>
-                                    <small class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Car.Category.CategoryName</font></font></small>
+                                    <h6 class="my-0"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Name</font></font></h6>
+                                    <small class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Category.CategoryName</font></font></small>
                                 </div>
-                                <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Car.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></span>
+                                <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></span>
                             </li>
-                            sum += el.Car.Price;
+                            sum += el.Product.Price;
                         }
                     }
                     <li class="list-group-item d-flex justify-content-between">
@@ -60,10 +60,9 @@
                             <div class="input-group">
                                 <span class="input-group-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@@</font></font></span>
                                 <input asp-for="Order.UserName" class="form-control" />
-                                <span asp-validation-for="Order.UserName" class="text-danger"></span>
                             </div>
+                            <span asp-validation-for="Order.UserName" class="text-danger"></span>
                         </div>
-
                         <div class="col-12">
                             <label asp-for="Order.Email" class="form-label"></label>
                             <div>

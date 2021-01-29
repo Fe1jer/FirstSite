@@ -27,8 +27,8 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             services.AddDbContext<AppDBContext>(option => option.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
-            services.AddTransient<IAllCars, CarRepository>();
-            services.AddTransient<ICarsCategory, CategoryRepository>();
+            services.AddTransient<IAllProduct, ProductRepository>();
+            services.AddTransient<IProductsCategory, CategoryRepository>();
             services.AddTransient<IAllOrders, OrdersRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -50,7 +50,7 @@ namespace WebApplication1
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(name: "categoryFilter", template: "Car/{action}/{category?}", defaults: new { Controller = "Cars", action = "List" });
+                routes.MapRoute(name: "categoryFilter", template: "Product/{action}/{category?}", defaults: new { Controller = "Productû", action = "List" });
             });
 
             using (var scope = app.ApplicationServices.CreateScope())

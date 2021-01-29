@@ -30,9 +30,9 @@ namespace WebApplication1.Data.Repository
             {
                 var orderDetail = new OrderDetail()
                 {
-                    CarID = el.Car.Id,
+                    ProductID = el.Product.Id,
                     OrderID = order.Id,
-                    Prise = el.Car.Price
+                    Prise = el.Product.Price
                 };
                 appDBContext.OrderDetail.Add(orderDetail);
             }

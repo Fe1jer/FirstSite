@@ -22,6 +22,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Checkout()
         {
+            ViewBag.Title = "Оформление заказа";
             var items = shopCart.GetShopItems();
             shopCart.ListShopItems = items;
 
@@ -38,11 +39,6 @@ namespace WebApplication1.Controllers
         public IActionResult Checkout(Order order)
         {
             shopCart.ListShopItems = shopCart.GetShopItems();
-
-            if (shopCart.ListShopItems.Count == 0)
-            {
-                ModelState.AddModelError("", "Нет товаров в корзине");
-            }
 
             if (ModelState.IsValid)
             {
@@ -66,6 +62,7 @@ namespace WebApplication1.Controllers
 
         public IActionResult Complete()
         {
+            ViewBag.Title = "Завершение заказа";
             shopCart.ListShopItems = shopCart.GetShopItems();
             shopCart.EmptyTheCart(shopCart.ListShopItems);
             ViewBag.Message = "Заказ успешно обработан";

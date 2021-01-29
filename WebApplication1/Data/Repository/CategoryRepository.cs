@@ -7,7 +7,7 @@ using WebApplication1.Data.Models;
 
 namespace WebApplication1.Data.Repository
 {
-    public class CategoryRepository : ICarsCategory
+    public class CategoryRepository : IProductsCategory
     {
         private readonly AppDBContext appDBContent;
 

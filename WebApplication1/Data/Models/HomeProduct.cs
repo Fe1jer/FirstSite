@@ -5,7 +5,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Data.Models
 {
-    public class HomeCar
+    public class HomeProduct
     {
         public int Id { set; get; }
         public string ShortDesc { set; get; }

@@ -12,11 +12,11 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IAllCars _carRep;
+        private readonly IAllProduct _productRep;
 
-        public HomeController(IAllCars carRep)
+        public HomeController(IAllProduct productRep)
         {
-            _carRep = carRep;
+            _productRep = productRep;
         }
 
         public interface IEnumerator
@@ -28,34 +28,34 @@ namespace WebApplication1.Controllers
 
         public ViewResult Catalog()
         {
-            var homeCars = new HomeViewModel
+            var homeProducts = new HomeViewModel
             {
-                AutoOnTheCover = new HomeCar[]
+                AutoOnTheCover = new HomeProduct[]
                 {
-                    new HomeCar
+                    new HomeProduct
                      {
                          ShortDesc = "Бесшумный и экономный",
                          LongDesc = "Небольшой семейный автомобиль для городской жизни",
                          Img = "/img/volkswagen.jpg",
                      },
-                      new HomeCar
+                      new HomeProduct
                      {
                         ShortDesc = "Дерзкий и стильный",
                         LongDesc = "Удобный автомобиль для городской жизни",
                          Img = "/img/bmwM3.jpg",
                      },
-                       new HomeCar
+                       new HomeProduct
                      {
                          ShortDesc = "Современный и большой",
                         LongDesc = "Премиальный автомобиль для городской жизни",
                          Img = "/img/teslamodelx.jpg",
                        }
                 },
-                FavCars = _carRep.GetFavCars
+                FavProducts = _productRep.GetFavProducts
             };
             ViewBag.Title = "Главная страница";
 
-            return View(homeCars);
+            return View(homeProducts);
         }
         public ViewResult Index()
         {

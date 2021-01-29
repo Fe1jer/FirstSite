@@ -6,10 +6,10 @@ using WebApplication1.Data.Models;
 
 namespace WebApplication1.Data.Interfaces
 {
-    public interface IAllCars
+    public interface IAllProduct
     {
-        IEnumerable<Car> Cars { get;  }
-        IEnumerable<Car> GetFavCars { get; }
-        Car GetObjectCar(int carId);
+        IEnumerable<Product> Products { get;  }
+        IEnumerable<Product> GetFavProducts { get; }
+        Product GetObjectProduct(int carId);
     }
 }

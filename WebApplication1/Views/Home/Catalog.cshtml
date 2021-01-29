@@ -26,7 +26,7 @@
                 @{
                     int i = 0;
                     string active;
-                    foreach (Car car in Model.FavCars)
+                    foreach (Product car in Model.FavProducts)
                     {
                         if (i == 0)
                         {
@@ -44,7 +44,7 @@
             <div class="carousel-inner">
                 @{
                     i = 0;
-                    foreach (HomeCar carImage in Model.AutoOnTheCover)
+                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
                     {
                         if (i == 0)
                         {
@@ -56,14 +56,14 @@
                         }
                         <div class="carousel-item @active">
                             <svg class="" width="100%" height="100%" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <img class="exmpl wrapper scale card-img-top" height="130" src="@carImage.Img" alt="@carImage.Img" />
+                                <img class="exmpl wrapper scale card-img-top" height="130" src="@productImage.Img" alt="@productImage.Img" />
 
                             </svg>
 
                             <div class="container">
                                 <div class="carousel-caption">
-                                    <h1>@carImage.ShortDesc.</h1>
-                                    <p>@carImage.LongDesc.</p>
+                                    <h1>@productImage.ShortDesc.</h1>
+                                    <p>@productImage.LongDesc.</p>
                                     <p><a class="btn btn-lg btn-primary" href="#" role="button">Sign up today</a></p>
                                 </div>
                             </div>
@@ -92,7 +92,7 @@
             <!-- Three columns of text below the carousel -->
             <div class="row">
                 @{
-                    foreach (HomeCar carImage in Model.AutoOnTheCover)
+                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
                     {
                         <div class="col-lg-4">
                             <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
@@ -107,7 +107,7 @@
                     i = 0;
                     string textOrder;
                     string imgOrder;
-                    foreach (HomeCar carImage in Model.AutoOnTheCover)
+                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
                     {
                         <hr class="featurette-divider">
                         if (i % 2 == 1)

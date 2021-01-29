@@ -11,10 +11,10 @@ namespace WebApplication1.Controllers
 {
     public class ShopCartController : Controller
     {
-        private readonly IAllCars _carRep;
+        private readonly IAllProduct _carRep;
         private readonly ShopCart _shopCart;
 
-        public ShopCartController(IAllCars carRep, ShopCart shopCart)
+        public ShopCartController(IAllProduct carRep, ShopCart shopCart)
         {
             _carRep = carRep;
             _shopCart = shopCart;
@@ -36,9 +36,9 @@ namespace WebApplication1.Controllers
             return View(obj);
         }
 
-        public RedirectToActionResult RemoveToCart(string id)
+        public RedirectToActionResult RemoveToCart(string IdCar)
         {
-            _shopCart.RemoveToCart(id);
+            _shopCart.RemoveToCart(IdCar);
 
             return RedirectToAction("Index");
         }

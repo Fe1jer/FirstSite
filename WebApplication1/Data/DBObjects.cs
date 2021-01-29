@@ -11,24 +11,27 @@ namespace WebApplication1.Data
 {
     public class DBObjects
     {
-        private const string FuelCategory = "Автомобиль с ДВС";
-        private const string ElectroCategory = "Электромобиль";
+        private const string FuelCategory = "Телевизоры";
+        private const string ElectroCategory = "Телефоны";
 
         public static void Initial(AppDBContext context)
         {
-/*          context.Database.EnsureDeleted();
-            context.Database.EnsureCreated();*/
-/*          context.Category.RemoveRange(context.Category);
-            context.SaveChanges();
-            context.Car.RemoveRange(context.Car);
-            context.SaveChanges();*/
+            context.Database.EnsureDeleted();
+            context.Database.EnsureCreated();
+            /*          context.Category.RemoveRange(context.Category);
+                        context.SaveChanges();
+                        context.Car.RemoveRange(context.Car);
+                        context.SaveChanges();*/
 
             if (!context.Category.Any())
                 context.Category.AddRange(Categories.Select(c => c.Value));
 
-            if (!context.Car.Any())
-                context.Car.AddRange(
-                     new Car
+            if (!context.Сompany.Any())
+                context.Сompany.AddRange(Сompanies.Select(c => c));
+
+            if (!context.Product.Any())
+                context.Product.AddRange(
+                     new Product
                      {
                          Name = "Volkswagen Polo",
                          ShortDesc = "Бесшумный и экономный",
@@ -39,7 +42,7 @@ namespace WebApplication1.Data
                          Available = true,
                          Category = Categories[FuelCategory]
                      },
-                    new Car
+                    new Product
                     {
                         Name = "BMW M3",
                         ShortDesc = "Дерзкий и стильный",
@@ -50,7 +53,7 @@ namespace WebApplication1.Data
                         Available = true,
                         Category = Categories[FuelCategory]
                     },
-                    new Car
+                    new Product
                     {
                         Name = "Tesla Model X",
                         ShortDesc = "Современный и большой",
@@ -61,7 +64,7 @@ namespace WebApplication1.Data
                         Available = true,
                         Category = Categories[ElectroCategory]
                     },
-                    new Car
+                    new Product
                     {
                         Name = "Lexus rx 350",
                         ShortDesc = "Современный и большой",
@@ -86,8 +89,8 @@ namespace WebApplication1.Data
                 {
                     var list = new Category[]
                     {
-                        new Category { CategoryName = ElectroCategory, Desc = "Современный вид транспорта" },
-                        new Category { CategoryName = FuelCategory, Desc = "Машины с двигателем внутреннего сгорания" }
+                        new Category { CategoryName = "Телевизоры", Desc = "Современный вид транспорта" },
+                        new Category { CategoryName = "Телефоны", Desc = "Машины с двигателем внутреннего сгорания" },
 
                     };
                     Category = new Dictionary<string, Category>();
@@ -97,6 +100,32 @@ namespace WebApplication1.Data
                     }
                 }
                 return Category;
+            }
+        }
+
+        private static List<Сompany> Сompany;
+
+        public static List<Сompany> Сompanies
+        {
+            get
+            {
+                if (Сompany == null)
+                {
+                    var list = new List<Сompany>()
+                    {
+                        new Сompany {СompanyName = "Samsung" , Country="Северная Корея"},
+                        new Сompany {СompanyName = "LG" , Country="Северная Корея"},
+                        new Сompany {СompanyName = "Apple" , Country="США"}
+                    };
+
+                    Сompany = new List<Сompany>();
+
+                    foreach (Сompany el in list)
+                    {
+                        Сompany.Add(el);
+                    }
+                }
+                return Сompany;
             }
         }
     }
