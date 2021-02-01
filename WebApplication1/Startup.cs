@@ -27,8 +27,8 @@ namespace WebApplication1
         {
             services.AddDbContext<AppDBContext>(option => option.UseSqlServer(_confString.GetConnectionString("DefaultConnection")));
             services.AddTransient<IAllProduct, ProductRepository>();
-            services.AddTransient<IProductsCategory, CategoryRepository>();
             services.AddTransient<IAllOrders, OrdersRepository>();
+            services.AddTransient<IProductFilter, ProductFilterRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShopCart.GetCart(sp));
@@ -48,8 +48,8 @@ namespace WebApplication1
             //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>
             {
-                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
-                routes.MapRoute(name: "categoryFilter", template: "Product/{action}/{category?}", defaults: new { Controller = "Productû", action = "List" });
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}");
+                routes.MapRoute(name: "categoryFilter", template: "Product/{action}", defaults: new { Controller = "Products", action = "List" });
             });
 
             using (var scope = app.ApplicationServices.CreateScope())

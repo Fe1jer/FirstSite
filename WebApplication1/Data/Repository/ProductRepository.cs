@@ -15,7 +15,7 @@ namespace WebApplication1.Data.Repository
             this.appDBContent = appDBContent;
         }
 
-        public IEnumerable<Product> Products => appDBContent.Product.Include(c => c.Category);
+        public IEnumerable<Product> Products => appDBContent.Product;
 
         public IEnumerable<Product> GetFavProducts => appDBContent.Product.Where(p => p.IsFavourite).Select(c => c);
 

@@ -62,7 +62,7 @@ namespace WebApplication1.Data.Models
 
         public List<ShopCartItem> GetShopItems()
         {
-            return appDBContent.ShopCartItem.Where(c => c.ShopCartId == ShopCartId).Include(s => s.Product).Include(q => q.Category).ToList();
+            return appDBContent.ShopCartItem.Where(c => c.ShopCartId == ShopCartId).Include(s => s.Product).ToList();
         }
     }
 }

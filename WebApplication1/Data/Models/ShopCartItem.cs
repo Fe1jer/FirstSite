@@ -6,7 +6,7 @@
         public Product Product { get; set; }
         public int Price { get; set; }
 
-        public Category Category { set; get; }
+        public string Category { set; get; }
         public string ShopCartId { get; set; }
     }
 }

@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 
 namespace WebApplication1.ViewModels
@@ -7,7 +8,7 @@ namespace WebApplication1.ViewModels
     {
         public IEnumerable<Product> AllProducts { get; set; }
         public ShopCart ShopCart { get; set; }
-        public string[] Filter { get; set; }
-        public string[] FilterSort { get; set; }
+        public ProductFilter Filter { get; set; }
+        public IProductFilter FilterSort { get; set; }
     }
 }

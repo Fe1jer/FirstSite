@@ -10,48 +10,50 @@ namespace WebApplication1.Controlles
     public class ProductsController : Controller
     {
         private readonly IAllProduct _allProducts;
-        private readonly IProductsCategory _allCategory;
+        private readonly IProductFilter _filter;
         private readonly ShopCart _shopCart;
-        private readonly string[] _filters;
-        private string[] _filter;
+        private ProductFilter _userFilter;
 
 
-        public ProductsController(IAllProduct iAllProducts, IProductsCategory iProductsCat, ShopCart shopCart)
+        public ProductsController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart)
         {
             _allProducts = iAllProducts;
-            _allCategory = iProductsCat;
             _shopCart = shopCart;
-            _filters = _allCategory.AllCategories.Select(p => p.CategoryName).ToArray();
-            _filters = _allCategory.AllCategories.Select(p => p.CategoryName).ToArray();
+            _filter = filter;
         }
 
         [Route("Products/List")]
-        [Route("Products/List/{category}")]
-        public ViewResult List(string filter)
+        public ViewResult List(string category, string company, string country)
         {
+            _userFilter = new ProductFilter { AllCategory = category, AllCompany = company, AllCountry = country };
 
-            foreach (Сompany company in _allCategory.AllCategories.Select(p => p.Сompany))
-                _filter = filter?.Split('_');
-            IEnumerable<Product> products = null;
-            if (filter == null)
+            IEnumerable<Product> products = _allProducts.Products.OrderBy(i => i.IsFavourite);
+
+            if (!_userFilter.IsEmpty())
             {
-                products = _allProducts.Products.OrderBy(i => i.Id);
-            }
-            else
-            {
-                products = _allProducts.Products.Where(i => i.Category.CategoryName == _filter.FirstOrDefault()).OrderBy(i => i.Id);
-                foreach (string item in _filter)
+                string[] filter;
+                if (_userFilter.AllCategory != null)
                 {
-                    if (item == _filter.FirstOrDefault()) continue;
-                    products = products.Select(product => product).Concat(_allProducts.Products.Where(i => i.Category.CategoryName.Equals(item)).OrderBy(i => i.Id));
+                    filter = _userFilter.AllCategory.Split('_');
+                    products = products.Where(i => filter.Contains(i.Category)).OrderBy(i => i.IsFavourite).ToList();
+                }
+                if (_userFilter.AllCompany != null)
+                {
+                    filter = _userFilter.AllCompany.Split('_');
+                    products = products.Where(i => filter.Contains(i.Company)).OrderBy(i => i.IsFavourite).ToList();
+                }
+                if (_userFilter.AllCountry != null)
+                {
+                    filter = _userFilter.AllCountry.Split('_');
+                    products = products.Where(i => filter.Contains(i.Country)).OrderBy(i => i.IsFavourite).ToList();
                 }
             }
             var carObj = new ProductsListViewModel
             {
                 AllProducts = products,
                 ShopCart = _shopCart,
-                FilterSort = _filters,
-                Filter = _filter
+                FilterSort = _filter,
+                Filter = new ProductFilter { AllCategory= category, AllCompany= company, AllCountry= country }
             };
 
             ViewBag.Title = "Страница с товарами";
@@ -59,7 +61,7 @@ namespace WebApplication1.Controlles
             return View(carObj);
         }
 
-        public RedirectToActionResult AddToCart(int IdProduct, string filter)
+        public RedirectToActionResult AddToCart(int IdProduct, string category, string company, string country)
         {
             var item = _allProducts.Products.FirstOrDefault(i => i.Id == IdProduct);
             if (item != null)
@@ -67,14 +69,14 @@ namespace WebApplication1.Controlles
                 _shopCart.AddToCart(item);
             }
 
-            return RedirectToAction("List", new { filter });
+            return RedirectToAction("List", new { category, company, country });
         }
 
-        public RedirectToActionResult RemoveToCart(string IdProduct, string filter)
+        public RedirectToActionResult RemoveToCart(string IdProduct, string category, string company, string country)
         {
             _shopCart.RemoveToCart(IdProduct);
 
-            return RedirectToAction("List", new { filter });
+            return RedirectToAction("List", new { category, company, country });
         }
     }
 }

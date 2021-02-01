@@ -5,23 +5,51 @@
 </head>
 <body>
     <div class="pt-5 mt-2 row">
-        <header class="navbar navbar-expand-lg navbar-light bg-light rounded flex-md-nowrap p-2 shadow">
-            <h2 class="">Все автомобили</h2>
+        <header class="navbar navbar-expand-lg navbar-light bg-light p-2 shadow">
+            <h2 >Все товары</h2>
             <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="w-100">
-                @{if (Model.Filter != null)
+                @{if (Model.Filter.AllCategory != null)
                     {
                         string i;
-                        foreach (string nameFilt in Model.Filter)
+                        foreach (string nameFilt in Model.Filter.AllCategory.Split('_'))
                         {
-                            string[] filter = Model.Filter.Where(val => val != nameFilt).ToArray();
+                            string[] filter = Model.Filter.AllCategory.Split('_').Where(val => val != nameFilt).ToArray();
                             i = filter == null ? nameFilt : string.Join('_', filter);
 
-                                <div class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Тип двигателя" id="l0_b1">
-                                    <a class="navbar-nav schema-tags__text" asp-controller="Products" asp-action="List" asp-route-filter="@i">@nameFilt</a>
-                                </div>
+                                <a asp-controller="Products" asp-action="List" asp-route-category="@i" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
+                                    <p class="navbar-nav schema-tags__text" >@nameFilt</p>
+                                </a>
+                            }
+                        }
+                    }
+                @{if (Model.Filter.AllCompany != null)
+                    {
+                        string i;
+                        foreach (string nameFilt in Model.Filter.AllCompany.Split('_'))
+                        {
+                            string[] filter = Model.Filter.AllCompany.Split('_').Where(val => val != nameFilt).ToArray();
+                            i = filter == null ? nameFilt : string.Join('_', filter);
+
+                                <a asp-controller="Products" asp-action="List" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@i" asp-route-country="@Model.Filter.AllCountry" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Компания производитель" id="l0_b1">
+                                    <p class="navbar-nav schema-tags__text">@nameFilt</p>
+                                </a>
+                            }
+                        }
+                    }
+                @{if (Model.Filter.AllCountry != null)
+                    {
+                        string i;
+                        foreach (string nameFilt in Model.Filter.AllCountry.Split('_'))
+                        {
+                            string[] filter = Model.Filter.AllCountry.Split('_').Where(val => val != nameFilt).ToArray();
+                            i = filter == null ? nameFilt : string.Join('_', filter);
+
+                                <a asp-controller="Products" asp-action="List" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@i" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Страна производитель" id="l0_b1">
+                                    <p class="navbar-nav schema-tags__text" >@nameFilt</p>
+                                </a>
                             }
                         }
                     }
@@ -35,23 +63,57 @@
 
                             <li class="nav-item">
                                 <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List">
-                                    <img class="i" src="/img/icon/AllCars.png">
-                                    Все автомобили
+                                    Все товары
                                 </a>
                             </li>
                         </ul>
-                        <label>
-                            @{foreach (string nameFilt in Model.FilterSort)
+                        <hr />
+                        @{foreach (string nameFilt in Model.FilterSort.Categories)
+                            {
+                                string i = null;
+                                string isChecked = "";
+                                if (Model.Filter.AllCategory != null)
                                 {
+                                    foreach (string item in Model.Filter.AllCategory.Split('_'))
+                                    {
+                                        if (item == nameFilt)
+                                        {
+                                            string[] filter = Model.Filter.AllCategory.Split('_').Where(val => val != nameFilt).ToArray();
+                                            i = filter == null ? nameFilt : string.Join('_', filter);
+                                            isChecked = "checked";
+                                            break;
+                                        }
+                                        else
+                                        {
+
+                                            i = Model.Filter.AllCategory + '_' + nameFilt;
+                                        }
+                                    }
+                                }
+                                else
+                                {
+                                    i = nameFilt;
+                                }
+                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List" asp-route-category="@i" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry" style="padding:3px 11px">
+                                    <input class="form-check-input" type="checkbox" id="flexCheckDefault" @isChecked />
+                                    @nameFilt
+                                    <span class="badge bg-light text-dark rounded-pill align-text-bottom"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">27</font></font></span>
+                                </a>
+                            }
+                        }
+                        <hr />
+                            @{foreach (string nameFilt in Model.FilterSort.Companies)
+                                {
+                                    string a = nameFilt;
                                     string i = null;
                                     string isChecked = "";
-                                    if (Model.Filter != null)
+                                    if (Model.Filter.AllCompany != null)
                                     {
-                                        foreach (string item in Model.Filter)
+                                        foreach (string item in Model.Filter.AllCompany.Split('_'))
                                         {
                                             if (item == nameFilt)
                                             {
-                                                string[] filter = Model.Filter.Where(val => val != nameFilt).ToArray();
+                                                string[] filter = Model.Filter.AllCompany.Split('_').Where(val => val != nameFilt).ToArray();
                                                 i = filter == null ? nameFilt : string.Join('_', filter);
                                                 isChecked = "checked";
                                                 break;
@@ -59,11 +121,7 @@
                                             else
                                             {
 
-                                                i = Model.Filter == null ? nameFilt : string.Join('_', Model.Filter) + '_' + nameFilt;
-                                                if ((i.Split('_')).Count() == Model.FilterSort.Count())
-                                                {
-                                                    i = "";
-                                                }
+                                                i = Model.Filter.AllCompany + '_' + nameFilt;
                                             }
                                         }
                                     }
@@ -71,16 +129,46 @@
                                     {
                                         i = nameFilt;
                                     }
-                                    <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List" asp-route-filter="@i">
-                                        <input type="checkbox" @isChecked />
+                                    <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@i" asp-route-country="@Model.Filter.AllCountry" style="padding:3px 11px">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @isChecked/>
                                         @nameFilt
-@*                                      <span class="badge bg-light text-dark rounded-pill align-text-bottom"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">27</font></font></span>
-*@                                    </a>
+                                        <span class="badge bg-light text-dark rounded-pill align-text-bottom"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">27</font></font></span>
+                                    </a>
                                 }
                             }
-
-                        </label>
-
+                        <hr />
+                            @{foreach (string nameFilt in Model.FilterSort.Countries)
+                                {
+                                    string i = null;
+                                    string isChecked = "";
+                                    if (Model.Filter.AllCountry != null)
+                                    {
+                                        foreach (string item in Model.Filter.AllCountry.Split('_'))
+                                        {
+                                            if (item == nameFilt)
+                                            {
+                                                string[] filter = Model.Filter.AllCountry.Split('_').Where(val => val != nameFilt).ToArray();
+                                                i = filter == null ? nameFilt : string.Join('_', filter);
+                                                isChecked = "checked";
+                                                break;
+                                            }
+                                            else
+                                            {
+                                                i = Model.Filter.AllCountry + '_' + nameFilt;
+                                            }
+                                        }
+                                    }
+                                    else
+                                    {
+                                        i = nameFilt;
+                                    };
+                                    <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="List" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@i" style="padding:3px 11px">
+                                        <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @isChecked />
+                                        @nameFilt
+                                        <span class="badge bg-light text-dark rounded-pill align-text-bottom"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">27</font></font></span>
+                                    </a>
+                                }
+                            }
                     </div>
                 </nav>
 
@@ -95,7 +183,7 @@
                                 <div class="col">
                                     <div class="card shadow-sm">
                                         <div class="scale">
-                                            <img class="scale card-img-top w-100" src="@product.img" alt="@product.Name" />
+                                            <img class="scale card-img-top" src="@product.img" alt="@product.Name" />
                                         </div>
                                         <div class="card-body">
                                             <h4>Модель: @product.Name</h4>
@@ -122,7 +210,7 @@
                                                     if (itemInCart)
                                                     {
 
-                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="RemoveToCart" asp-route-IdProduct="@checkShopCart.ShopCartId" asp-route-filter=@str>
+                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="RemoveToCart" asp-route-IdProduct="@checkShopCart.ShopCartId" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
                                                                 <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
                                                                 <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
@@ -134,7 +222,7 @@
                                                     }
                                                     else
                                                     {
-                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="AddToCart" asp-route-IdProduct="@product.Id" asp-route-filter=@str>
+                                                        <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="AddToCart" asp-route-IdProduct="@product.Id" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry">
                                                             <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                                                 <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z" />
                                                                 <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
