@@ -6,12 +6,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Compile Remove="Views\Products\Index.cshtml.cs" />
+    <Compile Remove="Views\List\Index.cshtml.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\Products\Index.cshtml" />
-    <Content Remove="Views\Products\View.cshtml" />
+    <Content Remove="Views\List\View.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

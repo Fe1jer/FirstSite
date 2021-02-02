@@ -11,7 +11,7 @@
     <header>
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
-                <a class="navbar-brand" href="/">Автосалон</a>
+                <a class="navbar-brand" href="/">Интернет магазин</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
                     <span class="navbar-toggler-icon"></span>
                 </button>
@@ -21,10 +21,10 @@
                             <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="Catalog">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/Products/List">Все автомобили</a>
+                            <a class="nav-link" aria-current="page" asp-controller="List" asp-action="Index">Все товары</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" href="/ShopCart/">Корзина</a>
+                            <a class="nav-link" aria-current="page" asp-controller="ShopCart" asp-action="Index">Корзина</a>
                         </li>
                     </ul>
                     <form class="d-flex">

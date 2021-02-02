@@ -49,7 +49,7 @@ namespace WebApplication1
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}");
-                routes.MapRoute(name: "categoryFilter", template: "Product/{action}", defaults: new { Controller = "Products", action = "List" });
+                routes.MapRoute(name: "productList", template: "List/{action}", defaults: new { Controller = "List", action = "Index" });
             });
 
             using (var scope = app.ApplicationServices.CreateScope())

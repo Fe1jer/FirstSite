@@ -34,7 +34,6 @@ namespace WebApplication1.Data.Models
             appDBContent.ShopCartItem.Add(new ShopCartItem
             {
                 ShopCartId = ShopCartId,
-
                 Product = product,
                 Price = product.Price,
                 Category = product.Category

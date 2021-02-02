@@ -7,7 +7,7 @@ using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controlles
 {
-    public class ProductsController : Controller
+    public class ListController : Controller
     {
         private readonly IAllProduct _allProducts;
         private readonly IProductFilter _filter;
@@ -15,15 +15,37 @@ namespace WebApplication1.Controlles
         private ProductFilter _userFilter;
 
 
-        public ProductsController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart)
+        public ListController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart)
         {
             _allProducts = iAllProducts;
             _shopCart = shopCart;
             _filter = filter;
         }
 
-        [Route("Products/List")]
-        public ViewResult List(string category, string company, string country)
+        public IActionResult ProductNotFound()
+        {
+            return View();
+        }
+        
+        [Route("Products/{name}")]
+        public IActionResult Product(string name)
+        {
+            Product obj = _allProducts.Products.Where(i => i.Name == name.Replace("-", " ")).FirstOrDefault();
+            if (obj != null)
+            {
+                ViewBag.Title = obj.Company + " " + obj.Name;
+                string i = _shopCart.GetShopItems().Where(o => o.Product.Name == name.Replace("-", " ")).FirstOrDefault()?.ShopCartId;
+                ProductPage product = new ProductPage { Product = obj, ShopCartId = i };
+                return View(product);
+            }
+            else
+            {
+                return RedirectToAction("ProductNotFound");
+            }
+        }
+        
+        [Route("Products")]
+        public IActionResult Index(string category, string company, string country)
         {
             _userFilter = new ProductFilter { AllCategory = category, AllCompany = company, AllCountry = country };
 
@@ -48,7 +70,7 @@ namespace WebApplication1.Controlles
                     products = products.Where(i => filter.Contains(i.Country)).OrderBy(i => i.IsFavourite).ToList();
                 }
             }
-            var carObj = new ProductsListViewModel
+            var productObj = new ProductsListViewModel
             {
                 AllProducts = products,
                 ShopCart = _shopCart,
@@ -56,27 +78,27 @@ namespace WebApplication1.Controlles
                 Filter = new ProductFilter { AllCategory= category, AllCompany= company, AllCountry= country }
             };
 
-            ViewBag.Title = "Страница с товарами";
+            ViewBag.Title = "Все товары";
 
-            return View(carObj);
+            return View(productObj);
         }
 
         public RedirectToActionResult AddToCart(int IdProduct, string category, string company, string country)
         {
-            var item = _allProducts.Products.FirstOrDefault(i => i.Id == IdProduct);
+            Product item = _allProducts.Products.FirstOrDefault(i => i.Id == IdProduct);
             if (item != null)
             {
                 _shopCart.AddToCart(item);
             }
 
-            return RedirectToAction("List", new { category, company, country });
+            return RedirectToAction("Index", new { category, company, country });
         }
 
         public RedirectToActionResult RemoveToCart(string IdProduct, string category, string company, string country)
         {
             _shopCart.RemoveToCart(IdProduct);
 
-            return RedirectToAction("List", new { category, company, country });
+            return RedirectToAction("Index", new { category, company, country });
         }
     }
 }

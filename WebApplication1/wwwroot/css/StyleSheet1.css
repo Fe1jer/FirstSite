@@ -4,6 +4,12 @@
     color: #77757a;
 }
 
+h6 {
+    word-wrap: break-word; /* old name */
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
 h2 {
     margin-right: 15px;
     white-space: nowrap;
