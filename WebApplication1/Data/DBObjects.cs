@@ -50,7 +50,7 @@ namespace WebApplication1.Data
                          "Аккумулятор 4000 мА·ч, быстрая зарядка 25 Вт, беспроводная зарядка 15 Вт\n" +
                          "Размеры 152×69×7,9 мм\n" +
                          "Масса 163 г\n",
-                         img = "/img/samsung-galaxy-s20.png",
+                         Img = "/img/samsung-galaxy-s20.png",
                          Price = 1200,
                          IsFavourite = true,
                          Available = true,
@@ -72,7 +72,7 @@ namespace WebApplication1.Data
                         "Моментальное переключение с одного устройства на другое\n" +
                         "Целый день телефонных разговоров и прослушивания музыки благодаря футляру,\n" +
                         "который обеспечивает наушникам несколько циклов зарядки\n",
-                        img = "/img/apple_airpods.png",
+                        Img = "/img/apple_airpods.png",
                         Price = 300,
                         IsFavourite = true,
                         Available = true,
@@ -93,7 +93,7 @@ namespace WebApplication1.Data
                         "Touch ID\n" +
                         "Трекпад Force Touch\n" +
                         "Два порта Thunderbolt / USB 4\n",
-                        img = "/img/apple-macbook-air-13.png",
+                        Img = "/img/apple-macbook-air-13.png",
                         Price = 2000,
                         IsFavourite = false,
                         Available = true,
@@ -116,7 +116,7 @@ namespace WebApplication1.Data
                         "размеры без подставки(ШxВxГ): 970x563x58 мм\n" +
                         "размеры с подставкой(ШxВxГ): 970x648x344 мм\n" +
                         "вес: 12.1 кг\n",
-                        img = "/img/Samsung_ue43ru7200u.png",
+                        Img = "/img/Samsung_ue43ru7200u.png",
                         Price = 2000,
                         IsFavourite = true,
                         Available = false,

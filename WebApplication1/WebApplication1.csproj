@@ -5,12 +5,9 @@
     <UserSecretsId>12210bc9-59b0-41b5-87a0-999cc86bd4a4</UserSecretsId>
   </PropertyGroup>
 
-  <ItemGroup>
-    <Compile Remove="Views\List\Index.cshtml.cs" />
-  </ItemGroup>
 
   <ItemGroup>
-    <Content Remove="Views\List\View.cshtml" />
+    <Content Remove="Views\Products\View.cshtml" />
   </ItemGroup>
 
   <ItemGroup>

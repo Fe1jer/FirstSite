@@ -21,13 +21,13 @@
                             <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="Catalog">Главная</a>
                         </li>
                         <li class="nav-item">
-                            <a class="nav-link" aria-current="page" asp-controller="List" asp-action="Index">Все товары</a>
+                            <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">Все товары</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" asp-controller="ShopCart" asp-action="Index">Корзина</a>
                         </li>
                     </ul>
-                    <form class="d-flex">
+                    <form asp-controller="Products" asp-action="Search" class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>

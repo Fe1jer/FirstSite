@@ -4,6 +4,21 @@
     color: #77757a;
 }
 
+.img_wrap {
+    width: 177%;
+    height: 100%;
+    overflow: hidden;
+    border-style: solid;
+}
+
+textarea {
+    padding: 10px; /* Поля */
+    width: 100%; /* Ширина */
+    height: 200px; /* Высота */
+    box-sizing: border-box; /* Алгоритм расчёта ширины */
+    font-size: 14px; /* Размер шрифта */
+}
+
 h6 {
     word-wrap: break-word; /* old name */
     overflow-wrap: break-word;

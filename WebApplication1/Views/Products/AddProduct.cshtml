@@ -1,0 +1,95 @@
+﻿@model Product
+<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" />
+<section class="product-details mt-5 pt-5 mb-4">
+    <div class="container-fluid">
+        <form asp-action="AddProduct" method="post">
+            <div class="row">
+
+                <div class="col-lg-6 py-3 order-2 order-lg-1">
+                    <div class="col-sm-6">
+                        <label asp-for="Img" class="form-label"></label>
+                        <div>
+                            <input asp-for="Img" class="form-control" />
+                            <span asp-validation-for="Img" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <img class="w-100" src="@Model?.Img" />
+                </div>
+                <div class=" col-lg-6 col-xl-5 pl-lg-5 mb-5 order-1 order-lg-2">
+
+                    <div class="row">
+                        <div class="col-sm-4">
+                            <label asp-for="Category" class="form-label"></label>
+                            <div>
+                                <input asp-for="Category" class="form-control" />
+                                <span asp-validation-for="Category" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label asp-for="Company" class="form-label"></label>
+                            <div>
+                                <input asp-for="Company" class="form-control" />
+                                <span asp-validation-for="Company" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-4">
+                            <label asp-for="Name" class="form-label"></label>
+                            <div>
+                                <input asp-for="Name" class="form-control" />
+                                <span asp-validation-for="Name" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="ShortDesc" class="form-label"></label>
+                        <div>
+                            <input asp-for="ShortDesc" class="form-control" />
+                            <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="col-sm-6">
+                        <label asp-for="Country" class="form-label"></label>
+                        <div>
+                            <input asp-for="Country" class="form-control" />
+                            <span asp-validation-for="Country" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
+                        <div class="col-sm-6">
+                            <label asp-for="Price" class="form-label"></label> $
+                            <div>
+                                <input asp-for="Price" class="form-control" />
+                                <span asp-validation-for="Price" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                    </div>
+                    <div>
+                        <label asp-for="LongDesc" class="form-label"></label>
+                        <div>
+                            <textarea asp-for="LongDesc"></textarea>
+                            <span asp-validation-for="LongDesc" class="text-danger"></span>
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div>
+                            <label asp-for="IsFavourite" class="form-label"></label>
+                            <input asp-for="IsFavourite" type="checkbox" />
+                            <div>
+                                <span asp-validation-for="IsFavourite" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div>
+                            <label asp-for="Available" class="form-label"></label>
+                            <input asp-for="Available" type="checkbox" checked />
+                            <div>
+                                <span asp-validation-for="Available" class="text-danger"></span>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <button class="btn btn-primary btn-lg" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Добавить товар</font></font></button>
+        </form>
+    </div>
+</section>

@@ -8,5 +8,8 @@ namespace WebApplication1.Data.Interfaces
         IEnumerable<Product> Products { get; }
         IEnumerable<Product> GetFavProducts { get; }
         Product GetObjectProduct(int carId);
+        void CreateProduct(Product product);
+        void ChangeProduct(Product product);
+        void DeleteProduct(int id);
     }
 }
