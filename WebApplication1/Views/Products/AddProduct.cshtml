@@ -1,6 +1,6 @@
 ﻿@model Product
-<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" />
-<section class="product-details mt-5 pt-5 mb-4">
+<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true"/>
+<section class="product-details mb-4">
     <div class="container-fluid">
         <form asp-action="AddProduct" method="post">
             <div class="row">
@@ -40,7 +40,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="col-sm-6">
+                    <div>
                         <label asp-for="ShortDesc" class="form-label"></label>
                         <div>
                             <input asp-for="ShortDesc" class="form-control" />

@@ -2,6 +2,8 @@
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
@@ -16,22 +18,21 @@ namespace WebApplication1.Controllers
             _shopCart = shopCart;
         }
 
+        [Authorize(Roles = "admin, user")]
         public ViewResult Index()
         {
             var items = _shopCart.GetShopItems();
             _shopCart.ListShopItems = items;
-
             var obj = new ShopCartViewModel
             {
                 ShopCart = _shopCart
             };
-
-
             ViewBag.Title = "Корзина";
 
             return View(obj);
         }
 
+        [Authorize(Roles = "admin, user")]  
         public RedirectToActionResult RemoveToCart(string IdCar)
         {
             _shopCart.RemoveToCart(IdCar);

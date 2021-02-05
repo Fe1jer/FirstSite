@@ -4,19 +4,23 @@ using System.Linq;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using System.Security.Claims;
 
 namespace WebApplication1.Controlles
 {
     public class ProductsController : Controller
     {
         private readonly IAllProduct _allProducts;
+        private readonly IAllUser _allUser;
         private readonly IProductFilter _filter;
         private readonly ShopCart _shopCart;
         private ProductFilter _userFilter;
 
 
-        public ProductsController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart)
+        public ProductsController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart, IAllUser allUser)
         {
+            _allUser = allUser;
             _allProducts = iAllProducts;
             _shopCart = shopCart;
             _filter = filter;
@@ -27,15 +31,22 @@ namespace WebApplication1.Controlles
             return View();
         }
 
+        [Authorize(Roles = "admin, moderator")]
         [Route("Products/ChangeProduct")]
-        public IActionResult ChangeProduct(int id)
-        {
+        public IActionResult ChangeProduct(int id) {
+            User user = _allUser.GetUserEmail(User.Identity.Name);
+            if (user.Role.Name!="admin" && user.Role.Name!= "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
+
             Product obj = _allProducts.Products.FirstOrDefault(p => p.Id == id);
             ViewBag.Title = "Изменение товара";
 
             return View(obj);
         }
 
+        [Authorize(Roles = "admin, moderator")]
         [Route("Products/ChangeProduct")]
         [HttpPost]
         public IActionResult ChangeProduct(Product obj)
@@ -50,6 +61,7 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
+        [Authorize(Roles = "admin, moderator")]
         [Route("Products/DeleteProduct")]
         public IActionResult DeleteProduct(int id)
         {
@@ -57,14 +69,22 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index");
         }
 
+        [Authorize(Roles = "admin, moderator")]
         [Route("Products/AddProduct")]
         public IActionResult AddProduct()
         {
+            User user = _allUser.GetUserEmail(User.Identity.Name);
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
+
             ViewBag.Title = "Добавление товара";
 
             return View();
         }
 
+        [Authorize(Roles = "admin, moderator")]
         [Route("Products/AddProduct")]
         [HttpPost]
         public IActionResult AddProduct(Product obj)
@@ -74,7 +94,7 @@ namespace WebApplication1.Controlles
                 _allProducts.CreateProduct(obj);
                 return RedirectToAction("Index");
             }
-
+            ViewBag.Title = "Добавление товара";
             return View(obj);
         }
 
@@ -134,6 +154,7 @@ namespace WebApplication1.Controlles
             return View(productObj);
         }
 
+        [Authorize(Roles = "admin, user, moderator")]
         [Route("Products/AddToCart")]
         public RedirectToActionResult AddToCart(int IdProduct, string category, string company, string country)
         {
@@ -146,6 +167,7 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index", new { category, company, country });
         }
 
+        [Authorize(Roles = "admin, user, moderator")]
         [Route("Products/RemoveToCart")]
         public RedirectToActionResult RemoveToCart(string IdProduct, string category, string company, string country)
         {

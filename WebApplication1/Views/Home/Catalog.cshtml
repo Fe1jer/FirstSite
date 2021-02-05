@@ -1,7 +1,7 @@
 ﻿@model HomeViewModel
 <head>
     <title>Carousel</title>
-    <link rel="stylesheet" href="~/css/carousel.css" type="text/css" />
+    <link rel="stylesheet" href="~/css/carousel.css" type="text/css" asp-append-version="true"/>
 
     <style>
         .bd-placeholder-img {
@@ -21,12 +21,12 @@
 </head>
 <body>
     <main>
-        <div id="myCarousel" class="pt-2 carousel slide" data-bs-ride="carousel">
+        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
             <ol class="carousel-indicators">
                 @{
                     int i = 0;
                     string active;
-                    foreach (Product car in Model.FavProducts)
+                    foreach (HomeProduct car in Model.AutoOnTheCover)
                     {
                         if (i == 0)
                         {

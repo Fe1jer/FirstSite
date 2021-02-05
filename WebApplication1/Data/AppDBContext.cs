@@ -14,5 +14,7 @@ namespace WebApplication1.Data
         public DbSet<ShopCartItem> ShopCartItem { get; set; }
         public DbSet<Order> Order { get; set; }
         public DbSet<OrderDetail> OrderDetail { get; set; }
+        public DbSet<User> Users { get; set; }
+        public DbSet<Role> Roles { get; set; }
     }
 }

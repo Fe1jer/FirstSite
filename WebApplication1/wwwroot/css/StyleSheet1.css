@@ -4,6 +4,10 @@
     color: #77757a;
 }
 
+body{
+    padding-top: 3.3rem;
+}
+
 .img_wrap {
     width: 177%;
     height: 100%;

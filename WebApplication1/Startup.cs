@@ -8,6 +8,7 @@ using WebApplication1.Data;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.Data.Repository;
+using Microsoft.AspNetCore.Authentication.Cookies;
 
 namespace WebApplication1
 {
@@ -16,6 +17,7 @@ namespace WebApplication1
 
         private readonly IConfigurationRoot _confString;
 
+        [System.Obsolete]
         public Startup(IHostingEnvironment hostEnv)
         {
             _confString = new ConfigurationBuilder().SetBasePath(hostEnv.ContentRootPath).AddJsonFile("dbsettings.json").Build();
@@ -29,6 +31,7 @@ namespace WebApplication1
             services.AddTransient<IAllProduct, ProductRepository>();
             services.AddTransient<IAllOrders, OrdersRepository>();
             services.AddTransient<IProductFilter, ProductFilterRepository>();
+            services.AddTransient<IAllUser, UserRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShopCart.GetCart(sp));
@@ -36,6 +39,12 @@ namespace WebApplication1
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddMemoryCache();
             services.AddSession();
+            services.AddAuthentication(CookieAuthenticationDefaults.AuthenticationScheme)
+                            .AddCookie(options =>
+                            {
+                                options.LoginPath = new PathString("/Account/Login");
+                                options.AccessDeniedPath = new PathString("/Account/Login");
+                            });
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -45,10 +54,15 @@ namespace WebApplication1
             app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseSession();
+
+            app.UseAuthentication();    // аутентификация
+            app.UseAuthorization();     // авторизация
+
             //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>
             {
-                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}");
+                routes.MapRoute(name: "admin", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
+                routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
 
             using (var scope = app.ApplicationServices.CreateScope())
@@ -56,7 +70,6 @@ namespace WebApplication1
                 AppDBContext context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
                 DBObjects.Initial(context);
             }
-
         }
     }
 }

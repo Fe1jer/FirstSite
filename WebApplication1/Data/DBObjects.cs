@@ -125,6 +125,32 @@ namespace WebApplication1.Data
                         Country = "Северная Корея"
                     });
             context.SaveChanges();
+
+
+            if (!context.Roles.Any())
+                context.Roles.AddRange(
+                     new Role { Name = "admin"}
+                     ,
+                     new Role { Name = "moderator"}
+                     ,
+                    new Role { Name = "user" }
+                    );
+
+            if (!context.Users.Any())
+                context.Users.AddRange(
+                     new User {
+                         Email = "vppechko@gmail.com",
+                         Password = "Fe1jer_Degra1der", RoleId= 3
+                     },
+                     new User {
+                         Email = "vik@gmail.com",
+                         Password = "vikr", RoleId= 2
+                     },
+                    new User {
+                        Email = "viktor@gmail.com", 
+                        Password = "viktor", RoleId = 1
+                    });
+            context.SaveChanges();
         }
 
     }
