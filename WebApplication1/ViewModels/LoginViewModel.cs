@@ -4,7 +4,7 @@ namespace WebApplication1.ViewModels
 {
     public class LoginViewModel
     {
-        [Display(Name = "Электронный адресс", Prompt = "Электронный адресс")]
+        [Display(Name = "Электронный адрес", Prompt = "Электронный адрес")]
         [Required(ErrorMessage = "Не указан Email")]
         [DataType(DataType.EmailAddress)]
         public string Email { get; set; }

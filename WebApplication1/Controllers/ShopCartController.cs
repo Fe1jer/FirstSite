@@ -9,12 +9,16 @@ namespace WebApplication1.Controllers
 {
     public class ShopCartController : Controller
     {
-        private readonly IAllProduct _carRep;
+        private readonly IAllProduct _prooductRep;
         private readonly ShopCart _shopCart;
+        private readonly IAllUser _allUser;
+        private readonly IShopCart _newShopCart;
 
-        public ShopCartController(IAllProduct carRep, ShopCart shopCart)
+        public ShopCartController(IShopCart newShopCart, IAllProduct prooductRep, ShopCart shopCart, IAllUser allUser)
         {
-            _carRep = carRep;
+            _newShopCart = newShopCart;
+            _allUser = allUser;
+            _prooductRep = prooductRep;
             _shopCart = shopCart;
         }
 
@@ -33,9 +37,9 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize(Roles = "admin, user")]  
-        public RedirectToActionResult RemoveToCart(string IdCar)
+        public RedirectToActionResult RemoveToCart(string IdProduct)
         {
-            _shopCart.RemoveToCart(IdCar);
+            _shopCart.RemoveToCart(IdProduct);
 
             return RedirectToAction("Index");
         }

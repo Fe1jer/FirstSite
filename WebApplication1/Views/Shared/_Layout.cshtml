@@ -32,6 +32,12 @@
                                 <a class="nav-link" aria-current="page" asp-controller="Roles" asp-action="Index">Управление ролями</a>
                             </li>
                         }
+                        @if (User.IsInRole("courier"))
+                        {
+                            <li class="nav-item">
+                                <a class="nav-link" aria-current="page" asp-controller="Courier" asp-action="AllOrders">Все заказы</a>
+                            </li>
+                        }
                     </ul>
                     <form asp-controller="Products" asp-action="Search" class="d-flex">
                         <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
