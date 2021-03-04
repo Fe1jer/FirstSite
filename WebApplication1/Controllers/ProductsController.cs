@@ -15,17 +15,20 @@ namespace WebApplication1.Controlles
         private readonly IAllUser _allUser;
         private readonly IProductFilter _filter;
         private readonly ShopCart _shopCart;
+        private readonly IShopCart _ShopCart;
         private ProductFilter _userFilter;
 
 
-        public ProductsController(IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart, IAllUser allUser)
+        public ProductsController(IShopCart newShopCart, IAllProduct iAllProducts, IProductFilter filter, ShopCart shopCart, IAllUser allUser)
         {
+            _ShopCart = newShopCart;
             _allUser = allUser;
             _allProducts = iAllProducts;
             _shopCart = shopCart;
             _filter = filter;
         }
 
+        [Route("Products/ProductNotFound")]
         public IActionResult ProductNotFound()
         {
             return View();
@@ -154,7 +157,7 @@ namespace WebApplication1.Controlles
             return View(productObj);
         }
 
-        [Authorize(Roles = "admin, user, moderator")]
+        [Authorize]
         [Route("Products/AddToCart")]
         public RedirectToActionResult AddToCart(int IdProduct, string category, string company, string country)
         {
@@ -167,7 +170,7 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index", new { category, company, country });
         }
 
-        [Authorize(Roles = "admin, user, moderator")]
+        [Authorize]
         [Route("Products/RemoveToCart")]
         public RedirectToActionResult RemoveToCart(string IdProduct, string category, string company, string country)
         {

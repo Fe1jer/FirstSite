@@ -18,7 +18,7 @@ namespace WebApplication1.Data.Repository
             this.appDBContent = appDBContent;
         }
 
-        public List<User> Users => appDBContent.Users.Include(p=>p.Role).OrderByDescending(p=>p.Role).ToList();
+        public List<User> Users => appDBContent.Users.Include(p=>p.Role).OrderByDescending(p=>p.RoleId).ToList();
 
         public List<Role> Roles => appDBContent.Roles.ToList();
 
@@ -37,7 +37,6 @@ namespace WebApplication1.Data.Repository
         public void SetUserRole(User user, string role)
         {
             user = appDBContent.Users.FirstOrDefault(p=>p==user);
- 
             user.Role = appDBContent.Roles.FirstOrDefault(u => u.Name == role);
             appDBContent.SaveChanges();
         }

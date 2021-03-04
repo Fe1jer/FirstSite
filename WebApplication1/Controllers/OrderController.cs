@@ -8,10 +8,12 @@ namespace WebApplication1.Controllers
     public class OrderController : Controller
     {
         private readonly IAllOrders allOrders;
+        private readonly IShopCart newShopCart;
         private readonly ShopCart shopCart;
 
-        public OrderController(IAllOrders allOrders, ShopCart shopCart)
+        public OrderController(IShopCart newShopCart, IAllOrders allOrders, ShopCart shopCart)
         {
+            this.newShopCart = newShopCart;
             this.allOrders = allOrders;
             this.shopCart = shopCart;
         }
@@ -24,7 +26,7 @@ namespace WebApplication1.Controllers
 
             OrderViewModel orderR = new OrderViewModel
             {
-                ShopCart = shopCart,
+                ShopCart = shopCart
             };
             shopCart.ListShopItems = shopCart.GetShopItems();
 

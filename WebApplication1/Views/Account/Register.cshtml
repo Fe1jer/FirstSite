@@ -1,8 +1,6 @@
 ﻿@model RegisterViewModel
 <html>
 <head>
-    <link href="/css/signin.css" rel="stylesheet">
-
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -21,13 +19,15 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet" asp-append-version="true">
+    <link href="/css/signin.css" rel="stylesheet" asp-append-version="true">
 </head>
 <body class="text-center">
 
     <main class="form-signin">
         <form asp-action="Register" method="post">
-            <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h1 class="mb-4"  width="72" height="57">
+                Fe1jer
+            </h1>
             <h1 class="h3 mb-3 fw-normal">Пожалуйста войдите</h1>
             <div class="validation" asp-validation-summary="ModelOnly"></div>
 

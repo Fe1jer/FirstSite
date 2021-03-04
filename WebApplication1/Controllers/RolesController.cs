@@ -6,9 +6,11 @@ using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
+using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
         private readonly IAllUser _users;

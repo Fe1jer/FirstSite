@@ -1,8 +1,6 @@
 ﻿@model LoginViewModel
 <html>
 <head>
-    <link href="/css/signin.css" rel="stylesheet">
-
     <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
@@ -21,13 +19,15 @@
 
 
     <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet" asp-append-version="true">
+    <link href="/css/signin.css" rel="stylesheet" asp-append-version="true">
 </head>
 <body class="text-center">
 
     <main class="form-signin">
         <form asp-action="Login" method="post">
-            <img class="mb-4" src="../assets/brand/bootstrap-logo.svg" alt="" width="72" height="57">
+            <h1 class="mb-4" width="72" height="57">
+                Fe1jer
+            </h1>
             <h1 class="h3 mb-3 fw-normal">Пожалуйста войдите</h1>
             <div class="validation" asp-validation-summary="ModelOnly"></div>
 
@@ -38,7 +38,7 @@
             <label asp-for="Password" class="visually-hidden"></label>
             <input asp-for="Password" class="form-control" />
             <span asp-validation-for="Password" class="text-danger"></span>
-            <a  asp-action="Register" asp-controller="Account">
+            <a asp-action="Register" asp-controller="Account">
                 Регистрация
             </a>
             <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>

@@ -32,6 +32,7 @@ namespace WebApplication1
             services.AddTransient<IAllOrders, OrdersRepository>();
             services.AddTransient<IProductFilter, ProductFilterRepository>();
             services.AddTransient<IAllUser, UserRepository>();
+            services.AddTransient<IShopCart, ShopCartRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddScoped(sp => ShopCart.GetCart(sp));
