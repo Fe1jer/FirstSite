@@ -9,7 +9,7 @@ using System.Threading.Tasks;
 
 namespace WebApplication1.Data.Repository
 {
-    public class UserRepository : IAllUser
+    public class UserRepository : IAllUsers
     {
         private readonly AppDBContext appDBContent;
 
@@ -22,7 +22,9 @@ namespace WebApplication1.Data.Repository
 
         public List<Role> Roles => appDBContent.Roles.ToList();
 
-        public async Task<User> User(LoginViewModel model) => await appDBContent.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == model.Email && u.Password == model.Password);
+        public List<User> Couriers => appDBContent.Users.Include(p => p.Role).Where(p => p.Role.Name == "courier").OrderByDescending(p => p.RoleId).ToList();
+
+        public async Task<User> User(LoginViewModel model) => await appDBContent.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == model.Email);
 
         public async Task<User> User(int id) => await appDBContent.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == id);
 

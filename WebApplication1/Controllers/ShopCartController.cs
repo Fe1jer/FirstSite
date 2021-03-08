@@ -7,39 +7,31 @@ using System.Security.Claims;
 
 namespace WebApplication1.Controllers
 {
+    [Authorize]
     public class ShopCartController : Controller
     {
         private readonly IAllProduct _prooductRep;
-        private readonly ShopCart _shopCart;
-        private readonly IAllUser _allUser;
-        private readonly IShopCart _newShopCart;
+        private readonly IAllUsers _allUser;
+        private readonly IShopCart _shopCart;
 
-        public ShopCartController(IShopCart newShopCart, IAllProduct prooductRep, ShopCart shopCart, IAllUser allUser)
+        public ShopCartController(IShopCart shopCart, IAllProduct prooductRep, IAllUsers allUser)
         {
-            _newShopCart = newShopCart;
+            _shopCart = shopCart;
             _allUser = allUser;
             _prooductRep = prooductRep;
-            _shopCart = shopCart;
         }
 
-        [Authorize(Roles = "admin, user")]
         public ViewResult Index()
         {
-            var items = _shopCart.GetShopItems();
-            _shopCart.ListShopItems = items;
-            var obj = new ShopCartViewModel
-            {
-                ShopCart = _shopCart
-            };
+            var obj = _shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name));
             ViewBag.Title = "Корзина";
 
             return View(obj);
         }
-
-        [Authorize(Roles = "admin, user")]  
-        public RedirectToActionResult RemoveToCart(string IdProduct)
+ 
+        public RedirectToActionResult RemoveToCart(int IdProduct)
         {
-            _shopCart.RemoveToCart(IdProduct);
+            _shopCart.RemoveToCart(_allUser.GetUserEmail(User.Identity.Name), IdProduct);
 
             return RedirectToAction("Index");
         }

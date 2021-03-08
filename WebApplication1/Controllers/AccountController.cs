@@ -14,11 +14,13 @@ namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IAllUser _users;
+        private readonly IAllUsers _users;
+        private readonly IPasswordHasher _hasher;
 
-        public AccountController(IAllUser users)
+        public AccountController(IAllUsers users, IPasswordHasher hasher)
         {
             _users = users;
+            _hasher = hasher;
         }
 
         [HttpGet]
@@ -39,7 +41,7 @@ namespace WebApplication1.Controllers
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    user = new User { Email = model.Email, Password = model.Password };
+                    user = new User { Email = model.Email, Password = _hasher.HashPassword(model.Password)};
                     Role userRole = await _users.GetRole("user");
                     if (userRole != null)
                         user.Role = userRole;
@@ -71,7 +73,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 User user = await _users.User(model);
-                if (user != null)
+                if (_hasher.VerifyHashedPassword(user.Password, model.Password))
                 {
                     await Authenticate(user); // аутентификация
 
@@ -81,6 +83,7 @@ namespace WebApplication1.Controllers
             }
             return View(model);
         }
+
         private async Task Authenticate(User user)
         {
             // создаем один claim

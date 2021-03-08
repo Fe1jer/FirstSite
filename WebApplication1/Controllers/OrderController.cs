@@ -8,27 +8,24 @@ namespace WebApplication1.Controllers
     public class OrderController : Controller
     {
         private readonly IAllOrders allOrders;
-        private readonly IShopCart newShopCart;
-        private readonly ShopCart shopCart;
+        private readonly IShopCart shopCart;
+        private readonly IAllUsers _allUser;
 
-        public OrderController(IShopCart newShopCart, IAllOrders allOrders, ShopCart shopCart)
+        public OrderController(IShopCart shopCart, IAllOrders allOrders, IAllUsers allUser)
         {
-            this.newShopCart = newShopCart;
-            this.allOrders = allOrders;
+            _allUser = allUser;
             this.shopCart = shopCart;
+            this.allOrders = allOrders;
         }
 
         public IActionResult Checkout()
         {
             ViewBag.Title = "Оформление заказа";
-            var items = shopCart.GetShopItems();
-            shopCart.ListShopItems = items;
 
             OrderViewModel orderR = new OrderViewModel
             {
-                ShopCart = shopCart
+                ShopCartItems = shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name))
             };
-            shopCart.ListShopItems = shopCart.GetShopItems();
 
             return View(orderR);
         }
@@ -36,24 +33,16 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public IActionResult Checkout(Order order)
         {
-            shopCart.ListShopItems = shopCart.GetShopItems();
-
             if (ModelState.IsValid)
             {
-                allOrders.CreateOrder(order);
+                allOrders.CreateOrder(_allUser.GetUserEmail(User.Identity.Name), order);
                 return RedirectToAction("Complete");
             }
-
-            var items = shopCart.GetShopItems();
-            shopCart.ListShopItems = items;
-
             OrderViewModel orderR = new OrderViewModel
             {
                 Order = order,
-                ShopCart = shopCart,
+                ShopCartItems = shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name))
             };
-            shopCart.ListShopItems = shopCart.GetShopItems();
-
 
             return View(orderR);
         }
@@ -61,8 +50,7 @@ namespace WebApplication1.Controllers
         public IActionResult Complete()
         {
             ViewBag.Title = "Завершение заказа";
-            shopCart.ListShopItems = shopCart.GetShopItems();
-            shopCart.EmptyTheCart(shopCart.ListShopItems);
+            shopCart.EmptyTheCart(_allUser.GetUserEmail(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
             return View();
         }

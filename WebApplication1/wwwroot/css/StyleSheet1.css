@@ -8,6 +8,16 @@ body{
     padding-top: 3.3rem;
 }
 
+.sidebar .nav-link {
+    color: #333;
+}
+
+.card-image {
+    width: 318px;
+    height: 260px;
+    object-fit: contain;
+}
+
 .img_wrap {
     width: 177%;
     height: 100%;

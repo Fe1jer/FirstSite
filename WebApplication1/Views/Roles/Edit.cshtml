@@ -4,12 +4,17 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" name="userId" value="@Model.UserId" />
-    <div class="form-group">
+
+    <div class="form-check">
         @foreach (Role role in Model.AllRoles)
         {
-            <input type="radio" name="role" value="@role.Name"
-                   @(Model.UserRole.Name == role.Name ? "checked" : "") />@role.Name <br />
-            }
+            <input class="form-check-input" type="radio" name="role" id="@role.Id" value="@role.Name"
+                   @(Model.UserRole.Name == role.Name ? "checked" : "") />
+            <label class="form-check-label" for="@role.Id">
+                @role.Name
+            </label>
+            <br />
+        }
     </div>
     <button type="submit" class="btn btn-primary">Сохранить</button>
 </form>

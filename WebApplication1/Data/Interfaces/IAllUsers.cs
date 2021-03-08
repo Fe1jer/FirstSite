@@ -7,10 +7,11 @@ using WebApplication1.ViewModels;
 
 namespace WebApplication1.Data.Interfaces
 {
-    public interface IAllUser
+    public interface IAllUsers
     {
         List<User> Users { get; }
         List<Role> Roles { get; }
+        List<User> Couriers { get; }
         public void AddUser(User user);
         public void SetUserRole(User user, string role);
         public Task<User> User(LoginViewModel model); 

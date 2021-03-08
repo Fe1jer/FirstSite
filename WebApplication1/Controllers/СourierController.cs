@@ -7,95 +7,84 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize(Roles = "courier")]
+    [Authorize(Roles = "courier, moderator")]
     public class CourierController : Controller
     {
         private readonly IAllOrders allOrders;
-        private readonly ShopCart shopCart;
+        private readonly IAllUsers allUser;
 
-        public CourierController(IAllOrders allOrders, ShopCart shopCart)
+        public CourierController(IAllOrders allOrders, IAllUsers allUser)
         {
             this.allOrders = allOrders;
-            this.shopCart = shopCart;
+            this.allUser = allUser;
         }
 
+        [Authorize(Roles = "moderator")]
         // GET: СourierController
         public ActionResult Index()
         {
-            return View();
-        }
-
-        // GET: СourierController/Details/5
-        public ActionResult AllOrders()
-        {
             ViewBag.Title = "Все заказы";
-            OrderViewModel orderR = new OrderViewModel
+
+            return View(allOrders.GetAllOrders());
+        }
+
+        [Authorize(Roles = "courier")]
+        public ActionResult CourierOrders()
+        {
+            ViewBag.Title = "Заказы";
+
+            return View(allOrders.GetCourierOrders(User.Identity.Name));
+        }
+
+        [Authorize(Roles = "courier")]
+        public ActionResult Renouncement(int idOrder)
+        {
+            ViewBag.Title = "Заказы";
+            allOrders.SetCourierOrders(idOrder, 0);
+            return RedirectToAction("CourierOrders");
+        }
+
+        [Authorize(Roles = "moderator")]
+        public ActionResult Edit(int idOrder)
+        {
+            ChangeCourierViewModels model = new ChangeCourierViewModels
             {
-                AllOrders = shopCart.GetAllOrders()
+                Order = allOrders.GetOrder(idOrder),
+                AllCouriers = allUser.Couriers
             };
-            return View(orderR);
+            ViewBag.Title = "Выбор курьера";
+             
+            return View(model);
         }
 
-        // GET: СourierController/Create
-        public ActionResult Create()
-        {
-            return View();
-        }
-
-        // POST: СourierController/Create
+        [Authorize(Roles = "moderator")]
         [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Create(IFormCollection collection)
+        public ActionResult Edit(int idOrder, int idCourier)
         {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
-            }
+            ViewBag.Title = "Выбор курьера";
+            allOrders.SetCourierOrders(idOrder, idCourier);
+
+            return RedirectToAction("Index");
         }
 
-        // GET: СourierController/Edit/5
-        public ActionResult Edit(int id)
+        public ActionResult OrderDetail(int idOrder)
         {
-            return View();
+            ViewBag.Title = "Информация о заказе";
+
+            return View(allOrders.GetOrder(idOrder));
         }
 
-        // POST: СourierController/Edit/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Edit(int id, IFormCollection collection)
+        public ActionResult Delete(int idOrder)
         {
-            try
+            ViewBag.Title = "Информация о заказе";
+            allOrders.DeleteOrder(idOrder);
+            if (User.IsInRole("moderator"))
             {
-                return RedirectToAction(nameof(Index));
+                return RedirectToAction("Index");
             }
-            catch
+            else
             {
-                return View();
-            }
-        }
-
-        // GET: СourierController/Delete/5
-        public ActionResult Delete(int id)
-        {
-            return View();
-        }
-
-        // POST: СourierController/Delete/5
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult Delete(int id, IFormCollection collection)
-        {
-            try
-            {
-                return RedirectToAction(nameof(Index));
-            }
-            catch
-            {
-                return View();
+                return RedirectToAction("CourierOrders");
             }
         }
     }
