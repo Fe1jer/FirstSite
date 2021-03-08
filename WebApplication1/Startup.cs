@@ -1,4 +1,4 @@
-using Microsoft.AspNetCore.Builder;
+п»їusing Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
 using Microsoft.EntityFrameworkCore;
@@ -56,8 +56,8 @@ namespace WebApplication1
             app.UseStaticFiles();
             app.UseSession();
 
-            app.UseAuthentication();    // аутентификация
-            app.UseAuthorization();     // авторизация
+            app.UseAuthentication();    // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
+            app.UseAuthorization();     // пїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅпїЅ
 
             //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>

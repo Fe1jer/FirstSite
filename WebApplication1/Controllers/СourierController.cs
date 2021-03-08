@@ -53,14 +53,14 @@ namespace WebApplication1.Controllers
                 AllCouriers = allUser.Couriers
             };
             ViewBag.Title = "Выбор курьера";
-             
+
             return View(model);
         }
 
         [Authorize(Roles = "moderator")]
         [HttpPost]
         public ActionResult Edit(int idOrder, int idCourier)
-        {
+            {
             ViewBag.Title = "Выбор курьера";
             allOrders.SetCourierOrders(idOrder, idCourier);
 
