@@ -1,10 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Data.Entity;
 using System.Linq;
-using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using Microsoft.EntityFrameworkCore;
 
 namespace WebApplication1.Data.Repository
 {
@@ -47,20 +46,7 @@ namespace WebApplication1.Data.Repository
 
         public List<ShopCartItem> GetShopItems(User user)
         {
-            return  appDBContent.ShopCartItem.Where(c => c.User == user).Include(s => s.Product).ToList();
-        }
-
-        public Dictionary<Order, List<OrderDetail>> GetAllOrders()
-        {
-            Dictionary<Order, List<OrderDetail>> allOrders = new Dictionary<Order, List<OrderDetail>>();
-            foreach (Order order in appDBContent.Order)
-            {
-                allOrders.Add(order, null);
-                List<OrderDetail> orders = new List<OrderDetail>();
-                orders = appDBContent.OrderDetail.Include(p => p.Product).Where(p => p.OrderID == order.Id).ToList();
-                allOrders[order] = orders;
-            }
-            return allOrders;
+            return appDBContent.ShopCartItem.Where(c => c.User == user).Include(s => s.Product).ToList();
         }
     }
 }

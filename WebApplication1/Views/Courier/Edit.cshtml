@@ -1,0 +1,19 @@
+﻿@model ChangeCourierViewModels
+
+<h2>Выбор курьера для заказа @Model.Order.Id</h2>
+
+<form asp-action="Edit" method="post">
+    <input type="hidden" name="idOrder" value="@Model.Order.Id" />
+    <div class="form-group">
+        @foreach (User courier in Model.AllCouriers)
+        {
+            <input class="form-check-input" type="radio" name="idCourier" id="@courier.Id" value="@courier.Id"
+                   @(Model.Order.Courier == courier ? "checked" : "") />
+            <label class="form-check-label" for="@courier.Id">
+                @courier.Email
+            </label>
+            <br />
+        }
+    </div>
+    <button type="submit" class="btn btn-primary">Сохранить</button>
+</form>

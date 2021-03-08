@@ -2,12 +2,12 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
+using WebApplication1.Data.AbstractClasses;
 
 namespace WebApplication1.Data.Models
 {
-    public class Product
+    public class Product : Entity
     {
-        public int Id { set; get; }
 
         [Display(Name = "Название")]
         [Required(ErrorMessage = "Введите дествительное название")]

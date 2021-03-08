@@ -1,17 +1,17 @@
-﻿@model ShopCartViewModel
+﻿@model List<ShopCartItem>
 <div class="">
     <h1>Корзина</h1>
-    @if (Model.ShopCart.ListShopItems.Count != 0)
+    @if (Model.Count != 0)
     {
-        foreach (var el in Model.ShopCart.ListShopItems)
+        foreach (ShopCartItem el in Model)
         {
             <form asp-action="Index" method="post" class="form-horizontal">
                 <div class="d-flex justify-content-between align-items-center alert alert-warning mt-3">
                     <div>
-                        <b>@el.Product.Category </b>@el.Product.Company @el.Product.Name<br />
+                        <b>@el.Category </b>@el.Product.Company @el.Product.Name<br />
                         <b>Цена: </b>@el.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))
                     </div>
-                    <a type="button" class="text-end btn btn-outline-danger" asp-controller="ShopCart" asp-action="RemoveToCart" asp-route-IdCar="@el.ShopCartId">
+                    <a type="button" class="text-end btn btn-outline-danger" asp-controller="ShopCart" asp-action="RemoveToCart" asp-route-IdProduct="@el.Product.Id">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-x" viewBox="0 0 16 16">
                             <path fill-rule="evenodd" d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z" />
                             <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
