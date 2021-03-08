@@ -2,14 +2,13 @@
 using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
-using WebApplication1.Data.AbstractClasses;
 
 namespace WebApplication1.Data.Models
 {
-    public class Order : Entity
+    public class Order
     {
-
-        public User Courier { get; set; }
+        [BindNever]
+        public int Id { get; set; }
 
         [Display(Name = "Имя")]
         [StringLength(10)]
@@ -48,28 +47,28 @@ namespace WebApplication1.Data.Models
         [Required(ErrorMessage = "Длина 6 символов")]
         public string Zip { get; set; }
 
-/*        [Display(Name = "Имя на карте")]
+        [Display(Name = "Имя на карте")]
         [DataType(DataType.CreditCard)]
         [StringLength(25, MinimumLength = 7)]
-        [Required(ErrorMessage = "Длина не менее 7 символов")]*/
+        [Required(ErrorMessage = "Длина не менее 7 символов")]
         public string CCName { get; set; }
 
-/*        [Display(Name = "Номер карты")]
+        [Display(Name = "Номер карты")]
         [DataType(DataType.CreditCard)]
         [StringLength(16, MinimumLength = 16)]
-        [Required(ErrorMessage = "Длина не менее 16 символов")]*/
+        [Required(ErrorMessage = "Длина не менее 16 символов")]
         public string CCNumber { get; set; }
 
-/*        [Display(Name = "Срок действия")]
+        [Display(Name = "Срок действия")]
         [DataType(DataType.CreditCard)]
         [StringLength(25, MinimumLength = 7)]
-        [Required(ErrorMessage = "Длина не менее 7 символов")]*/
+        [Required(ErrorMessage = "Длина не менее 7 символов")]
         public string CCExpiration { get; set; }
 
-/*        [Display(Name = "CVV")]
+        [Display(Name = "CVV")]
         [DataType(DataType.CreditCard)]
         [StringLength(3, MinimumLength = 3)]
-        [Required(ErrorMessage = "Длина не менее 3 символов")]*/
+        [Required(ErrorMessage = "Длина не менее 3 символов")]
         public string CCCVV { get; set; }
 
         [BindNever]

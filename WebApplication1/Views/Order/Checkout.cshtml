@@ -4,12 +4,12 @@
         <div class="col-md-5 col-lg-4 order-md-last">
             <h4 class="d-flex justify-content-between align-items-center mb-3">
                 <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Ваша корзина</font></font></span>
-                <span class="badge bg-secondary rounded-pill"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Model.ShopCartItems.Count</font></font></span>
+                <span class="badge bg-secondary rounded-pill"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Model.ShopCart.ListShopItems.Count</font></font></span>
             </h4>
             <ul class="list-group mb-3">
                 @{
                     int sum = 0;
-                    foreach (var el in Model.ShopCartItems)
+                    foreach (var el in Model.ShopCart.ListShopItems)
                     {
                         <li class="list-group-item d-flex justify-content-between lh-sm">
                             <div>
@@ -65,7 +65,7 @@
                     <div class="col-12">
                         <label asp-for="Order.Email" class="form-label"></label>
                         <div>
-                            <input asp-for="Order.Email" class="form-control" value="@User.Identity.Name"/>
+                            <input asp-for="Order.Email" class="form-control" />
                             <span asp-validation-for="Order.Email" class="text-danger"></span>
                         </div>
                     </div>

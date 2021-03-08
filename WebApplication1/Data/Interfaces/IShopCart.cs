@@ -8,6 +8,7 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IShopCart
     {
+        public Dictionary<Order, List<OrderDetail>> GetAllOrders();
         public void AddToCart(User user, Product product);
         public void RemoveToCart(User user, int id);
         public void EmptyTheCart(User user);

@@ -10,7 +10,6 @@ namespace WebApplication1.Data.Interfaces
         Product GetObjectProduct(int carId);
         void CreateProduct(Product product);
         void ChangeProduct(Product product);
-        bool ProductAvailability(Product product);
         void DeleteProduct(int id);
     }
 }

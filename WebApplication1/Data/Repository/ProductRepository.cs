@@ -15,7 +15,7 @@ namespace WebApplication1.Data.Repository
             this.appDBContent = appDBContent;
         }
 
-        public IEnumerable<Product> Products => appDBContent.Product.OrderByDescending(x => x.IsFavourite);
+        public IEnumerable<Product> Products => appDBContent.Product;
 
         public IEnumerable<Product> GetFavProducts => appDBContent.Product.Where(p => p.IsFavourite).Select(c => c);
 
@@ -51,18 +51,6 @@ namespace WebApplication1.Data.Repository
             }
 
             appDBContent.SaveChanges(); 
-        }
-
-        public bool ProductAvailability(Product obj) {
-            Product product = appDBContent.Product.FirstOrDefault(p => p.Name == obj.Name);
-            if(product != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
         }
 
         public void CreateProduct(Product product) {

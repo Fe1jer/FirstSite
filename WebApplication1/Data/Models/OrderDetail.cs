@@ -1,11 +1,10 @@
-﻿using WebApplication1.Data.AbstractClasses;
-
-namespace WebApplication1.Data.Models
+﻿namespace WebApplication1.Data.Models
 {
-    public class OrderDetail : Entity
+    public class OrderDetail
     {
-        public int OrderId { get; set; }
-        public int ProductId { get; set; }
+        public int ID { get; set; }
+        public int OrderID { get; set; }
+        public int ProductID { get; set; }
         public uint Prise { get; set; }
         public virtual Product Product { get; set; }
         public virtual Order Order { get; set; }

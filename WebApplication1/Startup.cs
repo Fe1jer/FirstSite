@@ -31,11 +31,11 @@ namespace WebApplication1
             services.AddTransient<IAllProduct, ProductRepository>();
             services.AddTransient<IAllOrders, OrdersRepository>();
             services.AddTransient<IProductFilter, ProductFilterRepository>();
-            services.AddTransient<IAllUsers, UserRepository>();
+            services.AddTransient<IAllUser, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
-            services.AddTransient<IPasswordHasher, PasswordHasherRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+            services.AddScoped(sp => ShopCart.GetCart(sp));
 
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddMemoryCache();
@@ -65,10 +65,6 @@ namespace WebApplication1
                 routes.MapRoute(name: "admin", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
-            app.Map("/hello", ap => ap.Run(async (context) =>
-            {
-                await context.Response.WriteAsync($"Hello ASP.NET Core");
-            }));
 
             using (var scope = app.ApplicationServices.CreateScope())
             {

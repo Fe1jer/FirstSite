@@ -7,84 +7,95 @@ using Microsoft.AspNetCore.Authorization;
 
 namespace WebApplication1.Controllers
 {
-    [Authorize(Roles = "courier, moderator")]
+    [Authorize(Roles = "courier")]
     public class CourierController : Controller
     {
         private readonly IAllOrders allOrders;
-        private readonly IAllUsers allUser;
+        private readonly ShopCart shopCart;
 
-        public CourierController(IAllOrders allOrders, IAllUsers allUser)
+        public CourierController(IAllOrders allOrders, ShopCart shopCart)
         {
             this.allOrders = allOrders;
-            this.allUser = allUser;
+            this.shopCart = shopCart;
         }
 
-        [Authorize(Roles = "moderator")]
         // GET: СourierController
         public ActionResult Index()
         {
+            return View();
+        }
+
+        // GET: СourierController/Details/5
+        public ActionResult AllOrders()
+        {
             ViewBag.Title = "Все заказы";
-
-            return View(allOrders.GetAllOrders());
-        }
-
-        [Authorize(Roles = "courier")]
-        public ActionResult CourierOrders()
-        {
-            ViewBag.Title = "Заказы";
-
-            return View(allOrders.GetCourierOrders(User.Identity.Name));
-        }
-
-        [Authorize(Roles = "courier")]
-        public ActionResult Renouncement(int idOrder)
-        {
-            ViewBag.Title = "Заказы";
-            allOrders.SetCourierOrders(idOrder, 0);
-            return RedirectToAction("CourierOrders");
-        }
-
-        [Authorize(Roles = "moderator")]
-        public ActionResult Edit(int idOrder)
-        {
-            ChangeCourierViewModels model = new ChangeCourierViewModels
+            OrderViewModel orderR = new OrderViewModel
             {
-                Order = allOrders.GetOrder(idOrder),
-                AllCouriers = allUser.Couriers
+                AllOrders = shopCart.GetAllOrders()
             };
-            ViewBag.Title = "Выбор курьера";
-             
-            return View(model);
+            return View(orderR);
         }
 
-        [Authorize(Roles = "moderator")]
+        // GET: СourierController/Create
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        // POST: СourierController/Create
         [HttpPost]
-        public ActionResult Edit(int idOrder, int idCourier)
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(IFormCollection collection)
         {
-            ViewBag.Title = "Выбор курьера";
-            allOrders.SetCourierOrders(idOrder, idCourier);
-
-            return RedirectToAction("Index");
-        }
-
-        public ActionResult OrderDetail(int idOrder)
-        {
-            ViewBag.Title = "Информация о заказе";
-
-            return View(allOrders.GetOrder(idOrder));
-        }
-
-        public ActionResult Delete(int idOrder)
-        {
-            ViewBag.Title = "Информация о заказе";
-            allOrders.DeleteOrder(idOrder);
-            if (User.IsInRole("moderator"))
+            try
             {
-                return RedirectToAction("Index");
+                return RedirectToAction(nameof(Index));
             }
-            else
+            catch
             {
-                return RedirectToAction("CourierOrders");
+                return View();
+            }
+        }
+
+        // GET: СourierController/Edit/5
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        // POST: СourierController/Edit/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Edit(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        // GET: СourierController/Delete/5
+        public ActionResult Delete(int id)
+        {
+            return View();
+        }
+
+        // POST: СourierController/Delete/5
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Delete(int id, IFormCollection collection)
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
             }
         }
     }

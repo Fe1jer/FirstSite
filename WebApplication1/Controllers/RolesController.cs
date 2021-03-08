@@ -13,9 +13,9 @@ namespace WebApplication1.Controllers
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
-        private readonly IAllUsers _users;
+        private readonly IAllUser _users;
 
-        public RolesController(IAllUsers users)
+        public RolesController(IAllUser users)
         {
             _users = users;
         }
