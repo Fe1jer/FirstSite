@@ -7,9 +7,9 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IAllProduct _productRep;
+        private readonly IProductRepository _productRep;
 
-        public HomeController(IAllProduct productRep)
+        public HomeController(IProductRepository productRep)
         {
             _productRep = productRep;
         }
@@ -46,7 +46,6 @@ namespace WebApplication1.Controllers
                          Img = "/img/teslamodelx.jpg",
                        }
                 },
-                FavProducts = _productRep.GetFavProducts
             };
             ViewBag.Title = "Главная страница";
 

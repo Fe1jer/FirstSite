@@ -8,7 +8,6 @@ namespace WebApplication1.Data.Models
 {
     public class Order : Entity
     {
-
         public User Courier { get; set; }
 
         [Display(Name = "Имя")]
@@ -24,7 +23,7 @@ namespace WebApplication1.Data.Models
         [Display(Name = "Адрес")]
         [StringLength(40, MinimumLength = 7)]
         [Required(ErrorMessage = "Длина адреса не менее 7 символов")]
-        public string Adress { get; set; }
+        public string Address { get; set; }
 
         [Display(Name = "Номер телефона")]
         [DataType(DataType.PhoneNumber)]

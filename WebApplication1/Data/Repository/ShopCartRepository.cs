@@ -4,49 +4,59 @@ using System.Linq;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
+using WebApplication1.Data.Specifications;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
-    public class ShopCartRepository: IShopCart
+    public class ShopCartRepository: Repository<ShopCartItem>, IShopCart
     {
-        private readonly AppDBContext appDBContent;
-        public ShopCartRepository(AppDBContext appDBContent)
+        public ShopCartRepository(AppDBContext appDBContext): base(appDBContext)
         {
-            this.appDBContent = appDBContent;
+
         }
 
-        public void AddToCart(User user, Product product)
+        public async Task AddToCart(User user, Product product)
         {
-            appDBContent.ShopCartItem.Add(new ShopCartItem
+            ShopCartItem shopCartItem = new ShopCartItem
             {
                 User = user,
                 Product = product,
                 Price = product.Price,
                 Category = product.Category
-            });
-            appDBContent.SaveChanges();
+            };
+            await AddAsync(shopCartItem);
         }
 
-        public void RemoveToCart(User user, int id)
+        public async Task RemoveToCart(User user, int id)
         {
-            ShopCartItem order = appDBContent.ShopCartItem.Include(s => s.Product).Where(o => o.User == user).Where(o => o.Product.Id == id).FirstOrDefault();
-            appDBContent.ShopCartItem.Remove(order);
-            appDBContent.SaveChanges();
+            ShopCartItem order = GetAllAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user).WhereProduct(id)).Result.FirstOrDefault();
+            await DeleteAsync(order);
         }
 
-        public void EmptyTheCart(User user)
+        public async Task RemoveToCart(ShopCartItem product)
         {
-            List<ShopCartItem> items = appDBContent.ShopCartItem.Where(c => c.User == user).ToList();
+            await DeleteAsync(product);
+        }
+
+        public async Task EmptyTheCart(User user)
+        {
+            IEnumerable<ShopCartItem> items = await GetShopItemsAsync(new ShopCartSpecification().WhereUser(user));
             foreach (ShopCartItem item in items)
             {
-                appDBContent.ShopCartItem.Remove(item);
+                await DeleteAsync(item);
             }
-            appDBContent.SaveChanges();
         }
 
-        public List<ShopCartItem> GetShopItems(User user)
+        public async Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync()
         {
-            return appDBContent.ShopCartItem.Where(c => c.User == user).Include(s => s.Product).ToList();
+            return await GetAllAsync();
+        }
+
+        public async Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync(ISpecification<ShopCartItem> specification)
+        {
+            return await GetAllAsync(specification);
         }
     }
 }

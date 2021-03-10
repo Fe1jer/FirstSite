@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.EntityFrameworkCore;
+using System.Threading.Tasks;
 using WebApplication1.Data.Models;
 
 namespace WebApplication1.Data
 {
-    public class DBObjects
+    public class AppDBContextInit
     {
-        public static void Initial(AppDBContext context)
+        public async static Task InitDbContextAsync(AppDBContext context)
         {
             /*            context.Database.EnsureDeleted();
                         context.Database.EnsureCreated();*/
@@ -14,8 +14,8 @@ namespace WebApplication1.Data
             context.OrderDetail.RemoveRange(context.OrderDetail);*/
             //context.SaveChanges();
 
-            if (!context.Roles.Any())
-                context.Roles.AddRange(
+            if (!await context.Roles.AnyAsync())
+                await context.Roles.AddRangeAsync(
                      new Role { Name = "admin" }
                      ,
                      new Role { Name = "courier" }
@@ -25,8 +25,8 @@ namespace WebApplication1.Data
                     new Role { Name = "user" }
                     );
 
-            if (!context.Users.Any())
-                context.Users.AddRange(
+            if (!await context.Users.AnyAsync())
+                await context.Users.AddRangeAsync(
                      new User
                      {
                          Email = "vppechko@gmail.com",
@@ -45,7 +45,7 @@ namespace WebApplication1.Data
                         Password = "ALpvpQ90VUoOtGjKIWX8nFyfjFNnwoez+qN3QptLTECJMZDlx1DFtU+Rn/rBq1bFNw==",
                         RoleId = 3
                     });
-            context.SaveChanges();
+            await context.SaveChangesAsync();
         }
 
     }

@@ -14,13 +14,15 @@ namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IAllUsers _users;
+        private readonly IUserRepository _users;
         private readonly IPasswordHasher _hasher;
+        private readonly IRoleRepository _roles;
 
-        public AccountController(IAllUsers users, IPasswordHasher hasher)
+        public AccountController(IUserRepository users, IPasswordHasher hasher, IRoleRepository roles)
         {
             _users = users;
             _hasher = hasher;
+            _roles = roles;
         }
 
         [HttpGet]
@@ -37,16 +39,16 @@ namespace WebApplication1.Controllers
             ViewBag.Title = "Регистрация";
             if (ModelState.IsValid)
             {
-                User user = await _users.EmailUser(model);
+                User user = await _users.GetUserAsync(model.Email);
                 if (user == null)
                 {
                     // добавляем пользователя в бд
                     user = new User { Email = model.Email, Password = _hasher.HashPassword(model.Password)};
-                    Role userRole = await _users.GetRole("user");
+                    Role userRole = await _roles.GetRoleAsync("user");
                     if (userRole != null)
                         user.Role = userRole;
 
-                    _users.AddUser(user);
+                    await _users.AddUserAsync(user);
 
                     await Authenticate(user); // аутентификация
 
@@ -72,7 +74,7 @@ namespace WebApplication1.Controllers
             ViewBag.Title = "Вход";
             if (ModelState.IsValid)
             {
-                User user = await _users.User(model);
+                User user = await _users.GetUserAsync(model.Email);
                 if (_hasher.VerifyHashedPassword(user.Password, model.Password))
                 {
                     await Authenticate(user); // аутентификация

@@ -1,13 +1,19 @@
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Threading.Tasks;
+using WebApplication1.Data;
 
 namespace WebApplication1
 {
     public class Program
     {
-        public static void Main(string[] args)
+        public async static Task Main(string[] args)
         {
-            CreateHostBuilder(args).Build().Run();
+            var host = CreateHostBuilder(args).Build();
+            await InitContext(host);
+            await host.RunAsync();
         }
 
         public static IHostBuilder CreateHostBuilder(string[] args) =>
@@ -16,5 +22,14 @@ namespace WebApplication1
                 {
                     webBuilder.UseStartup<Startup>();
                 });
+
+        private async static Task InitContext(IHost host)
+        {
+            using var scope = host.Services.CreateScope();
+            var dbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
+
+            await AppDBContextInit.InitDbContextAsync(dbContext);
+        }
     }
 }

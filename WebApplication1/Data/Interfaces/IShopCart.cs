@@ -3,14 +3,17 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Interfaces
 {
     public interface IShopCart
     {
-        public void AddToCart(User user, Product product);
-        public void RemoveToCart(User user, int id);
-        public void EmptyTheCart(User user);
-        public List<ShopCartItem> GetShopItems(User user);
+        Task AddToCart(User user, Product product);
+        Task RemoveToCart(User user, int id);
+        Task RemoveToCart(ShopCartItem product);
+        Task EmptyTheCart(User user);
+        Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync();
+        Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync(ISpecification<ShopCartItem> specification);
     }
 }

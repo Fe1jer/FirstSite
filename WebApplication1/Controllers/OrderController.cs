@@ -1,56 +1,59 @@
 ﻿using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Specifications;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
     public class OrderController : Controller
     {
-        private readonly IAllOrders allOrders;
+        private readonly IOrdersRepository allOrders;
         private readonly IShopCart shopCart;
-        private readonly IAllUsers _allUser;
+        private readonly IUserRepository _allUser;
 
-        public OrderController(IShopCart shopCart, IAllOrders allOrders, IAllUsers allUser)
+        public OrderController(IShopCart shopCart, IOrdersRepository allOrders, IUserRepository allUser)
         {
             _allUser = allUser;
             this.shopCart = shopCart;
             this.allOrders = allOrders;
         }
 
-        public IActionResult Checkout()
+        public async Task<IActionResult> Checkout()
         {
             ViewBag.Title = "Оформление заказа";
 
             OrderViewModel orderR = new OrderViewModel
             {
-                ShopCartItems = shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name))
-            };
+                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
+        };
 
             return View(orderR);
         }
 
         [HttpPost]
-        public IActionResult Checkout(Order order)
+        public async Task<IActionResult> Checkout(Order order)
         {
             if (ModelState.IsValid)
             {
-                allOrders.CreateOrder(_allUser.GetUserEmail(User.Identity.Name), order);
+               await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
                 return RedirectToAction("Complete");
             }
             OrderViewModel orderR = new OrderViewModel
             {
                 Order = order,
-                ShopCartItems = shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name))
+                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
             };
 
             return View(orderR);
         }
 
-        public IActionResult Complete()
+        public async Task<IActionResult> Complete()
         {
             ViewBag.Title = "Завершение заказа";
-            shopCart.EmptyTheCart(_allUser.GetUserEmail(User.Identity.Name));
+            shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
             return View();
         }

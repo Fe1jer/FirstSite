@@ -1,73 +1,55 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
-    public class ProductRepository : IAllProduct
+    public class ProductRepository : Repository<Product>, IProductRepository
     {
-        private readonly AppDBContext appDBContent;
 
-        public ProductRepository(AppDBContext appDBContent)
+        public ProductRepository(AppDBContext appDBContext) : base(appDBContext)
         {
-            this.appDBContent = appDBContent;
+
         }
 
-        public IEnumerable<Product> Products => appDBContent.Product.OrderByDescending(x => x.IsFavourite);
-
-        public IEnumerable<Product> GetFavProducts => appDBContent.Product.Where(p => p.IsFavourite).Select(c => c);
-
-        public Product GetObjectProduct(int productId) => appDBContent.Product.FirstOrDefault(p => p.Id == productId);
-
-        public void DeleteProduct(int productId) {
-            Product product = appDBContent.Product.FirstOrDefault(p => p.Id == productId);
-            appDBContent.Product.Remove(product);
-            List<ShopCartItem> deleteProducts = appDBContent.ShopCartItem.Where(p=>p.Product==product).ToList();
-            foreach(ShopCartItem p in deleteProducts)
-            {
-                appDBContent.ShopCartItem.Remove(p);
-            }
-            
-            appDBContent.SaveChanges(); 
+        public async Task<IReadOnlyList<Product>> GetProductsAsync()
+        {
+            return await GetAllAsync();
         }
 
-        public void ChangeProduct(Product obj) {
-            Product product = appDBContent.Product.FirstOrDefault(p => p.Id == obj.Id);
-
-            if(product != null)
-            {
-                product.Name = obj.Name;
-                product.ShortDesc = obj.ShortDesc;
-                product.LongDesc = obj.LongDesc;
-                product.Category = obj.Category;
-                product.Company = obj.Company;
-                product.Country = obj.Country;
-                product.Price = obj.Price;
-                product.Img = obj.Img;
-                product.IsFavourite = obj.IsFavourite;
-                product.Available = obj.Available;
-            }
-
-            appDBContent.SaveChanges(); 
+        public async Task<IReadOnlyList<Product>> GetProductsAsync(ISpecification<Product> specification)
+        {
+            return await GetAllAsync(specification);
         }
 
-        public bool ProductAvailability(Product obj) {
-            Product product = appDBContent.Product.FirstOrDefault(p => p.Name == obj.Name);
-            if(product != null)
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+        public async Task<Product> GetProductByIdAsync(int productId)
+        {
+            return await GetByIdAsync(productId);
         }
 
-        public void CreateProduct(Product product) {
-            appDBContent.Product.Add(product);
-            appDBContent.SaveChanges(); 
+        public async Task DeleteProductAsync(Product product)
+        {
+            await DeleteAsync(product);
+        }
+
+        public async Task UpdateProductAsync(Product product)
+        {
+            await UpdateAsync(product);
+        }
+
+        public async Task<Product> GetProductByNameAsync(string name)
+        {
+            var collection = await GetAllAsync();
+            return collection.FirstOrDefault(n => n.Name.Equals(name));
+        }
+
+        public async Task AddProductAsync(Product product)
+        {
+            await AddAsync(product);
         }
     }
 }

@@ -4,28 +4,25 @@ using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using Microsoft.EntityFrameworkCore;
 using System.Linq;
+using System.Threading.Tasks;
+using WebApplication1.Data.Specifications.Base;
+using WebApplication1.Data.Specifications;
 
 namespace WebApplication1.Data.Repository
 {
-    public class OrdersRepository : IAllOrders
+    public class OrdersRepository : Repository<Order>, IOrdersRepository
     {
-        private readonly AppDBContext appDBContext;
         private readonly IShopCart shopCart;
 
-        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart)
+        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart): base(appDBContext)
         {
-            this.appDBContext = appDBContext;
             this.shopCart = shopCart;
         }
 
-        public void CreateOrder(User user ,Order order)
+        public async Task AddOrder(User user ,Order order)
         {
-            order.Courier = null;
-            order.OrderTime = DateTime.Now;
-            appDBContext.Order.Add(order);
-            appDBContext.SaveChanges();
-
-            foreach (var el in shopCart.GetShopItems(user))
+            List<OrderDetail> a = new List<OrderDetail>();
+            foreach (var el in await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user)))
             {
                 var orderDetail = new OrderDetail()
                 {
@@ -33,65 +30,45 @@ namespace WebApplication1.Data.Repository
                     OrderId = order.Id,
                     Prise = el.Product.Price
                 };
-                appDBContext.OrderDetail.Add(orderDetail);
+                a.Add(orderDetail);
             }
-            appDBContext.SaveChanges();
+            order.OrderDetails = a;
+            order.Courier = null;
+            order.OrderTime = DateTime.Now;
+            await AddAsync(order);
         }
 
-        public List<Order> GetAllOrders()
+        public async Task<IReadOnlyList<Order>> GetOrdersAsync()
         {
-            List<Order> allOrders = new List<Order>();
-            foreach (Order order in appDBContext.Order.Include(p => p.Courier).OrderBy(p => p.Courier).ToList())
-            {
-                allOrders.Add(order);
-                order.OrderDetails = appDBContext.OrderDetail.Include(p => p.Product).Where(p => p.OrderId == order.Id).ToList();
-            }
-            return allOrders;
+            return await GetAllAsync();
         }
 
-        public Order GetOrder(int id)
+        public async Task<Order> GetOrderByIdAsync(int id)
         {
-            Dictionary<Order, List<OrderDetail>> getOrder = new Dictionary<Order, List<OrderDetail>>();
-            Order order = appDBContext.Order.Include(p => p.Courier).Where(p => p.Id == id).FirstOrDefault();
-            order.OrderDetails = appDBContext.OrderDetail.Include(p => p.Product).Where(p => p.OrderId == order.Id).ToList();
-            return order;
+            return await GetByIdAsync(id);
         }
 
-        public void DeleteOrder(int id)
+        public async Task DeleteOrderAsync(Order order)
         {
-            Dictionary<Order, List<OrderDetail>> getOrder = new Dictionary<Order, List<OrderDetail>>();
-            Order order = appDBContext.Order.Where(p => p.Id == id).FirstOrDefault();
-            List<OrderDetail> ordersDetail = appDBContext.OrderDetail.Include(p => p.Product).Where(p => p.OrderId == order.Id).ToList();
-            appDBContext.Order.Remove(order);
-            foreach (OrderDetail orderDetail in ordersDetail)
-            {
-                appDBContext.OrderDetail.Remove(orderDetail);
-            }
-            appDBContext.SaveChanges();
+            await DeleteAsync(order);
         }
-        public List<Order> GetCourierOrders(string courier)
+
+        public async Task<IReadOnlyList<Order>> GetCourierOrdersAsync()
         {
-            List<Order> allOrders = appDBContext.Order.Include(p => p.Courier).Where(p => p.Courier.Email == courier).ToList();
-            foreach (Order order in allOrders)
-            {
-                order.OrderDetails = appDBContext.OrderDetail.Include(p => p.Product).Where(p => p.OrderId == order.Id).ToList();
-            }
-            return allOrders;
+            return await GetAllAsync();
         }
-        public void SetCourierOrders(int idOrder, int idCourier)
+
+        public async Task UpdateCourierOrdersAsync(int idOrder, User courier)
         {
-            Order order = appDBContext.Order.Include(p => p.Courier).Where(p => p.Id == idOrder).FirstOrDefault();
-            User user = appDBContext.Users.Where(p => p.Id == idCourier).FirstOrDefault();
-            if (idCourier != 0)
-            {
-                order.Courier = user;
-            }
-            else
-            {
-                order.Courier = null;
-            }
-            
-            appDBContext.SaveChanges();
+            var orders = await GetAllAsync(new OrderSpecification().IncludeCourier());
+            Order order = orders.FirstOrDefault(n => n.Id == idOrder);
+            order.Courier = courier;
+            await UpdateAsync(order);
+        }
+
+        public async Task<IReadOnlyList<Order>> GetOrdersAsync(ISpecification<Order> specification)
+        {
+            return await GetAllAsync(specification);
         }
     }
 }

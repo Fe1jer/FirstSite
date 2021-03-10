@@ -1,5 +1,7 @@
 ﻿using WebApplication1.Data.AbstractClasses;
 using WebApplication1.Data.Interfaces;
+using WebApplication1.Data.Specifications;
+using WebApplication1.Data.Specifications.Base;
 using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
@@ -47,10 +49,25 @@ namespace WebApplication1.Data.Repository
             return await EntitySet.FindAsync(id);
         }
 
+        public async Task<T> GetByMailAsync(string mail)
+        {
+            return await EntitySet.FindAsync(mail);
+        }
+
         public async Task UpdateAsync(T entity)
         {
             Context.Entry(entity).State = EntityState.Modified;
             await Context.SaveChangesAsync();
+        }
+
+        public async Task<IReadOnlyList<T>> GetAllAsync(ISpecification<T> specification)
+        {
+            return await ApplySpecification(specification).ToListAsync();
+        }
+
+        protected IQueryable<T> ApplySpecification(ISpecification<T> spec)
+        {
+            return SpecificationEvaluator.ApplySpecification(Context.Set<T>().AsQueryable(), spec);
         }
     }
 }

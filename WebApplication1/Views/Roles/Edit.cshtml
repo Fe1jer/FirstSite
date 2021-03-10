@@ -8,7 +8,7 @@
     <div class="form-check">
         @foreach (Role role in Model.AllRoles)
         {
-            <input class="form-check-input" type="radio" name="role" id="@role.Id" value="@role.Name"
+            <input class="form-check-input" type="radio" name="nameRole" id="@role.Id" value="@role.Name"
                    @(Model.UserRole.Name == role.Name ? "checked" : "") />
             <label class="form-check-label" for="@role.Id">
                 @role.Name

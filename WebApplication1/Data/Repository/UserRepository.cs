@@ -6,47 +6,48 @@ using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
 using Microsoft.EntityFrameworkCore;
 using System.Threading.Tasks;
+using WebApplication1.Data.Specifications;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
-    public class UserRepository : IAllUsers
+    public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly AppDBContext appDBContent;
-
-        public UserRepository(AppDBContext appDBContent)
+        public UserRepository(AppDBContext appDBContext) : base(appDBContext)
         {
-            this.appDBContent = appDBContent;
+
         }
 
-        public List<User> Users => appDBContent.Users.Include(p=>p.Role).OrderByDescending(p=>p.RoleId).ToList();
-
-        public List<Role> Roles => appDBContent.Roles.ToList();
-
-        public List<User> Couriers => appDBContent.Users.Include(p => p.Role).Where(p => p.Role.Name == "courier").OrderByDescending(p => p.RoleId).ToList();
-
-        public async Task<User> User(LoginViewModel model) => await appDBContent.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Email == model.Email);
-
-        public async Task<User> User(int id) => await appDBContent.Users.Include(u => u.Role).FirstOrDefaultAsync(u => u.Id == id);
-
-        public async Task<User> EmailUser(RegisterViewModel model) => await appDBContent.Users.FirstOrDefaultAsync(u => u.Email == model.Email);
-
-        public async Task<Role> GetRole(string role) => await appDBContent.Roles.FirstOrDefaultAsync(u => u.Name == role);
-
-        public User GetUserEmail(string email) =>  appDBContent.Users.Include(u => u.Role).FirstOrDefault(u => u.Email == email);
-
-        public List<User> SearchUsers(string email) =>  appDBContent.Users.Include(u => u.Role).Where(p=>p.Email.Contains(email)).ToList();
-
-        public void SetUserRole(User user, string role)
+        public async Task<User> GetUserAsync(string email) 
         {
-            user = appDBContent.Users.FirstOrDefault(p=>p==user);
-            user.Role = appDBContent.Roles.FirstOrDefault(u => u.Name == role);
-            appDBContent.SaveChanges();
+            var users = await GetAllAsync(new UserSpecification().IncludeRole());
+            return users.FirstOrDefault(u => u.Email == email);
+        } 
+
+        public async Task<User> GetUserAsync(int id) 
+        {
+            var users = await GetAllAsync(new UserSpecification().IncludeRole());
+            return users.FirstOrDefault(u => u.Id == id);
         }
 
-        public void AddUser(User user)
+        public async Task<IReadOnlyList<User>> GetUsersAsync()
         {
-            appDBContent.Users.Add(user);
-             appDBContent.SaveChanges();
+            return await GetAllAsync();
+        }
+
+        public async Task<IReadOnlyList<User>> GetUsersAsync(ISpecification<User> specification)
+        {
+            return await GetAllAsync(specification);
+        }
+
+        public async Task UpdateUserRole(User user)
+        {
+            await UpdateAsync(user);
+        }
+
+        public async Task AddUserAsync(User user)
+        {
+            await AddAsync(user);
         }
     }
 }

@@ -4,34 +4,36 @@ using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using System.Security.Claims;
+using System.Threading.Tasks;
+using WebApplication1.Data.Specifications;
 
 namespace WebApplication1.Controllers
 {
     [Authorize]
     public class ShopCartController : Controller
     {
-        private readonly IAllProduct _prooductRep;
-        private readonly IAllUsers _allUser;
+        private readonly IProductRepository _prooductRep;
+        private readonly IUserRepository _allUser;
         private readonly IShopCart _shopCart;
 
-        public ShopCartController(IShopCart shopCart, IAllProduct prooductRep, IAllUsers allUser)
+        public ShopCartController(IShopCart shopCart, IProductRepository prooductRep, IUserRepository allUser)
         {
             _shopCart = shopCart;
             _allUser = allUser;
             _prooductRep = prooductRep;
         }
 
-        public ViewResult Index()
+        public async Task<ViewResult> Index()
         {
-            var obj = _shopCart.GetShopItems(_allUser.GetUserEmail(User.Identity.Name));
+            var obj = await _shopCart.GetShopItemsAsync( new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)));
             ViewBag.Title = "Корзина";
 
             return View(obj);
         }
  
-        public RedirectToActionResult RemoveToCart(int IdProduct)
+        public async Task<RedirectToActionResult> RemoveToCart(int IdProduct)
         {
-            _shopCart.RemoveToCart(_allUser.GetUserEmail(User.Identity.Name), IdProduct);
+            await _shopCart.RemoveToCart(await _allUser.GetUserAsync(User.Identity.Name), IdProduct);
 
             return RedirectToAction("Index");
         }

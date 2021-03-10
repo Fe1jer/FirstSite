@@ -7,50 +7,53 @@ using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.ViewModels;
 using Microsoft.AspNetCore.Authorization;
+using WebApplication1.Data.Specifications;
 
 namespace WebApplication1.Controllers
 {
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
-        private readonly IAllUsers _users;
+        private readonly IUserRepository _users;
+        private readonly IRoleRepository _roles;
 
-        public RolesController(IAllUsers users)
+        public RolesController(IUserRepository users, IRoleRepository roles)
         {
+            _roles = roles;
             _users = users;
         }
 
-        public IActionResult Index()
+        public async Task<IActionResult> Index()
         {
             ViewBag.Title = "Список ролей";
-            return View(_users.Roles);
+            return View(await _roles.GetRolesAsync(new RoleSpecification().SortByName()));
         }
 
-        public IActionResult UserList(string search)
+        public async Task<IActionResult> UserList(string search)
         {
             ViewBag.Title = "Список авторизованных пользователей";
             if (search != null)
             {
-                return View(_users.Users.Where(p => p.Email.Contains(search)).ToList());
+                return View(await _users.GetUsersAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
             }
-            return View(_users.Users);
+            return View(await _users.GetUsersAsync(new UserSpecification().IncludeRole().SortByRole()));
         }
 
         public async Task<IActionResult> Edit(int userId)
         {
             ViewBag.Title = "Выбор роли пользователя";
             // получаем пользователя
-            User user = await _users.User(userId);
+            User user = await _users.GetUserAsync(userId);
             if (user != null)
             {
                 // получем список ролей пользователя
-                var userRoles = user.Role;
-                IEnumerable<Role> allRoles = _users.Roles;
+                var userRole = user.Role;
+                IEnumerable<Role> allRoles = await _roles.GetRolesAsync(new RoleSpecification().SortByName());
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
                     UserEmail = user.Email,
-                    UserRole = userRoles,
+                    UserRole = userRole,
                     AllRoles = allRoles
                 };
                 return View(model);
@@ -60,14 +63,16 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Edit(int userId, string role)
+        public async Task<IActionResult> Edit(int userId, string nameRole)
         {
             ViewBag.Title = "Выбор роли пользователя";
             // получаем пользователя
-            User user = await _users.User(userId);
+            User user = await _users.GetUserAsync(userId);
             if (user != null)
             {
-                _users.SetUserRole(user, role);
+                Role role = await _roles.GetRoleAsync(nameRole);
+                user.Role = role;
+                await _users.UpdateUserRole(user);
 
                 return RedirectToAction("UserList");
             }
