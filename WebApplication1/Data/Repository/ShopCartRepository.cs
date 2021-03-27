@@ -1,18 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using WebApplication1.Data.Specifications;
 using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
-    public class ShopCartRepository: Repository<ShopCartItem>, IShopCart
+    public class ShopCartRepository : Repository<ShopCartItem>, IShopCart
     {
-        public ShopCartRepository(AppDBContext appDBContext): base(appDBContext)
+        public ShopCartRepository(AppDBContext appDBContext) : base(appDBContext)
         {
 
         }

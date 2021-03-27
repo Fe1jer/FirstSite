@@ -1,14 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Data.Interfaces
 {
     public interface IProductFilter
     {
-        IEnumerable<string> Categories { get; }
-        IEnumerable<string> Countries { get; }
-        IEnumerable<string> Companies { get; }
+        public string Name { get; }
+        public List<FilterCategoryVM> FilterCategories { get; }
     }
 }

@@ -1,13 +1,10 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Security.Cryptography;
-using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 
 namespace WebApplication1.Data.Repository
 {
-    public class PasswordHasherRepository: IPasswordHasher
+    public class PasswordHasherRepository : IPasswordHasher
     {
         public string HashPassword(string password)
         {

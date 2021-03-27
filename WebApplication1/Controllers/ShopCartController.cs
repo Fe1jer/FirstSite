@@ -1,10 +1,7 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
+using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Specifications;
 
 namespace WebApplication1.Controllers
@@ -25,12 +22,12 @@ namespace WebApplication1.Controllers
 
         public async Task<ViewResult> Index()
         {
-            var obj = await _shopCart.GetShopItemsAsync( new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)));
+            var obj = await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)));
             ViewBag.Title = "Корзина";
 
             return View(obj);
         }
- 
+
         public async Task<RedirectToActionResult> RemoveToCart(int IdProduct)
         {
             await _shopCart.RemoveToCart(await _allUser.GetUserAsync(User.Identity.Name), IdProduct);

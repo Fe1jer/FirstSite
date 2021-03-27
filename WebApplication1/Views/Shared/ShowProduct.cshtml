@@ -43,10 +43,18 @@
                             break;
                         }
                     }
-                    @{string str = Model.Filter == null ? null : string.Join('_', Model.Filter);
+                    @{
                         if (itemInCart)
                         {
-                            <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="RemoveToCart" asp-route-IdProduct="@Model.Product.Id" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry">
+@*                            @using (Html.BeginForm("AddToCart", "Products"))
+                            {
+                                <div class="pull-right">
+                                    @Html.HiddenFor(x => x)
+                                    @Html.Hidden("filters", Model.Filter)
+                                    <input type="submit" class="btn btn-success" name="" value="Добавить в корзину" />
+                                </div>
+                            }*@
+                            <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="RemoveToCart" asp-route-IdProduct="@Model.Product.Id" asp-route-filters="@Model.Filter">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-check" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M10.854 8.146a.5.5 0 0 1 0 .708l-3 3a.5.5 0 0 1-.708 0l-1.5-1.5a.5.5 0 0 1 .708-.708L7.5 10.793l2.646-2.647a.5.5 0 0 1 .708 0z" />
                                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
@@ -58,7 +66,7 @@
                         }
                         else
                         {
-                            <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="AddToCart" asp-route-IdProduct="@Model.Product.Id" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry">
+                            <a type="button nav-link" class="text-end btn btn-outline-success" asp-controller="Products" asp-action="AddToCart" asp-route-IdProduct="@Model.Product.Id" asp-route-filters="@Model.Filter">
                                 <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-plus" viewBox="0 0 16 16">
                                     <path fill-rule="evenodd" d="M8 7.5a.5.5 0 0 1 .5.5v1.5H10a.5.5 0 0 1 0 1H8.5V12a.5.5 0 0 1-1 0v-1.5H6a.5.5 0 0 1 0-1h1.5V8a.5.5 0 0 1 .5-.5z" />
                                     <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />

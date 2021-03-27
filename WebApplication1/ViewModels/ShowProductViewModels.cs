@@ -1,7 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using System.Collections.Generic;
 using WebApplication1.Data.Models;
 
 namespace WebApplication1.ViewModels
@@ -10,6 +7,6 @@ namespace WebApplication1.ViewModels
     {
         public Product Product { get; set; }
         public List<ShopCartItem> ShopCartItems { get; set; }
-        public ProductFilter Filter { get; set; }
+        public Dictionary<string, int> Filter { get; set; }
     }
 }

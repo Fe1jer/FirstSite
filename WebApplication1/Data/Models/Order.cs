@@ -47,28 +47,28 @@ namespace WebApplication1.Data.Models
         [Required(ErrorMessage = "Длина 6 символов")]
         public string Zip { get; set; }
 
-/*        [Display(Name = "Имя на карте")]
-        [DataType(DataType.CreditCard)]
-        [StringLength(25, MinimumLength = 7)]
-        [Required(ErrorMessage = "Длина не менее 7 символов")]*/
+        /*        [Display(Name = "Имя на карте")]
+                [DataType(DataType.CreditCard)]
+                [StringLength(25, MinimumLength = 7)]
+                [Required(ErrorMessage = "Длина не менее 7 символов")]*/
         public string CCName { get; set; }
 
-/*        [Display(Name = "Номер карты")]
-        [DataType(DataType.CreditCard)]
-        [StringLength(16, MinimumLength = 16)]
-        [Required(ErrorMessage = "Длина не менее 16 символов")]*/
+        /*        [Display(Name = "Номер карты")]
+                [DataType(DataType.CreditCard)]
+                [StringLength(16, MinimumLength = 16)]
+                [Required(ErrorMessage = "Длина не менее 16 символов")]*/
         public string CCNumber { get; set; }
 
-/*        [Display(Name = "Срок действия")]
-        [DataType(DataType.CreditCard)]
-        [StringLength(25, MinimumLength = 7)]
-        [Required(ErrorMessage = "Длина не менее 7 символов")]*/
+        /*        [Display(Name = "Срок действия")]
+                [DataType(DataType.CreditCard)]
+                [StringLength(25, MinimumLength = 7)]
+                [Required(ErrorMessage = "Длина не менее 7 символов")]*/
         public string CCExpiration { get; set; }
 
-/*        [Display(Name = "CVV")]
-        [DataType(DataType.CreditCard)]
-        [StringLength(3, MinimumLength = 3)]
-        [Required(ErrorMessage = "Длина не менее 3 символов")]*/
+        /*        [Display(Name = "CVV")]
+                [DataType(DataType.CreditCard)]
+                [StringLength(3, MinimumLength = 3)]
+                [Required(ErrorMessage = "Длина не менее 3 символов")]*/
         public string CCCVV { get; set; }
 
         [BindNever]

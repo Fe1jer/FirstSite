@@ -1,13 +1,11 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using System;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
-using WebApplication1.ViewModels;
-using Microsoft.AspNetCore.Authorization;
 using WebApplication1.Data.Specifications;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
@@ -58,7 +56,6 @@ namespace WebApplication1.Controllers
                 };
                 return View(model);
             }
-
             return NotFound();
         }
 

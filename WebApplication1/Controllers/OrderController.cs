@@ -28,7 +28,7 @@ namespace WebApplication1.Controllers
             OrderViewModel orderR = new OrderViewModel
             {
                 ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
-        };
+            };
 
             return View(orderR);
         }
@@ -38,7 +38,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-               await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
+                await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
                 return RedirectToAction("Complete");
             }
             OrderViewModel orderR = new OrderViewModel
@@ -53,7 +53,7 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Complete()
         {
             ViewBag.Title = "Завершение заказа";
-            shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
+            await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
             return View();
         }

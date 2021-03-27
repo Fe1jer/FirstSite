@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using Microsoft.EntityFrameworkCore;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data.Specifications.Base;
+using WebApplication1.Data.Interfaces;
+using WebApplication1.Data.Models;
 using WebApplication1.Data.Specifications;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
@@ -14,12 +13,12 @@ namespace WebApplication1.Data.Repository
     {
         private readonly IShopCart shopCart;
 
-        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart): base(appDBContext)
+        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart) : base(appDBContext)
         {
             this.shopCart = shopCart;
         }
 
-        public async Task AddOrder(User user ,Order order)
+        public async Task AddOrder(User user, Order order)
         {
             List<OrderDetail> a = new List<OrderDetail>();
             foreach (var el in await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user)))

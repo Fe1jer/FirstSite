@@ -1,7 +1,4 @@
-﻿using Microsoft.AspNetCore.Mvc.ModelBinding;
-using System;
-using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
+﻿using System.ComponentModel.DataAnnotations;
 using WebApplication1.Data.AbstractClasses;
 
 namespace WebApplication1.Data.Models
@@ -21,7 +18,7 @@ namespace WebApplication1.Data.Models
         [Required(ErrorMessage = "Введите дествительное описание")]
         public string LongDesc { set; get; }
 
-       [Display(Name = "Картинка (url или /img/...) 16x9")]
+        [Display(Name = "Картинка (url или /img/...) 16x9")]
         [DataType(DataType.ImageUrl)]
         [Required(ErrorMessage = "Введите дествительную картинку")]
         public string Img { set; get; }

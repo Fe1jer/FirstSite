@@ -11,46 +11,17 @@
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div class="w-100">
-                @{if (Model.Filter.AllCategory != null)
+                @if (Model.Filter != null)
+                {
+                    foreach (KeyValuePair<string, int> item in Model.Filter)
                     {
-                        string i;
-                        foreach (string nameFilt in Model.Filter.AllCategory.Split('_'))
-                        {
-                            string[] filter = Model.Filter.AllCategory.Split('_').Where(val => val != nameFilt).ToArray();
-                            i = filter == null ? nameFilt : string.Join('_', filter);
-
-                            <a asp-controller="Products" asp-action="Index" asp-route-category="@i" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
-                                <p class="navbar-nav schema-tags__text">@nameFilt</p>
-                            </a>
-                        }
-                    }
-                }
-                @{if (Model.Filter.AllCompany != null)
-                    {
-                        string i;
-                        foreach (string nameFilt in Model.Filter.AllCompany.Split('_'))
-                        {
-                            string[] filter = Model.Filter.AllCompany.Split('_').Where(val => val != nameFilt).ToArray();
-                            i = filter == null ? nameFilt : string.Join('_', filter);
-
-                            <a asp-controller="Products" asp-action="Index" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@i" asp-route-country="@Model.Filter.AllCountry" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Компания производитель" id="l0_b1">
-                                <p class="navbar-nav schema-tags__text">@nameFilt</p>
-                            </a>
-                        }
-                    }
-                }
-                @{if (Model.Filter.AllCountry != null)
-                    {
-                        string i;
-                        foreach (string nameFilt in Model.Filter.AllCountry.Split('_'))
-                        {
-                            string[] filter = Model.Filter.AllCountry.Split('_').Where(val => val != nameFilt).ToArray();
-                            i = filter == null ? nameFilt : string.Join('_', filter);
-
-                            <a asp-controller="Products" asp-action="Index" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@i" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Страна производитель" id="l0_b1">
-                                <p class="navbar-nav schema-tags__text">@nameFilt</p>
-                            </a>
-                        }
+                        int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
+                        int filterId = item.Value - 1;
+                        string name = String.Format("filters[{0}-{1}]", categoryId, filterId);
+                        string i = Model.FilterSort.FilterCategories[categoryId].Selections[filterId].Name;
+                <a asp-controller="Products" asp-action="Index" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
+                    <p class="navbar-nav schema-tags__text">@i</p>
+                </a>
                     }
                 }
             </div>
@@ -76,101 +47,47 @@
                             }
                         </ul>
                         <hr />
-                        <b class="px-2">Категории</b>
+                        @Html.AntiForgeryToken()
+                        @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+                        {
+                            foreach (var category in Model.FilterSort.FilterCategories)
+                            {
+                                int counter = 1; // used to generate unique keys
+                                <b class="px-2">@category.Name</b>
+                                foreach (var selection in category.Selections)
+                                {
+                                    string i = null;
+                                    @if (Model.Filter != null)
+                                    {
 
-                        @{foreach (string nameFilt in Model.FilterSort.Categories)
-                            {
-                                string isCheked = null;
-                                string i = null;
-                                if (Model.Filter.AllCategory != null)
-                                {
-                                    isCheked = Model.Filter.AllCategory.Contains(nameFilt) ? "checked" : "";
-                                    if (Model.Filter.AllCategory.Contains(nameFilt))
-                                    {
-                                        isCheked = "checked";
-                                        string[] filter = Model.Filter.AllCategory.Split('_').Where(val => val != nameFilt).ToArray();
-                                        i = filter == null ? nameFilt : string.Join('_', filter);
+                                        foreach (KeyValuePair<string, int> item in Model.Filter)
+                                        {
+                                            int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
+                                            int filterId = item.Value - 1;
+                                            i = Model.FilterSort.FilterCategories[categoryId].Selections[filterId].Name;
+                                            Model.Filter.Remove(i);
+                                            if (selection.Name == i)
+                                            {
+                                                break;
+                                            }
+                                        }
                                     }
-                                    else
-                                    {
-                                        i = Model.Filter.AllCategory + '_' + nameFilt;
-                                    }
-                                }
-                                else
-                                {
-                                    i = nameFilt;
-                                }
 
-                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index" asp-route-category="@i" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@Model.Filter.AllCountry" style="padding:3px 11px">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @isCheked />
-                                    @nameFilt
-                                </a>
-                            }
-                        }
-                        <hr />
-                        <b class="px-2">Производители</b>
-                        @{foreach (string nameFilt in Model.FilterSort.Companies)
-                            {
-                                string isCheked = null;
-                                string i = null;
-                                if (Model.Filter.AllCompany != null)
-                                {
-                                    isCheked = Model.Filter.AllCompany.Contains(nameFilt) ? "checked" : "";
-                                    if (Model.Filter.AllCompany.Contains(nameFilt))
-                                    {
-                                        isCheked = "checked";
-                                        string[] filter = Model.Filter.AllCompany.Split('_').Where(val => val != nameFilt).ToArray();
-                                        i = filter == null ? nameFilt : string.Join('_', filter);
-                                    }
-                                    else
-                                    {
-                                        i = Model.Filter.AllCompany + '_' + nameFilt;
-                                    }
+                                    string name = String.Format("filters[{0}-{1}]", category.ID, counter++);
+                                    <label class="nav-link" style="padding:3px 11px">
+                                        <input class="form-check-input" type="checkbox" name="@name" value="@selection.ID"
+                                               @(i == selection.Name ? "checked" : "") />
+                                        <span>@selection.Name</span>
+                                    </label>
                                 }
-                                else
-                                {
-                                    i = nameFilt;
-                                }
-                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@i" asp-route-country="@Model.Filter.AllCountry" style="padding:3px 11px">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @isCheked />
-                                    @nameFilt
-                                </a>
+                                <hr />
                             }
-                        }
-                        <hr />
-                        <b class="px-2">Страны производители</b>
-                        @{foreach (string nameFilt in Model.FilterSort.Countries)
-                            {
-                                string isCheked = null;
-                                string i = null;
-                                if (Model.Filter.AllCountry != null)
-                                {
-                                    isCheked = Model.Filter.AllCountry.Contains(nameFilt) ? "checked" : "";
-                                    if (Model.Filter.AllCountry.Contains(nameFilt))
-                                    {
-                                        isCheked = "checked";
-                                        string[] filter = Model.Filter.AllCountry.Split('_').Where(val => val != nameFilt).ToArray();
-                                        i = filter == null ? nameFilt : string.Join('_', filter);
-                                    }
-                                    else
-                                    {
-                                        i = Model.Filter.AllCountry + '_' + nameFilt;
-                                    }
-                                }
-                                else
-                                {
-                                    i = nameFilt;
-                                };
-                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index" asp-route-category="@Model.Filter.AllCategory" asp-route-company="@Model.Filter.AllCompany" asp-route-country="@i" style="padding:3px 11px">
-                                    <input class="form-check-input" type="checkbox" value="" id="flexCheckDefault" @isCheked />
-                                    @nameFilt
-                                </a>
-                            }
+                            <input class="btn btn-primary" type="submit"/>
                         }
                     </div>
                 </nav>
                 <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
-                    <div class=" row">
+                    <div class="row">
                         @if (Model.AllProducts.Count() != 0)
                         {
                             ShowProductViewModels showProduct = new ShowProductViewModels { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };

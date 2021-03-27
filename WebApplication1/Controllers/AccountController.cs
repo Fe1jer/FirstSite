@@ -1,14 +1,12 @@
-﻿using System.Collections.Generic;
-using System.Threading.Tasks;
-using Microsoft.EntityFrameworkCore;
-using Microsoft.AspNetCore.Mvc;
-using System.Security.Claims;
-using WebApplication1.ViewModels;
-using WebApplication1.Data.Models;
-using WebApplication1.Data;
-using Microsoft.AspNetCore.Authentication;
+﻿using Microsoft.AspNetCore.Authentication;
 using Microsoft.AspNetCore.Authentication.Cookies;
+using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Security.Claims;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
+using WebApplication1.Data.Models;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
@@ -32,8 +30,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
             ViewBag.Title = "Регистрация";
@@ -43,7 +40,7 @@ namespace WebApplication1.Controllers
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    user = new User { Email = model.Email, Password = _hasher.HashPassword(model.Password)};
+                    user = new User { Email = model.Email, Password = _hasher.HashPassword(model.Password) };
                     Role userRole = await _roles.GetRoleAsync("user");
                     if (userRole != null)
                         user.Role = userRole;
@@ -67,8 +64,7 @@ namespace WebApplication1.Controllers
             return View();
         }
 
-        [HttpPost]
-        [ValidateAntiForgeryToken]
+        [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             ViewBag.Title = "Вход";

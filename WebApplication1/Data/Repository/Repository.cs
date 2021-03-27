@@ -1,13 +1,13 @@
-﻿using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Specifications;
-using WebApplication1.Data.Specifications.Base;
-using Microsoft.EntityFrameworkCore;
+﻿using Microsoft.EntityFrameworkCore;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
+using WebApplication1.Data.AbstractClasses;
+using WebApplication1.Data.Interfaces;
+using WebApplication1.Data.Specifications;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Repository
 {
@@ -25,7 +25,7 @@ namespace WebApplication1.Data.Repository
         {
             await Context.AddAsync(entity);
             await Context.SaveChangesAsync();
-            return entity; 
+            return entity;
         }
 
         public async Task<int> CountAsync(Expression<Func<T, bool>> predicate)

@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
-using WebApplication1.ViewModels;
-using Microsoft.EntityFrameworkCore;
-using System.Threading.Tasks;
 using WebApplication1.Data.Specifications;
 using WebApplication1.Data.Specifications.Base;
 
@@ -18,13 +15,13 @@ namespace WebApplication1.Data.Repository
 
         }
 
-        public async Task<User> GetUserAsync(string email) 
+        public async Task<User> GetUserAsync(string email)
         {
             var users = await GetAllAsync(new UserSpecification().IncludeRole());
             return users.FirstOrDefault(u => u.Email == email);
-        } 
+        }
 
-        public async Task<User> GetUserAsync(int id) 
+        public async Task<User> GetUserAsync(int id)
         {
             var users = await GetAllAsync(new UserSpecification().IncludeRole());
             return users.FirstOrDefault(u => u.Id == id);

@@ -1,12 +1,10 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
-using WebApplication1.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using System.Threading.Tasks;
 using WebApplication1.Data.Specifications;
-using System.Collections.Generic;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
 {
@@ -27,7 +25,7 @@ namespace WebApplication1.Controllers
         public async Task<ActionResult> Index()
         {
             ViewBag.Title = "Все заказы";
-            return  View(await allOrders.GetOrdersAsync(
+            return View(await allOrders.GetOrdersAsync(
                 new OrderSpecification().
                 IncludeDetails().IncludeCourier().SortByCourier().
                 WithoutTracking()
@@ -63,7 +61,7 @@ namespace WebApplication1.Controllers
                 AllCouriers = await allUser.GetUsersAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
             };
             ViewBag.Title = "Выбор курьера";
-             
+
             return View(model);
         }
 

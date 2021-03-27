@@ -1,7 +1,7 @@
-﻿using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications.Base;
-using System;
+﻿using System;
 using System.Linq.Expressions;
+using WebApplication1.Data.Models;
+using WebApplication1.Data.Specifications.Base;
 
 namespace WebApplication1.Data.Specifications
 {

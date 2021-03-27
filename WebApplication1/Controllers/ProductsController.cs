@@ -1,29 +1,29 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
-using WebApplication1.ViewModels;
-using Microsoft.AspNetCore.Authorization;
-using System.Security.Claims;
-using System.Threading.Tasks;
 using WebApplication1.Data.Specifications;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controlles
 {
     public class ProductsController : Controller
     {
         private readonly IProductRepository _allProducts;
+        private readonly IProductFilter _productFilter;
         private readonly IUserRepository _allUser;
-        private readonly IProductFilter _filter;
         private readonly IShopCart _shopCart;
 
-        public ProductsController(IShopCart shopCart, IProductRepository iAllProducts, IProductFilter filter, IUserRepository allUser)
+        public ProductsController(IShopCart shopCart, IProductRepository iAllProducts, IUserRepository allUser, IProductFilter productFilter)
         {
+            _productFilter = productFilter;
             _shopCart = shopCart;
             _allUser = allUser;
             _allProducts = iAllProducts;
-            _filter = filter;
         }
 
         [Route("Products/ProductNotFound")]
@@ -32,11 +32,11 @@ namespace WebApplication1.Controlles
             return View();
         }
 
-        [Authorize(Roles = "admin, moderator")]
-        [Route("Products/ChangeProduct")]
-        public async Task<IActionResult> ChangeProduct(int id) {
+        [Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
+        public async Task<IActionResult> ChangeProduct(int id)
+        {
             User user = await _allUser.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name!="admin" && user.Role.Name!= "moderator")
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
             {
                 return RedirectToAction("Logout", "Account");
             }
@@ -47,9 +47,7 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
-        [Authorize(Roles = "admin, moderator")]
-        [Route("Products/ChangeProduct")]
-        [HttpPost]
+        [HttpPost, Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> ChangeProduct(Product obj)
         {
             ViewBag.Title = "Изменение товара";
@@ -62,8 +60,7 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
-        [Authorize(Roles = "admin, moderator")]
-        [Route("Products/DeleteProduct")]
+        [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             Product product = await _allProducts.GetProductByIdAsync(id);
@@ -71,8 +68,7 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index");
         }
 
-        [Authorize(Roles = "admin, moderator")]
-        [Route("Products/AddProduct")]
+        [Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> AddProduct()
         {
             User user = await _allUser.GetUserAsync(User.Identity.Name);
@@ -86,9 +82,7 @@ namespace WebApplication1.Controlles
             return View();
         }
 
-        [Authorize(Roles = "admin, moderator")]
-        [Route("Products/AddProduct")]
-        [HttpPost]
+        [HttpPost, Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> AddProduct(Product obj)
         {
             ViewBag.Title = "Добавление товара";
@@ -130,38 +124,66 @@ namespace WebApplication1.Controlles
             }
         }
 
-        [Route("Products")]
-        public async Task<IActionResult> Index(string category, string company, string country)
+        [HttpGet, Route("Products")]
+        public async Task<IActionResult> Index(Dictionary<string, int> filters)
         {
-            ProductFilter _userFilter = new ProductFilter { AllCategory = category, AllCompany = company, AllCountry = country };
+            int categoryId = 0;
+            ProductFilter _userFilter = new ProductFilter { AllCategory = null, AllCompany = null, AllCountry = null };
 
+            List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
-
-            if (!_userFilter.IsEmpty())
+            foreach (KeyValuePair<string, int> item in filters)
             {
-                string[] filter;
-                if (_userFilter.AllCategory != null)
+                if (item.Value != 0)
                 {
-                    filter = _userFilter.AllCategory.Split('_');
-                    products = products.Where(i => filter.Contains(i.Category)).ToList();
+                    categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
+                    int filterId = item.Value - 1;
+                    string i = _productFilter.FilterCategories[categoryId].Selections[filterId].Name;
+                    if (categoryId == 0)
+                    {
+                        filter[0].Add(i);
+                    }
+                    else if (categoryId == 1)
+                    {
+                        filter[1].Add(i);
+                    }
+                    else
+                    {
+                        filter[2].Add(i);
+                    }
                 }
-                if (_userFilter.AllCompany != null)
+                else
                 {
-                    filter = _userFilter.AllCompany.Split('_');
-                    products = products.Where(i => filter.Contains(i.Company)).ToList();
+                    filters.Clear();
+                    break;
                 }
-                if (_userFilter.AllCountry != null)
+            }
+            categoryId = 0;
+            foreach (List<string> item in filter)
+            {
+                if (item.Count != 0)
                 {
-                    filter = _userFilter.AllCountry.Split('_');
-                    products = products.Where(i => filter.Contains(i.Country)).ToList();
+                    if (categoryId == 0)
+                    {
+                        products = products.Where(i => item.Contains(i.Category)).ToList();
+                    }
+                    else if (categoryId == 1)
+                    {
+                        products = products.Where(i => item.Contains(i.Company)).ToList();
+                    }
+                    else
+                    {
+                        products = products.Where(i => item.Contains(i.Country)).ToList();
+                    }
                 }
+                categoryId++;
             }
             var productObj = new ProductsListViewModel
             {
                 AllProducts = products,
                 ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
-                FilterSort = _filter,
-                Filter = new ProductFilter { AllCategory = category, AllCompany = company, AllCountry = country }
+                FilterSort = _productFilter,
+                Filter = filters
             };
 
             ViewBag.Title = "Все товары";
@@ -169,9 +191,8 @@ namespace WebApplication1.Controlles
             return View(productObj);
         }
 
-        [Authorize]
-        [Route("Products/AddToCart")]
-        public async Task<RedirectToActionResult> AddToCart(int IdProduct, string category, string company, string country)
+        [Route("Products/AddToCart"), Authorize]
+        public async Task<RedirectToActionResult> AddToCart(int IdProduct, Dictionary<string, int> filters)
         {
             Product item = await _allProducts.GetProductByIdAsync(IdProduct);
             if (item != null)
@@ -179,16 +200,15 @@ namespace WebApplication1.Controlles
                 await _shopCart.AddToCart(await _allUser.GetUserAsync(User.Identity.Name), item);
             }
 
-            return RedirectToAction("Index", new { category, company, country });
+            return RedirectToAction("Index", filters);
         }
 
-        [Authorize]
-        [Route("Products/RemoveToCart")]
-        public async Task<RedirectToActionResult> RemoveToCart(int IdProduct, string category, string company, string country)
+        [Route("Products/RemoveToCart"), Authorize]
+        public async Task<RedirectToActionResult> RemoveToCart(int IdProduct, Dictionary<string, int> filters)
         {
             await _shopCart.RemoveToCart(await _allUser.GetUserAsync(User.Identity.Name), IdProduct);
 
-            return RedirectToAction("Index", new { category, company, country });
+            return RedirectToAction("Index", filters);
         }
     }
 }
