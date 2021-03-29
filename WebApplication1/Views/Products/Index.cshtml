@@ -1,7 +1,7 @@
 ﻿@model ProductsListViewModel
 <html>
 <head>
-    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 </head>
 <body>
     <div class=" row">
@@ -10,7 +10,7 @@
             <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="w-100">
+@*            <div class="w-100">
                 @if (Model.Filter != null)
                 {
                     foreach (KeyValuePair<string, int> item in Model.Filter)
@@ -19,12 +19,13 @@
                         int filterId = item.Value - 1;
                         string name = String.Format("filters[{0}-{1}]", categoryId, filterId);
                         string i = Model.FilterSort.FilterCategories[categoryId].Selections[filterId].Name;
-                <a asp-controller="Products" asp-action="Index" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
-                    <p class="navbar-nav schema-tags__text">@i</p>
-                </a>
+                        <a asp-controller="Products" asp-action="Index" asp-route-filters="@Model.Filter" asp-route-deleteFilter="@categoryId" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
+                            <p class="navbar-nav schema-tags__text">@i</p>
+                        </a>
+
                     }
                 }
-            </div>
+            </div>*@
         </header>
         <div class="container-fluid">
             <div class="row">
@@ -82,7 +83,7 @@
                                 }
                                 <hr />
                             }
-                            <input class="btn btn-primary" type="submit"/>
+                            <input class="btn btn-primary" type="submit" />
                         }
                     </div>
                 </nav>
@@ -90,7 +91,7 @@
                     <div class="row">
                         @if (Model.AllProducts.Count() != 0)
                         {
-                            ShowProductViewModels showProduct = new ShowProductViewModels { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };
+                            ShowProductViewModel showProduct = new ShowProductViewModel { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };
                             foreach (Product product in Model.AllProducts)
                             {
                                 showProduct.Product = product;

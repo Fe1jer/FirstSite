@@ -8,7 +8,7 @@ namespace WebApplication1.Data.Interfaces
     public interface IUserRepository
     {
         Task AddUserAsync(User user);
-        Task UpdateUserRole(User user);
+        Task UpdateUser(User user);
         Task<User> GetUserAsync(string email);
         Task<User> GetUserAsync(int id);
         Task<IReadOnlyList<User>> GetUsersAsync(ISpecification<User> specification);

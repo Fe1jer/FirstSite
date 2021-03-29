@@ -1,27 +1,17 @@
-﻿using WebApplication1.Data.AbstractClasses;
-using Microsoft.AspNetCore.Mvc.ModelBinding;
+﻿
+using Microsoft.AspNetCore.Http;
 using System;
-using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WebApplication1.Validation;
 
-namespace WebApplication1.Data.Models
+namespace WebApplication1.ViewModels
 {
-    public class User : Entity
+    public class ProfileViewModel
     {
         [Display(Name = "Электронная почта")]
         [DataType(DataType.EmailAddress)]
         [Required(ErrorMessage = "Введите существующую почту")]
         public string Email { get; set; }
-
-        [Display(Name = "Пароль")]/*
-        [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength = 6)]
-        [Required(ErrorMessage = "Длина пароля не менее 6 символов")]*/
-        public string Password { get; set; }
-
-        public int RoleId { get; set; }
-        public Role Role { get; set; }
 
         [Display(Name = "Имя")]
         [DataType(DataType.Text)]
@@ -50,6 +40,11 @@ namespace WebApplication1.Data.Models
         public DateTime? DateOfBirth { get; set; }
 
         [Display(Name = "Изображение")]
-        public string Img { get; set; }
+        [DataType(DataType.ImageUrl)]
+        public string Avatar { get; set; }
+
+        [Display(Name = "Изображение")]
+        [Required(ErrorMessage = "Введите существующую почту")]
+        public IFormFile Img { get; set; }
     }
 }

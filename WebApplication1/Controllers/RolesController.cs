@@ -69,7 +69,7 @@ namespace WebApplication1.Controllers
             {
                 Role role = await _roles.GetRoleAsync(nameRole);
                 user.Role = role;
-                await _users.UpdateUserRole(user);
+                await _users.UpdateUser(user);
 
                 return RedirectToAction("UserList");
             }

@@ -3,7 +3,7 @@ using WebApplication1.Data.Models;
 
 namespace WebApplication1.ViewModels
 {
-    public class ShowProductViewModels
+    public class ShowProductViewModel
     {
         public Product Product { get; set; }
         public List<ShopCartItem> ShopCartItems { get; set; }

@@ -125,8 +125,13 @@ namespace WebApplication1.Controlles
         }
 
         [HttpGet, Route("Products")]
-        public async Task<IActionResult> Index(Dictionary<string, int> filters)
+        public async Task<IActionResult> Index(Dictionary<string, int> filters, string deleteFilter)
         {
+            if (deleteFilter != null)
+            {
+                filters.Remove(deleteFilter.Split('-')[0]);
+            }
+
             int categoryId = 0;
             ProductFilter _userFilter = new ProductFilter { AllCategory = null, AllCompany = null, AllCountry = null };
 

@@ -37,7 +37,7 @@ namespace WebApplication1.Data.Repository
             return await GetAllAsync(specification);
         }
 
-        public async Task UpdateUserRole(User user)
+        public async Task UpdateUser(User user)
         {
             await UpdateAsync(user);
         }

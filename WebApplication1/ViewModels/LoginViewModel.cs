@@ -10,8 +10,9 @@ namespace WebApplication1.ViewModels
         public string Email { get; set; }
 
         [Display(Name = "Пароль", Prompt = "Пароль")]
-        [Required(ErrorMessage = "Не указан пароль")]
+        [Required(ErrorMessage = "Длина пароля не менее 6 символов")]
         [DataType(DataType.Password)]
+        [StringLength(25, MinimumLength = 6)]
         public string Password { get; set; }
     }
 }

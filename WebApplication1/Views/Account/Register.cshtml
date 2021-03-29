@@ -22,35 +22,62 @@
 
     <!-- Custom styles for this template -->
     <link href="signin.css" rel="stylesheet" asp-append-version="true">
+    <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
+
 </head>
-<body class="text-center">
+<body >
+    <form asp-action="Register" method="post" class="form-horizontal">
+        <div class="row justify-content-center g-3 bg-white shadow" style="padding-top: 3.3rem;">
+            <h1 class="text-center">Регистрация пользователя</h1>
+            <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
 
-    <main class="form-signin">
-        <form asp-action="Register" method="post">
-            <h1 class="mb-4" width="72" height="57">
-                Fe1jer
-            </h1>
-            <h1 class="h3 mb-3 fw-normal">Пожалуйста войдите</h1>
-            <div class="validation" asp-validation-summary="ModelOnly"></div>
-
-            <label asp-for="Email" class="visually-hidden"></label>
-            <input asp-for="Email" class="form-control" />
-            <span asp-validation-for="Email" class="text-danger"></span>
-
-            <label asp-for="Password" class="visually-hidden"></label>
-            <input asp-for="Password" class="form-control" />
-            <span asp-validation-for="Password" class="text-danger"></span>
-
-            <label asp-for="ConfirmPassword" class="visually-hidden"></label>
-            <input asp-for="ConfirmPassword" class="form-control" />
-            <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-
-            <button class="w-100 btn btn-lg btn-primary" type="submit">Зарегистрироваться</button>
-            <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
-        </form>
-    </main>
-
-
-
+            <div class="col-md-4 row g-3">
+                <div class="col-md-12">
+                    <label asp-for="Email" class="form-label"></label><sup>*</sup>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="Password" class="form-label"></label><sup>*</sup>
+                    <input asp-for="Password" class="form-control" />
+                    <span asp-validation-for="Password" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="ConfirmPassword" class="form-label"></label><sup>*</sup>
+                    <input asp-for="ConfirmPassword" class="form-control" />
+                    <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-4 offset-md-1 row g-3">
+                <div class="col-md-12">
+                    <label asp-for="Name" class="form-label"></label><sup>*</sup>
+                    <input asp-for="Name" class="form-control" />
+                    <span asp-validation-for="Name" class="text-danger"></span>
+                </div>
+                <div class="col-md-12">
+                    <label asp-for="Gender" class="form-label"></label><sup>*</sup>
+                    <div class="slider-radio elegant">
+                        <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
+                        <input asp-for="Gender" type="radio" id="None" value="None"><label for="None">None</label>
+                        <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
+                        <div class="sliding-piece" style="position: absolute; transition: width 0.2s ease 0s, height 0.2s ease 0s, top 0.2s ease 0s, left 0.2s ease 0s; opacity: 1; left: 0px; top: 0px; width: 151.125px; height: 43.2px;"></div>
+                        <script type="text/javascript">
+                            if (document.getElementById('Male').checked) {
+                                //Male radio button is checked
+                            } else if (document.getElementById('Female').checked) {
+                                //Female radio button is checked
+                            }
+                            else document.getElementById('None').checked = "checked";
+                        </script>
+                    </div>
+                    <span asp-validation-for="Gender" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="text-center">
+                <button class="btn btn-primary btn-lg mb-4" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Зарегистрироваться</font></font></button>
+            </div>
+        </div>
+        <script src="~/js/slider-radio.js" asp-append-version="true"></script>
+    </form>
 </body>
 </html>
