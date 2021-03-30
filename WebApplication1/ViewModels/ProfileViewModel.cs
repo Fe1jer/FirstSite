@@ -44,7 +44,6 @@ namespace WebApplication1.ViewModels
         public string Avatar { get; set; }
 
         [Display(Name = "Изображение")]
-        [Required(ErrorMessage = "Введите существующую почту")]
         public IFormFile Img { get; set; }
     }
 }

@@ -2,14 +2,16 @@
 using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
+using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Services;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controllers
@@ -19,14 +21,16 @@ namespace WebApplication1.Controllers
         private readonly IUserRepository _users;
         private readonly IPasswordHasher _hasher;
         private readonly IRoleRepository _roles;
-        IWebHostEnvironment _appEnvironment;
+        private readonly IWebHostEnvironment _appEnvironment;
+        //private readonly UserManager<User> _userManager;
 
-        public AccountController(IUserRepository users, IPasswordHasher hasher, IRoleRepository roles, IWebHostEnvironment appEnvironment)
+        public AccountController(IUserRepository users, IPasswordHasher hasher, IRoleRepository roles, IWebHostEnvironment appEnvironment, UserManager<User> userManager)
         {
             _users = users;
             _hasher = hasher;
             _roles = roles;
             _appEnvironment = appEnvironment;
+            //_userManager = userManager;
         }
 
         [HttpGet]
@@ -118,6 +122,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 User user = await _users.GetUserAsync(User.Identity.Name);
+
                 user.Email = model.Email;
                 user.Name = model.Name;
                 user.Surname = model.Surname;
@@ -135,22 +140,9 @@ namespace WebApplication1.Controllers
                         await model.Img.CopyToAsync(fileStream);
                     }
                     user.Img = path;
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    var claims = new List<Claim>
-                    {
-                        new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                        new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name),
-                        new Claim("Avatar", user.Img)
-                    };
-                    // создаем объект ClaimsIdentity
-                    var claimsIdentity = new ClaimsIdentity(
-                        claims,
-                        CookieAuthenticationDefaults.AuthenticationScheme);
 
-                    ClaimsIdentity id = new ClaimsIdentity(claims, "Cookie", ClaimsIdentity.DefaultNameClaimType,
-                        ClaimsIdentity.DefaultRoleClaimType);
-                    // установка аутентификационных куки
-                    await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(claimsIdentity));
+                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
+                    await Authenticate(user);
                 }
                 user.Role = await _roles.GetRoleAsync(user.RoleId);
                 await _users.UpdateUser(user);
@@ -160,6 +152,38 @@ namespace WebApplication1.Controllers
 
             return View(model);
         }
+
+/*        [HttpGet]
+        [AllowAnonymous]
+        public IActionResult ForgotPassword()
+        {
+            return View();
+        }
+        [HttpPost]
+        [AllowAnonymous]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ForgotPassword(ForgotPasswordViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
+                {
+                    // пользователь с данным email может отсутствовать в бд
+                    // тем не менее мы выводим стандартное сообщение, чтобы скрыть 
+                    // наличие или отсутствие пользователя в бд
+                    return View("ForgotPasswordConfirmation");
+                }
+
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync(model.Email, "Reset Password",
+                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                return View("ForgotPasswordConfirmation");
+            }
+            return View(model);
+        }*/
 
         private async Task Authenticate(User user)
         {
