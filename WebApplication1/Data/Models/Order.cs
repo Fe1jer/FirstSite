@@ -29,7 +29,7 @@ namespace WebApplication1.Data.Models
         [DataType(DataType.PhoneNumber)]
         [StringLength(13, MinimumLength = 7)]
         [Required(ErrorMessage = "Длина номера не менее 7 символов")]
-        public int Phone { get; set; }
+        public string Phone { get; set; }
 
         [Display(Name = "Электронная почта")]
         [DataType(DataType.EmailAddress)]

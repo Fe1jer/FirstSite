@@ -4,6 +4,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using WebApplication1.Validation;
+using Microsoft.AspNetCore.Identity;
 
 namespace WebApplication1.Data.Models
 {
