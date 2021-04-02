@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.AspNetCore.Mvc.RazorPages;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -30,6 +31,50 @@ namespace WebApplication1.Controlles
         public IActionResult ProductNotFound()
         {
             return View();
+        }
+
+        [HttpGet, Route("Products/Search")]
+        public async Task<IActionResult> Search(string search)
+        {
+            var products = await _allProducts.GetProductsAsync();
+            products = products.Where(i => i.Name.ToLower().Contains(search.ToLower())).ToList()
+                .Union(products.Where(i => i.Company.ToLower().Contains(search.ToLower()))).Distinct().ToList();
+            var productObj = new ProductsListViewModel
+            {
+                AllProducts = products,
+                ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
+                FilterSort = _productFilter.GetFilterCategoriesByProducts(products.ToList())
+            };
+            var model = new SearchViewModel
+            {
+                SearchName = search,
+                ProductsListViewModel = productObj
+            };
+            return View(model);
+        }
+
+        [HttpPost, Route("Products/Search")]
+        public async Task<IActionResult> Search(Dictionary<string, int> filters, string search)
+        {
+            var products = await _allProducts.GetProductsAsync();
+            products = products.Where(i => i.Name.ToLower().Contains(search.ToLower())).ToList()
+                .Union(products.Where(i => i.Company.ToLower().Contains(search.ToLower()))).Distinct().ToList();
+            List<FilterCategoryVM> filterCategories = _productFilter.GetFilterCategoriesByProducts(products.ToList());
+            products = _productFilter.SortProducts(products.ToList(), filters);
+
+            var productObj = new ProductsListViewModel
+            {
+                AllProducts = products,
+                ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
+                FilterSort = filterCategories,
+                Filter = filters
+            };
+            var model = new SearchViewModel
+            {
+                SearchName = search,
+                ProductsListViewModel = productObj
+            };
+            return View(model);
         }
 
         [Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
@@ -124,70 +169,20 @@ namespace WebApplication1.Controlles
             }
         }
 
-        [HttpGet, Route("Products")]
+        [Route("Products")]
         public async Task<IActionResult> Index(Dictionary<string, int> filters, string deleteFilter)
         {
             if (deleteFilter != null)
             {
                 filters.Remove(deleteFilter.Split('-')[0]);
             }
-
-            int categoryId = 0;
-            ProductFilter _userFilter = new ProductFilter { AllCategory = null, AllCompany = null, AllCountry = null };
-
-            List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
-            foreach (KeyValuePair<string, int> item in filters)
-            {
-                if (item.Value != 0)
-                {
-                    categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
-                    int filterId = item.Value - 1;
-                    string i = _productFilter.FilterCategories[categoryId].Selections[filterId].Name;
-                    if (categoryId == 0)
-                    {
-                        filter[0].Add(i);
-                    }
-                    else if (categoryId == 1)
-                    {
-                        filter[1].Add(i);
-                    }
-                    else
-                    {
-                        filter[2].Add(i);
-                    }
-                }
-                else
-                {
-                    filters.Clear();
-                    break;
-                }
-            }
-            categoryId = 0;
-            foreach (List<string> item in filter)
-            {
-                if (item.Count != 0)
-                {
-                    if (categoryId == 0)
-                    {
-                        products = products.Where(i => item.Contains(i.Category)).ToList();
-                    }
-                    else if (categoryId == 1)
-                    {
-                        products = products.Where(i => item.Contains(i.Company)).ToList();
-                    }
-                    else
-                    {
-                        products = products.Where(i => item.Contains(i.Country)).ToList();
-                    }
-                }
-                categoryId++;
-            }
+            products = _productFilter.SortProducts(products.ToList(), filters);
             var productObj = new ProductsListViewModel
             {
                 AllProducts = products,
                 ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
-                FilterSort = _productFilter,
+                FilterSort = _productFilter.FilterCategories,
                 Filter = filters
             };
 

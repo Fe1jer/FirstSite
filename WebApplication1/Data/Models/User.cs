@@ -15,10 +15,13 @@ namespace WebApplication1.Data.Models
         [Required(ErrorMessage = "Введите существующую почту")]
         public string Email { get; set; }
 
-        [Display(Name = "Пароль")]/*
-        [DataType(DataType.Password)]
-        [StringLength(25, MinimumLength = 6)]
-        [Required(ErrorMessage = "Длина пароля не менее 6 символов")]*/
+        [Required]
+        public bool EmailConfirmed { get; set; }
+
+        public virtual DateTimeOffset? LockoutEnd { get; set; }
+
+
+        [Display(Name = "Пароль")]
         public string Password { get; set; }
 
         public int RoleId { get; set; }

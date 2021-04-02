@@ -19,5 +19,7 @@ namespace WebApplication1.ViewModels
         public string ConfirmPassword { get; set; }
 
         public string Code { get; set; }
+
+        public string userId { get; set; }
     }
 }

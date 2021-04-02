@@ -47,8 +47,8 @@
                             </li>
                         }
                     </ul>
-                    <form asp-controller="Products" asp-action="Search" class="d-flex">
-                        <input class="form-control me-2" type="search" placeholder="Поиск" aria-label="Search">
+                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex">
+                        <input class="form-control me-2" name="search" type="search" placeholder="Поиск" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     @if (User.Identity.IsAuthenticated)

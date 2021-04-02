@@ -10,7 +10,7 @@ namespace WebApplication1.Data.Services
         {
             var emailMessage = new MimeMessage();
 
-            emailMessage.From.Add(new MailboxAddress("Администрация сайта", "admin@metanit.com"));
+            emailMessage.From.Add(new MailboxAddress("Подтверждение почты", "electroshopf@gmail.com"));
             emailMessage.To.Add(new MailboxAddress("", email));
             emailMessage.Subject = subject;
             emailMessage.Body = new TextPart(MimeKit.Text.TextFormat.Html)
@@ -18,14 +18,12 @@ namespace WebApplication1.Data.Services
                 Text = message
             };
 
-            using (var client = new SmtpClient())
-            {
-                await client.ConnectAsync("smtp.metanit.com", 465, true);
-                await client.AuthenticateAsync("admin@metanit.com", "password");
-                await client.SendAsync(emailMessage);
+            using var client = new SmtpClient();
+            await client.ConnectAsync("smtp.gmail.com", 465, true);
+            await client.AuthenticateAsync("electroshopf@gmail.com", "elshop12");
+            await client.SendAsync(emailMessage);
 
-                await client.DisconnectAsync(true);
-            }
+            await client.DisconnectAsync(true);
         }
     }
 }

@@ -7,6 +7,81 @@ p{
     margin: 0.3em auto;
 }
 
+.box {
+    overflow: hidden;
+    height: 110px;
+    line-height: 25px;
+}
+
+    .box:before {
+        content: "";
+        float: left;
+        width: 5px;
+        height: 130px;
+    }
+
+    .box > *:first-child {
+        float: right;
+        width: 100%;
+        margin-left: -5px;
+    }
+
+    .box:after {
+        content: "\02026";
+        box-sizing: content-box;
+        float: right;
+        position: relative;
+        top: -50px;
+        left: 100%;
+        width: 3em;
+        margin-left: -3em;
+        padding-right: 5px;
+        text-align: right;
+        background-size: 100% 100%;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    }
+
+/* стили для мноточия '…' */
+.block-with-text {
+    /* спрятать текст если у более N строк */
+    overflow: hidden;
+    /* для установки '…' в абсолютную позицию */
+    position: relative;
+    /* используйте это значение для расчёта высоты блока */
+    line-height: 1.5em;
+    /* max-height = line-height (1.2) * число строк (3) */
+    max-height: 45px;
+    /* исправлиление проблемы когда последнее слово не соединяется с правой стороны */
+    text-align: justify;
+    /* место для многоточия '…' */
+    padding-right: 1em;
+}
+
+    /* создаём многоточие … */
+    .block-with-text:before {
+        /* многоточие в конце */
+        content: '…';
+        /* абсолютное позиционирование */
+        position: absolute;
+        /* установить позицию в правый нижний угол блока */
+        right: 0;
+        bottom: 0;
+    }
+
+    /* спрятать многоточие … если у нас есть текст, который меньше или равен количеству максимальный строк */
+    .block-with-text:after {
+        content: "";
+        position: absolute;
+        /* установить позицию в правый нижний угол блока */
+        right: 0;
+        /* установить width и height */
+        width: 1em;
+        height: 1em;
+        margin-top: 0.2em;
+        /* цвет фона перед блоком */
+        background: white;
+    }
+
 h3{
     margin: 0em;
 }

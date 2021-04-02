@@ -44,6 +44,7 @@ namespace WebApplication1.ViewModels
         public string Avatar { get; set; }
 
         [Display(Name = "Изображение")]
+        [ValidateImg]
         public IFormFile Img { get; set; }
     }
 }
