@@ -23,7 +23,6 @@ namespace WebApplication1.Controllers
         public async Task<ViewResult> Index()
         {
             var obj = await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)));
-            ViewBag.Title = "Корзина";
 
             return View(obj);
         }

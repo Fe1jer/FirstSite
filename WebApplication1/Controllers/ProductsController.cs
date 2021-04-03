@@ -56,12 +56,9 @@ namespace WebApplication1.Controlles
         [HttpPost, Route("Products/Search")]
         public async Task<IActionResult> Search(Dictionary<string, int> filters, string search)
         {
-            var products = await _allProducts.GetProductsAsync();
-            products = products.Where(i => i.Name.ToLower().Contains(search.ToLower())).ToList()
-                .Union(products.Where(i => i.Company.ToLower().Contains(search.ToLower()))).Distinct().ToList();
+            var products = await _allProducts.SearchProductsAsync(search);
             List<FilterCategoryVM> filterCategories = _productFilter.GetFilterCategoriesByProducts(products.ToList());
             products = _productFilter.SortProducts(products.ToList(), filters);
-
             var productObj = new ProductsListViewModel
             {
                 AllProducts = products,
@@ -87,7 +84,6 @@ namespace WebApplication1.Controlles
             }
 
             Product obj = await _allProducts.GetProductByIdAsync(id);
-            ViewBag.Title = "Изменение товара";
 
             return View(obj);
         }
@@ -95,7 +91,6 @@ namespace WebApplication1.Controlles
         [HttpPost, Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> ChangeProduct(Product obj)
         {
-            ViewBag.Title = "Изменение товара";
             if (ModelState.IsValid)
             {
                 await _allProducts.UpdateProductAsync(obj);
@@ -122,15 +117,12 @@ namespace WebApplication1.Controlles
                 return RedirectToAction("Logout", "Account");
             }
 
-            ViewBag.Title = "Добавление товара";
-
             return View();
         }
 
         [HttpPost, Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> AddProduct(Product obj)
         {
-            ViewBag.Title = "Добавление товара";
             if (await _allProducts.GetProductByNameAsync(obj.Name) == null)
             {
                 if (ModelState.IsValid)
@@ -148,14 +140,16 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Products/{name}")]
-        public async Task<IActionResult> Product(string name, int id)
+        public async Task<IActionResult> Product(int id)
         {
             int i = 0;
             Product obj = await _allProducts.GetProductByIdAsync(id);
             if (obj != null)
             {
-                ViewBag.Title = obj.Company + " " + obj.Name;
-                ShopCartItem item = _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))).Result.Where(o => o.Product.Id == id).FirstOrDefault() ?? null;
+                ShopCartItem item = _shopCart.GetShopItemsAsync(new ShopCartSpecification()
+                    .IncludeProduct()
+                    .WhereUser(await _allUser.GetUserAsync(User.Identity.Name))).Result
+                    .Where(o => o.Product.Id == id).FirstOrDefault() ?? null;
                 if (item != null)
                 {
                     i = item.Product.Id;
@@ -165,7 +159,7 @@ namespace WebApplication1.Controlles
             }
             else
             {
-                return NotFound();
+                return View("ProductNotFound");
             }
         }
 
@@ -177,16 +171,15 @@ namespace WebApplication1.Controlles
                 filters.Remove(deleteFilter.Split('-')[0]);
             }
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
+            List<FilterCategoryVM> filterCategories = _productFilter.GetFilterCategoriesByProducts(products.ToList());
             products = _productFilter.SortProducts(products.ToList(), filters);
             var productObj = new ProductsListViewModel
             {
                 AllProducts = products,
                 ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
-                FilterSort = _productFilter.FilterCategories,
+                FilterSort = filterCategories,
                 Filter = filters
             };
-
-            ViewBag.Title = "Все товары";
 
             return View(productObj);
         }

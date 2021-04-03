@@ -1,7 +1,15 @@
-﻿<html class="h-100">
+﻿@{
+    ViewData["Title"] = "Обложка";
+}
+<html class="h-100">
 <head>
     <meta charset="utf-8">
-    <link rel="stylesheet" href="~/css/Сover.css" type="text/css" asp-append-version="true"/>
+    <link rel="stylesheet" href="~/css/Сover.css" type="text/css" asp-append-version="true" />
+    <style>
+        footer {
+            display: none;
+        }
+    </style>
 </head>
 <body class="d-xxl-flex h-100 text-white bg-dark">
     <div class="cover-container text-center d-flex w-100 h-100 p-3 mx-auto flex-column">
@@ -12,9 +20,9 @@
                 <a href="/Home/Catalog" class="btn btn-lg btn-secondary fw-bold border-white bg-white"><font size="5" color="black" face="Arial">Узнать больше</font></a>
             </p>
         </main>
-        <footer class="mt-auto text-white-50">
+        <div class="mt-auto text-white-50">
             <p>Автор сайта: <a href="https://github.com/Fe1jer" class="text-white">Fe1jer</a></p>
-        </footer>
+        </div>
     </div>
 </body>
 </html>

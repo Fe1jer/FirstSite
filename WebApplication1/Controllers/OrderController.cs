@@ -25,8 +25,6 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Checkout()
         {
-            ViewBag.Title = "Оформление заказа";
-
             OrderViewModel orderR = new OrderViewModel
             {
                 ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
@@ -54,7 +52,6 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Complete()
         {
-            ViewBag.Title = "Завершение заказа";
             await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
             return View();

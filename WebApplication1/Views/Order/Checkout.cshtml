@@ -1,4 +1,7 @@
 ﻿@model OrderViewModel
+@{
+    ViewData["Title"] = "Оформление заказа";
+}
 <main>
     <div class="row g-3">
         <div class="col-md-5 col-lg-4 order-md-last">
@@ -65,7 +68,7 @@
                     <div class="col-12">
                         <label asp-for="Order.Email" class="form-label"></label>
                         <div>
-                            <input asp-for="Order.Email" class="form-control" value="@User.Identity.Name"/>
+                            <input asp-for="Order.Email" class="form-control" value="@User.Identity.Name" />
                             <span asp-validation-for="Order.Email" class="text-danger"></span>
                         </div>
                     </div>

@@ -24,7 +24,6 @@ namespace WebApplication1.Controllers
         // GET: СourierController
         public async Task<ActionResult> Index()
         {
-            ViewBag.Title = "Все заказы";
             return View(await allOrders.GetOrdersAsync(
                 new OrderSpecification().
                 IncludeDetails().IncludeCourier().SortByCourier().
@@ -35,8 +34,6 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "courier")]
         public async Task<ActionResult> CourierOrders()
         {
-            ViewBag.Title = "Заказы";
-
             return View(await allOrders.GetOrdersAsync(new OrderSpecification()
                 .WhereCourierEmail(User.Identity.Name)
                 .IncludeCourier()
@@ -47,7 +44,6 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "courier")]
         public async Task<ActionResult> Renouncement(int idOrder)
         {
-            ViewBag.Title = "Заказы";
             await allOrders.UpdateCourierOrdersAsync(idOrder, null);
             return RedirectToAction("CourierOrders");
         }
@@ -60,7 +56,6 @@ namespace WebApplication1.Controllers
                 Order = await allOrders.GetOrderByIdAsync(idOrder),
                 AllCouriers = await allUser.GetUsersAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
             };
-            ViewBag.Title = "Выбор курьера";
 
             return View(model);
         }
@@ -69,7 +64,6 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(int idOrder, int idCourier)
         {
-            ViewBag.Title = "Выбор курьера";
             User courier = await allUser.GetUserAsync(idCourier);
             await allOrders.UpdateCourierOrdersAsync(idOrder, courier);
             return RedirectToAction("Index");
@@ -77,14 +71,11 @@ namespace WebApplication1.Controllers
 
         public async Task<ActionResult> OrderDetail(int idOrder)
         {
-            ViewBag.Title = "Информация о заказе";
-
             return View(await allOrders.GetOrderByIdAsync(idOrder));
         }
 
         public async Task<ActionResult> Delete(int idOrder)
         {
-            ViewBag.Title = "Информация о заказе";
             await allOrders.DeleteOrderAsync(await allOrders.GetOrderByIdAsync(idOrder));
             if (User.IsInRole("moderator"))
             {

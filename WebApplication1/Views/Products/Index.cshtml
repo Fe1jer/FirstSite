@@ -1,4 +1,7 @@
 ﻿@model ProductsListViewModel
+@{
+    ViewData["Title"] = "Все товары";
+}
 <html>
 <head>
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
@@ -19,7 +22,7 @@
                         int filterId = item.Value - 1;
                         string name = String.Format("filters[{0}-{1}]", categoryId, filterId);
                         string i = Model.FilterSort[categoryId].Selections[filterId].Name;
-                        <a asp-controller="Products" asp-action="Index" asp-route-filters="@Model.Filter" asp-route-deleteFilter="@categoryId" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
+                        <a asp-controller="Products" asp-action="Index" asp-route-filters="@Model.Filter.Keys" asp-route-deleteFilter="@categoryId" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
                             <p class="navbar-nav schema-tags__text">@i</p>
                         </a>
 
@@ -30,87 +33,30 @@
         <div class="container-fluid">
             <div class="row">
                 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
-                    <div class="position-sticky pt-3 bg-light shadow">
-                        <ul class="nav flex-column">
 
-                            <li class="nav-item">
-                                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">
-                                    Все товары
-                                </a>
-                            </li>
-                            @if (User.IsInRole("admin") || User.IsInRole("moderator"))
-                            {
-                                <li class="nav-item">
-                                    <a class="nav-link" asp-controller="Products" asp-action="AddProduct">
-                                        Добавить товар
-                                    </a>
-                                </li>
-                            }
-                        </ul>
-                        <hr />
-                        @Html.AntiForgeryToken()
-                        @using (Html.BeginForm("Index", "Products", FormMethod.Get))
-                        {
-                            foreach (var category in Model.FilterSort)
-                            {
-                                int counter = 1; // used to generate unique keys
-                                <b class="px-2">@category.Name</b>
-                                foreach (var selection in category.Selections)
-                                {
-                                    string i = null;
-                                    @if (Model.Filter != null)
-                                    {
-
-                                        foreach (KeyValuePair<string, int> item in Model.Filter)
-                                        {
-                                            int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
-                                            int filterId = item.Value - 1;
-                                            i = Model.FilterSort[categoryId].Selections[filterId].Name;
-                                            Model.Filter.Remove(i);
-                                            if (selection.Name == i)
-                                            {
-                                                break;
-                                            }
-                                        }
-                                    }
-
-                                    string name = String.Format("filters[{0}-{1}]", category.ID, counter++);
-                                    <label class="nav-link" style="padding:3px 11px">
-                                        <input class="form-check-input" type="checkbox" name="@name" value="@selection.ID"
-                                               @(i == selection.Name ? "checked" : "") />
-                                        <span>@selection.Name</span>
-                                    </label>
-                                }
-                                <hr />
-                            }
-                            <input class="btn btn-primary" type="submit" />
-                        }
-                    </div>
+                    @Html.AntiForgeryToken()
+                    @using (Html.BeginForm("Index", "Products", FormMethod.Get))
+                    {
+                        @await Html.PartialAsync("ProductsFilter", Model)
+                    }
                 </nav>
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2">
-                    <div class="row">
-                        @if (Model.AllProducts.Count() != 0)
+                <main class="col-md-9 ms-sm-auto col-lg-10 mt-2 row">
+                    @if (Model.AllProducts.Count() != 0)
+                    {
+                        ShowProductViewModel showProduct = new ShowProductViewModel { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };
+                        foreach (Product product in Model.AllProducts)
                         {
-                            ShowProductViewModel showProduct = new ShowProductViewModel { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };
-                            foreach (Product product in Model.AllProducts)
-                            {
-                                showProduct.Product = product;
-                                @await Html.PartialAsync("ShowProduct", showProduct)
-                            }
+                            showProduct.Product = product;
+                            @await Html.PartialAsync("ShowProduct", showProduct)
                         }
-                        else
-                        {
-                            <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
-                        }
-                    </div>
+                    }
+                    else
+                    {
+                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                    }
                 </main>
             </div>
         </div>
     </div>
-    <hr class="featurette-heading">
-    <footer class="container">
-        <p class="float-end"><a href="#">Подняться</a></p>
-        <p>© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
-    </footer>
 </body>
 </html>

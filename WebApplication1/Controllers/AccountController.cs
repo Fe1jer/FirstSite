@@ -34,14 +34,12 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Register()
         {
-            ViewBag.Title = "Регистрация";
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            ViewBag.Title = "Регистрация";
             if (ModelState.IsValid)
             {
                 User user = await _users.GetUserAsync(model.Email);
@@ -62,7 +60,7 @@ namespace WebApplication1.Controllers
                     await emailService.SendEmailAsync(model.Email, "Reset Password",
                         $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
 
-                    return Content("Для завершения регистрации проверьте электронную почту и перейдите по ссылке, указанной в письме");
+                    return View("RegisterConfirmation");
                 }
                 else if (user.EmailConfirmed == false)
                 {
@@ -74,6 +72,7 @@ namespace WebApplication1.Controllers
                     {
                         user.LockoutEnd = DateTime.Now.AddMinutes(5);
                         await _users.UpdateUserAsync(user);
+
                         return View("RegisterConfirmation");
                     }
                 }
@@ -86,33 +85,18 @@ namespace WebApplication1.Controllers
         [HttpGet]
         public IActionResult Login()
         {
-            ViewBag.Title = "Вход";
             return View();
         }
 
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
-            ViewBag.Title = "Вход";
             if (ModelState.IsValid)
             {
                 User user = await _users.GetUserAsync(model.Email);
-
-                if(user == null)
+                if (user != null && user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
                 {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-                }
-                else if (user.EmailConfirmed == false)
-                {
-                    if (user.LockoutEnd >= DateTime.Now)
-                    {
-                        ModelState.AddModelError("", "Подтвердите регистрацию на почте.");
-                    }
-                    else
-                    {
-                        await _users.DeleteUserAsync(user);
-                        ModelState.AddModelError("", "Некорректные логин и(или) пароль");
-                    }
+                    await _users.DeleteUserAsync(user);
                 }
                 else if (user != null && _hasher.VerifyHashedPassword(user.Password, model.Password))
                 {
@@ -120,15 +104,14 @@ namespace WebApplication1.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
+                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
             }
-
             return View(model);
         }
 
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            ViewBag.Title = "Профиль";
             User user = await _users.GetUserAsync(User.Identity.Name);
             ProfileViewModel model = new ProfileViewModel
             {
@@ -149,7 +132,6 @@ namespace WebApplication1.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Profile(ProfileViewModel model)
         {
-            ViewBag.Title = "Профиль";
             if (ModelState.IsValid)
             {
                 User user = await _users.GetUserAsync(User.Identity.Name);
@@ -173,7 +155,6 @@ namespace WebApplication1.Controllers
                 }
                 user.Role = await _roles.GetRoleAsync(user.RoleId);
                 await _users.UpdateUserAsync(user, model);
-
 
                 return RedirectToAction("Profile");
             }
@@ -234,30 +215,19 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (!ModelState.IsValid)
+            if (ModelState.IsValid)
             {
-                return View(model);
-            }
-            var user = await _users.GetUserAsync(model.Email);
-            if (user == null || model.userId == null)
-            {
-                return View("ResetPasswordConfirmation");
-            }
-            int userId = Convert.ToInt32(model.userId);
-            if (!HmacService.VerifyPasswordResetHmacCode(model.Code, userId))
-            {
-                ModelState.AddModelError(string.Empty, "Invalid, tampered, or expired code used.");
-                return View(model);
-            }
-            if (user.Id == userId)
-            {
-                user.Password = _hasher.HashPassword(model.Password);
-                await _users.UpdateUserAsync(user);
-                return View("ResetPasswordConfirmation");
-            }
-            else
-            {
-                ModelState.AddModelError(string.Empty, "Invalid, tampered, or expired code used.");
+                var user = await _users.GetUserAsync(model.Email);
+                if (!HmacService.VerifyPasswordResetHmacCode(model.Code, model.userId))
+                {
+                    ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
+                }
+                else
+                {
+                    user.Password = _hasher.HashPassword(model.Password);
+                    await _users.UpdateUserAsync(user);
+                    return View("ResetPasswordConfirmation");
+                }
             }
             return View(model);
         }
@@ -266,20 +236,13 @@ namespace WebApplication1.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (userId == null || code == null)
+            if (!HmacService.VerifyPasswordResetHmacCode(code, userId))
             {
+                ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
                 return View("Error");
             }
             var user = await _users.GetUserAsync(userId);
-            if (user == null)
-            {
-                return View("Error");
-            }
-            if (!HmacService.VerifyPasswordResetHmacCode(code, Convert.ToInt32(userId)))
-            {
-                ModelState.AddModelError(string.Empty, "Invalid, tampered, or expired code used.");
-                return View("Error");
-            }
+
             user.EmailConfirmed = true;
             user.LockoutEnd = null;
             await _users.UpdateUserAsync(user);

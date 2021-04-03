@@ -1,5 +1,8 @@
 ﻿@model List<Order>
-<h2>Ваши заказы</h2>
+@{
+    ViewData["Title"] = "Ваши заказы";
+}
+<h2>@ViewData["Title"]</h2>
 <main>
     @{
         foreach (var order in Model)

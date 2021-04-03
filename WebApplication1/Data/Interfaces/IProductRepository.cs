@@ -10,6 +10,7 @@ namespace WebApplication1.Data.Interfaces
         Task<Product> GetProductByIdAsync(int productId);
         Task<IReadOnlyList<Product>> GetProductsAsync();
         Task<IReadOnlyList<Product>> GetProductsAsync(ISpecification<Product> specification);
+        Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText);
         Task AddProductAsync(Product product);
         Task UpdateProductAsync(Product product);
         Task<Product> GetProductByNameAsync(string name);

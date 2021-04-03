@@ -7,7 +7,6 @@ namespace WebApplication1.Data.Interfaces
     public interface IProductFilter
     {
         public string Name { get; }
-        public List<FilterCategoryVM> FilterCategories { get; }
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products);
         public List<Product> SortProducts(List<Product> products, Dictionary<string, int> filters);
     }

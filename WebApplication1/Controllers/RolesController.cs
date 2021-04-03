@@ -23,13 +23,11 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Index()
         {
-            ViewBag.Title = "Список ролей";
             return View(await _roles.GetRolesAsync(new RoleSpecification().SortByName()));
         }
 
         public async Task<IActionResult> UserList(string search)
         {
-            ViewBag.Title = "Список авторизованных пользователей";
             if (search != null)
             {
                 return View(await _users.GetUsersAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
@@ -39,8 +37,6 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Edit(int userId)
         {
-            ViewBag.Title = "Выбор роли пользователя";
-            // получаем пользователя
             User user = await _users.GetUserAsync(userId);
             if (user != null)
             {
@@ -62,8 +58,6 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int userId, string nameRole)
         {
-            ViewBag.Title = "Выбор роли пользователя";
-            // получаем пользователя
             User user = await _users.GetUserAsync(userId);
             if (user != null)
             {

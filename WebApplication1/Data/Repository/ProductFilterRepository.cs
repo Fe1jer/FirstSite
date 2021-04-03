@@ -9,50 +9,14 @@ namespace WebApplication1.Data.Repository
 {
     public class ProductFilterRepository : IProductFilter
     {
-        private readonly IProductRepository products;
         private List<FilterCategoryVM> filter;
 
-        public ProductFilterRepository(IProductRepository products)
+        public ProductFilterRepository()
         {
-            this.products = products;
+
         }
         public string Name { get => "Фильтр продуктов"; }
-        public List<FilterCategoryVM> FilterCategories
-        {
-            get
-            {
-                this.filter = new List<FilterCategoryVM>();
-                IEnumerable<string> Categories = products.GetProductsAsync().Result.Select(i => i.Category).Distinct().ToList();
-                IEnumerable<string> Countries = products.GetProductsAsync().Result.Select(i => i.Country).Distinct().ToList();
-                IEnumerable<string> Companies = products.GetProductsAsync().Result.Select(i => i.Company).Distinct().ToList();
-                Dictionary<string, IEnumerable<string>> filter = new Dictionary<string, IEnumerable<string>>() { { "Категория", Categories }, { "Компания", Companies }, { "Страна производитель", Countries } };
 
-                int categoryId = 1;
-                foreach (KeyValuePair<string, IEnumerable<string>> item in filter)
-                {
-                    FilterCategoryVM category = new FilterCategoryVM
-                    {
-                        ID = categoryId,
-                        Name = item.Key,
-                        Selections = new List<FilterSelectionVM>()
-                    };
-                    int selectionId = 1;
-                    foreach (string i in item.Value)
-                    {
-                        FilterSelectionVM filterSelection = new FilterSelectionVM
-                        {
-                            ID = selectionId,
-                            Name = i
-                        };
-                        category.Selections.Add(filterSelection);
-                        selectionId++;
-                    }
-                    this.filter.Add(category);
-                    categoryId++;
-                }
-                return this.filter;
-            }
-        }
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products)
         {
             this.filter = new List<FilterCategoryVM>();
@@ -89,6 +53,7 @@ namespace WebApplication1.Data.Repository
 
         public List<Product> SortProducts(List<Product> products, Dictionary<string, int> filters)
         {
+            List<FilterCategoryVM> filterCategories = GetFilterCategoriesByProducts(products);
             int categoryId = 0;
             List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
             foreach (KeyValuePair<string, int> item in filters)
@@ -97,7 +62,7 @@ namespace WebApplication1.Data.Repository
                 {
                     categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
                     int filterId = item.Value - 1;
-                    string i = GetFilterCategoriesByProducts(products)[categoryId].Selections[filterId].Name;
+                    string i = filterCategories[categoryId].Selections[filterId].Name;
                     if (categoryId == 0)
                     {
                         filter[0].Add(i);

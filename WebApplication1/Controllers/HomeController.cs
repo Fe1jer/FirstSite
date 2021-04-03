@@ -47,14 +47,11 @@ namespace WebApplication1.Controllers
                        }
                 },
             };
-            ViewBag.Title = "Главная страница";
 
             return View(homeProducts);
         }
         public ViewResult Index()
         {
-            ViewBag.Title = "Обложка";
-
             return View();
         }
     }

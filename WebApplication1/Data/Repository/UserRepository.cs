@@ -12,7 +12,7 @@ namespace WebApplication1.Data.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        IPasswordHasher _passwordHasher;
+        private readonly IPasswordHasher _passwordHasher;
 
         public UserRepository(AppDBContext appDBContext, IPasswordHasher passwordHasher) : base(appDBContext)
         {

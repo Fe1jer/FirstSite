@@ -29,8 +29,14 @@ namespace WebApplication1.Data.Services
             }
         }
 
-        public static bool VerifyPasswordResetHmacCode(string codeBase64Url, int userId)
+        public static bool VerifyPasswordResetHmacCode(string codeBase64Url, string stringUserId)
         {
+            if(codeBase64Url == null || stringUserId == null)
+            {
+                return false;
+            }
+            int userId = Convert.ToInt32(stringUserId);
+
             string base64 = codeBase64Url.Replace('-', '+').Replace('_', '/');
             byte[] message = Convert.FromBase64String(base64);
 

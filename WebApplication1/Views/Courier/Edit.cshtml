@@ -1,5 +1,7 @@
 ﻿@model ChangeCourierViewModels
-
+@{
+    ViewData["Title"] = "Выбор курьера";
+}
 <h2>Выбор курьера для заказа @Model.Order.Id</h2>
 
 <form asp-action="Edit" method="post">

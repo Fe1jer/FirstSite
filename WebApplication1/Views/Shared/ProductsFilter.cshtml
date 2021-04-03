@@ -1,0 +1,56 @@
+﻿@model ProductsListViewModel
+    <div class="position-sticky pt-3 bg-light shadow">
+        <ul class="nav flex-column">
+
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">
+                    Все товары
+                </a>
+            </li>
+            @if (User.IsInRole("admin") || User.IsInRole("moderator"))
+            {
+                <li class="nav-item">
+                    <a class="nav-link" asp-controller="Products" asp-action="AddProduct">
+                        Добавить товар
+                    </a>
+                </li>
+            }
+        </ul>
+        <hr />
+        @{
+            foreach (var category in Model.FilterSort)
+            {
+                int counter = 1;
+                <b class="px-2">@category.Name</b>
+                foreach (var selection in category.Selections)
+                {
+                    string i = null;
+                    @if (Model.Filter != null)
+                    {
+
+                        foreach (KeyValuePair<string, int> item in Model.Filter)
+                        {
+                            int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
+                            int filterId = item.Value - 1;
+                            i = Model.FilterSort[categoryId].Selections[filterId].Name;
+                            Model.Filter.Remove(i);
+                            if (selection.Name == i)
+                            {
+                                break;
+                            }
+                        }
+                    }
+
+                    string name = String.Format("filters[{0}-{1}]", category.ID, counter++);
+                    <label class="nav-link" style="padding:3px 11px">
+                        <input class="form-check-input" type="checkbox" name="@name" value="@selection.ID"
+                               @(i == selection.Name ? "checked" : "") />
+                        <span>@selection.Name</span>
+                    </label>
+                }
+                <hr />
+
+            }
+            <input class="btn btn-primary" type="submit" />
+        }
+    </div>
