@@ -14,13 +14,6 @@ namespace WebApplication1.Controllers
             _productRep = productRep;
         }
 
-        public interface IEnumerator
-        {
-            bool MoveNext(); // перемещение на одну позицию вперед в контейнере элементов
-            object Current { get; }  // текущий элемент в контейнере
-            void Reset(); // перемещение в начало контейнера
-        }
-
         public ViewResult Catalog()
         {
             var homeProducts = new HomeViewModel
