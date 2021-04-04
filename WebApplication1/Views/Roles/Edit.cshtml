@@ -18,5 +18,24 @@
             <br />
         }
     </div>
-    <button type="submit" class="btn btn-primary">Сохранить</button>
+    <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#Edit">
+        Изменить роль
+    </button>
+    <div class="modal fade" id="Edit" tabindex="-1" aria-labelledby="Edit" style="display: none;" aria-hidden="true">
+        <div class="modal-dialog">
+            <div class="modal-content">
+                <div class="modal-header">
+                    <h5 class="modal-title" id="Edit">Сохранить изменения</h5>
+                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                </div>
+                <div class="modal-body">
+                    Перед тем как изменить роль пользователя, проверьте правильность выбора электронной почты этого пользователя.
+                </div>
+                <div class="modal-footer">
+                    <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                    <button type="submit" class="btn btn-primary">Сохранить</button>
+                </div>
+            </div>
+        </div>
+    </div>
 </form>
