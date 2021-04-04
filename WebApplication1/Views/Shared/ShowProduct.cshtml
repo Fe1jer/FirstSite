@@ -16,8 +16,6 @@
                         <p style="font-size: .9375rem; margin-bottom: 0.9rem;">@Model.Product.ShortDesc</p>
                     </div>
                 </div>
-
-
                 <p><b>Цена: @Model.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</b></p>
                 <div class="d-flex justify-content-between align-items-center">
                     <a type="button" class="btn btn-outline-warning" asp-controller="Products" asp-action="Product" asp-route-name="@Model.Product.Name.Replace(" ", "-")" asp-route-id="@Model.Product.Id">

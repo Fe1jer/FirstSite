@@ -1,7 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.RazorPages;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -164,12 +162,8 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Products")]
-        public async Task<IActionResult> Index(Dictionary<string, int> filters, string deleteFilter)
+        public async Task<IActionResult> Index(Dictionary<string, int> filters)
         {
-            if (deleteFilter != null)
-            {
-                filters.Remove(deleteFilter.Split('-')[0]);
-            }
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
             List<FilterCategoryVM> filterCategories = _productFilter.GetFilterCategoriesByProducts(products.ToList());
             products = _productFilter.SortProducts(products.ToList(), filters);

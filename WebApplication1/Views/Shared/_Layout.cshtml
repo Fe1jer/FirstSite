@@ -11,7 +11,7 @@
     <meta charset="utf-8">
 </head>
 <body>
-    <header>
+    <header id="header">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">Интернет магазин</a>
@@ -21,7 +21,7 @@
                 <div class="collapse navbar-collapse" id="navbarCollapse">
                     <ul class="navbar-nav me-auto mb-2 mb-md-0">
                         <li class="nav-item active">
-                            <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="Catalog">Главная</a>
+                            <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="News">Главная</a>
                         </li>
                         <li class="nav-item">
                             <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">Каталог</a>
@@ -79,19 +79,19 @@
         </nav>
 
     </header>
-    <div class="container">
+    <div class="container" id="container">
         @RenderBody()
     </div>
     <div id="cookie_notification">
         <p class="text-dark abs">Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.</p>
         <button class="btn btn-info cookie_accept">Принять</button>
     </div>
-    <footer class="blockquote-footer">
+    <footer id="footer">
         <hr class="featurette-heading">
         <p class="float-end mx-5"><a href="#">Подняться</a></p>
         <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
     </footer>
-    <script src="~/js/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="~/js/Cookie.js" asp-append-version="true"></script>
+    <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
+    <script src="~/js/modules/Cookie.js" asp-append-version="true"></script>
 </body>
 </html>

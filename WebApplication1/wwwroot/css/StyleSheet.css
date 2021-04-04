@@ -92,7 +92,6 @@ h3{
     overflow: hidden; /* Скрываем всё за контуром */
 }
 
-
     .scale img {
         transform: scale(0.85);
         transition: 1s; /* Время эффекта */
