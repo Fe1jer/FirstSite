@@ -1,60 +1,46 @@
 ﻿@model SearchViewModel
 @{
-    ViewData["Title"] = "Результат поиска";
+    ViewData["Title"] = Model.SearchName + " - Результат поиска";
 }
 <head>
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 </head>
 <body>
-    <div class="row">
-        <div class="navbar navbar-expand-lg navbar-light bg-light p-2 shadow">
-            <h2>Результат поиска "@Model.SearchName" @Model.ProductsListViewModel.AllProducts.Count()</h2>
-            <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
-                <span class="navbar-toggler-icon"></span>
-            </button>
-            <div class="w-100">
-                @if (Model.ProductsListViewModel.Filter != null)
-                {
-                    foreach (KeyValuePair<string, int> item in Model.ProductsListViewModel.Filter)
-                    {
-                        int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
-                        int filterId = item.Value - 1;
-                        string name = String.Format("filters[{0}-{1}]", categoryId, filterId);
-                        string i = Model.ProductsListViewModel.FilterSort[categoryId].Selections[filterId].Name;
-                        <a asp-controller="Products" asp-action="Search" asp-route-search="@Model.SearchName" asp-route-filters="@Model.ProductsListViewModel.Filter" asp-route-deleteFilter="@categoryId" class="schema-tags__item m-1" data-bind="click: $root.removeTag.bind($root, tag), attr: {title: tag.facet.name}" title="Категория товара" id="l0_b1">
-                            <p class="navbar-nav schema-tags__text">@i</p>
-                        </a>
-
-                    }
-                }
-            </div>
-        </div>
-        <div class="container-fluid">
-            <div class="row">
-                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
-                    @Html.AntiForgeryToken()
-                    @using (Html.BeginForm("Search", "Products", FormMethod.Post))
-                    {
-                        @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
-                        <input type="hidden" name="search" value="@Model.SearchName" />
-                    }
-                </nav>
-                <main class="col-md-9 ms-sm-auto col-lg-10 px-md-4 mt-2 row">
-                    @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
-                    {
-                        ShowProductViewModel showProduct = new ShowProductViewModel { Filter = null, ShopCartItems = Model.ProductsListViewModel.ShopCartItems };
-                        foreach (Product product in Model.ProductsListViewModel.AllProducts)
-                        {
-                            showProduct.Product = product;
-                            @await Html.PartialAsync("ShowProduct", showProduct)
-                        }
-                    }
-                    else
-                    {
-                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
-                    }
-                </main>
-            </div>
+    <div class="navbar navbar-expand-lg navbar-light bg-light p-2 shadow">
+        <h2>Результат поиска "@Model.SearchName" @Model.ProductsListViewModel.AllProducts.Count()</h2>
+        <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="w-100">
+            @await Html.PartialAsync("FilterHeader", Model.ProductsListViewModel)
         </div>
     </div>
+    <div class="container-fluid">
+        <div class="row">
+            <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
+                @Html.AntiForgeryToken()
+                @using (Html.BeginForm("Search", "Products", FormMethod.Post))
+                {
+                    @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
+                    <input type="hidden" name="search" value="@Model.SearchName" />
+                }
+            </nav>
+            <main class="col-md-9 ms-sm-auto col-lg-10 mt-2 row" style="margin-right: 0px;margin-left: 0px;">
+                @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
+                {
+                    ShowProductViewModel showProduct = new ShowProductViewModel { Filter = null, ShopCartItems = Model.ProductsListViewModel.ShopCartItems };
+                    foreach (Product product in Model.ProductsListViewModel.AllProducts)
+                    {
+                        showProduct.Product = product;
+                        @await Html.PartialAsync("ShowProduct", showProduct)
+                    }
+                }
+                else
+                {
+                    <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                }
+            </main>
+        </div>
+    </div>
+    <script src="~/js/modules/CheckboxFilter.js"></script>
 </body>

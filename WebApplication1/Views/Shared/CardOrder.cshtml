@@ -1,0 +1,73 @@
+﻿@model Order
+<h5 class=" text-danger">@Model.Email</h5>
+<div class="d-flex row">
+    <div class="col-lg-4">
+        <p>
+            <b>Время заказа: </b>@Model.OrderTime
+        </p>
+        <p>
+            <b>Номер заказчика: </b>@Model.Phone
+        </p>
+        @if (User.IsInRole("moderator"))
+        {
+            @if (Model.Courier != null)
+            {
+                <p>
+                    <b class="text-success">Курьер: </b>@Model.Courier.Email
+                </p>
+            }
+        }
+    </div>
+    <div class="col-lg-3">
+        @foreach (OrderDetail orderDetail in Model.OrderDetails)
+        {
+            <p>
+                <b>@orderDetail.Product.Category:</b> @orderDetail.Product.Name
+            </p>
+        }
+    </div>
+    <div class="btn-group col-lg-4" style="display: flex; align-items: flex-end;">
+        <a type="button" class="btn btn-outline-warning" asp-controller="Courier" asp-action="OrderDetail" asp-route-idOrder="@Model.Id">
+            <font style="vertical-align: inherit;">
+                <font style="vertical-align: inherit;">
+                    Подробнее
+                </font>
+            </font>
+        </a>
+        @if (User.IsInRole("moderator"))
+        {
+            <a type="button" class="btn btn-outline-success" asp-controller="Courier" asp-action="Edit" asp-route-idOrder="@Model.Id">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Выбрать курьера
+                    </font>
+                </font>
+            </a>
+            <a type="button" class="btn btn-outline-danger" asp-controller="Courier" asp-action="Delete" asp-route-idOrder="@Model.Id">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Удалить заказ
+                    </font>
+                </font>
+            </a>
+        }
+        else if (User.IsInRole("courier"))
+        {
+            <a type="button" class="btn btn-outline-success" asp-controller="Courier" asp-action="Delete" asp-route-idOrder="@Model.Id">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Заказ доставлен
+                    </font>
+                </font>
+            </a>
+            <a type="button" class="btn btn-outline-danger" asp-controller="Courier" asp-action="Renouncement" asp-route-idOrder="@Model.Id">
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">
+                        Отказаться
+                    </font>
+                </font>
+            </a>
+        }
+    </div>
+</div>
+<hr style="margin: 0.4rem 0;" />

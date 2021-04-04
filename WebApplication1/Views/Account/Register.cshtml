@@ -6,11 +6,6 @@
 <head>
     <link href="/css/signin.css" rel="stylesheet">
     <style>
-        footer {
-            display: none;
-        }
-    </style>
-    <style>
         .bd-placeholder-img {
             font-size: 1.125rem;
             text-anchor: middle;
@@ -33,7 +28,7 @@
 
 </head>
 <body>
-    <form asp-action="Register" method="post" class="form-horizontal">
+    <form asp-action="Register" method="post" class="form-horizontal mt-5">
         <div class="row justify-content-center g-3 bg-white shadow" style="padding-top: 3.3rem;">
             <h1 class="text-center">Регистрация пользователя</h1>
             <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
@@ -84,7 +79,7 @@
                 <button class="btn btn-primary btn-lg mb-4" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Зарегистрироваться</font></font></button>
             </div>
         </div>
-        <script src="~/js/slider-radio.js" asp-append-version="true"></script>
+        <script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
     </form>
 </body>
 </html>

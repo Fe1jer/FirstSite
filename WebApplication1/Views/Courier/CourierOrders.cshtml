@@ -7,49 +7,7 @@
     @{
         foreach (var order in Model)
         {
-            <h5 class="text-danger">@order.Email</h5>
-            <div class="col-12 row">
-                <div class="col-lg-4">
-                    <p>
-                        <b>Время заказа: </b>@order.OrderTime
-                    </p>
-                    <p>
-                        <b>Номер заказчика: </b>@order.Phone
-                    </p>
-                </div>
-                <div class="col-lg-3">
-                    @foreach (OrderDetail orderDetail in order.OrderDetails)
-                    {
-                        <p>
-                            <b>@orderDetail.Product.Category:</b> @orderDetail.Product.Name
-                        </p>
-                    }
-                </div>
-                <div class="btn-group col-lg-4" style="display: flex; align-items: flex-end;">
-                    <a type="button" class="btn btn-outline-warning" asp-controller="Courier" asp-action="OrderDetail" asp-route-idOrder="@order.Id">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">
-                                Подробнее
-                            </font>
-                        </font>
-                    </a>
-                    <a type="button" class="btn btn-outline-success" asp-controller="Courier" asp-action="Delete" asp-route-idOrder="@order.Id">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">
-                                Заказ доставлен
-                            </font>
-                        </font>
-                    </a>
-                    <a type="button" class="btn btn-outline-danger" asp-controller="Courier" asp-action="Renouncement" asp-route-idOrder="@order.Id">
-                        <font style="vertical-align: inherit;">
-                            <font style="vertical-align: inherit;">
-                                Отказаться
-                            </font>
-                        </font>
-                    </a>
-                </div>
-            </div>
-            <hr style="margin: 0.4rem 0;" />
+            @await Html.PartialAsync("CardOrder", order)
         }
     }
 </main>

@@ -4,7 +4,7 @@
     let cookieBtn = cookieNotification.querySelector('.cookie_accept');
 
     // Если записи про кукисы нет или она просрочена на 1 год, то показываем информацию про кукисы
-    if (!cookieDate || (+cookieDate + 31622400) < Date.now()) {
+    if (!cookieDate || (+cookieDate + 3153600000) < Date.now()) {
         cookieNotification.classList.add('show');
     }
 

@@ -1,0 +1,17 @@
+﻿@model ProductsListViewModel
+
+@if (Model.Filter != null)
+{
+    int counter = 1;
+    foreach (KeyValuePair<string, int> item in Model.Filter)
+    {
+        int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
+        int filterId = item.Value - 1;
+        string name = String.Format("filters[{0}-{1}]", categoryId, filterId);
+        string i = Model.FilterSort[categoryId].Selections[filterId].Name;
+        <a class="schema-tags__item m-1" onclick="setbutton(this, @i);" title="Категория товара" id="@counter">
+            <p class="navbar-nav schema-tags__text">@i</p>
+        </a>
+        counter++;
+    }
+}

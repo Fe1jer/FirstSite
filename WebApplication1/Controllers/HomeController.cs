@@ -14,7 +14,7 @@ namespace WebApplication1.Controllers
             _productRep = productRep;
         }
 
-        public ViewResult Catalog()
+        public ViewResult News()
         {
             var homeProducts = new HomeViewModel
             {

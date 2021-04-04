@@ -41,6 +41,29 @@
         scroll-behavior: smooth
     }
 }
+* {
+    margin: 0;
+}
+
+body {
+    height: 100%;
+}
+
+html {
+    position: relative;
+    min-height: 100%;
+}
+
+#container {
+    padding-bottom: 80px; /*Примерно 2 размера footer, чтобы он не наезжал на контент при узком окне браузера*/
+}
+
+#footer {
+    height: 80px;
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
 
 body {
     margin: 0;
@@ -527,10 +550,12 @@ progress {
     }
 
 .blockquote-footer {
-    margin-top: 40px;
-    margin-bottom: 1rem;
     font-size: .875em;
     color: #6c757d;
+    position: absolute;
+    bottom: 0;
+    left: 0;
+    width: 100%;
 }
 
 .img-fluid {
