@@ -1,4 +1,25 @@
-﻿li.toc-entry a {
+﻿.loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(244,244,244,.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+
+.isDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    display: inline-block; /* For IE11/ MS Edge bug */
+    pointer-events: none;
+    text-decoration: none;
+}
+
+li.toc-entry a {
     display: block;
     padding: .300rem .5rem;
     color: #77757a;
