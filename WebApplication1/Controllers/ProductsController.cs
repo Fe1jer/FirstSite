@@ -29,9 +29,9 @@ namespace WebApplication1.Controlles
         }
 
         [HttpGet, Route("Products/Search")]
-        public async Task<IActionResult> Search(string search, List<string> filters)
+        public async Task<IActionResult> Search(string q, List<string> filters)
         {
-            var products = await _allProducts.SearchProductsAsync(search);
+            var products = await _allProducts.SearchProductsAsync(q);
             List<FilterCategoryVM> filterCategories = _productsManager.GetFilterCategoriesByProducts(products.ToList());
             products = _productsManager.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = _productsManager.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
@@ -45,7 +45,7 @@ namespace WebApplication1.Controlles
             };
             var model = new SearchViewModel
             {
-                SearchName = search,
+                SearchName = q,
                 ProductsListViewModel = productObj
             };
 
@@ -180,9 +180,9 @@ namespace WebApplication1.Controlles
 
         [HttpPost]
         [Route("Products/SearchAjax")]
-        public async Task<IActionResult> SearchAjax(string search, List<string> filters)
+        public async Task<IActionResult> SearchAjax(string q, List<string> filters)
         {
-            var products = await _allProducts.SearchProductsAsync(search);
+            var products = await _allProducts.SearchProductsAsync(q);
             products = _productsManager.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = _productsManager.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
             Thread.Sleep(1000);

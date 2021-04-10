@@ -10,26 +10,24 @@
 </form>
 
 <h2>@ViewData["Title"]</h2>
-<div class="">
-    @{
-        string role = "";
-        foreach (var user in Model)
-        {
-            @if (role != user.Role.Name)
-            {
-                role = user.Role.Name;
-                <h5 class="text-danger">@role</h5>
-            }
-            <div class="d-flex justify-content-between ">
-                <div>
-                    <p>
-                        @user.Email
 
-                    </p>
-                </div>
-                <a class="mx-3 btn btn-sm btn-primary" asp-action="Edit" asp-route-userid="@user.Id">Права доступа</a>
-            </div>
-            <hr style="margin: 0.4rem 0;" />
+@{
+    string role = "";
+    foreach (var user in Model)
+    {
+        @if (role != user.Role.Name)
+        {
+            role = user.Role.Name;
+            <h5 class="text-danger">@role</h5>
         }
+        <div class="d-flex justify-content-between">
+            <div class="row">
+                <p>
+                    @user.Email
+                </p>
+            </div>
+            <a class="mx-3 btn btn-sm btn-primary" asp-action="Edit" asp-route-userid="@user.Id">Права доступа</a>
+        </div>
+        <hr style="margin: 0.4rem 0;" />
     }
-</div>
+}

@@ -49,7 +49,7 @@
                         }
                     </ul>
                     <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3 pt-1 pb-1">
-                        <input class="form-control me-2" name="search" type="search" placeholder="Поиск" aria-label="Search">
+                        <input class="form-control me-2" name="q" type="search" placeholder="Поиск" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     @if (User.Identity.IsAuthenticated)
@@ -94,6 +94,17 @@
         <p class="float-end mx-5"><a href="#">Подняться</a></p>
         <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
     </footer>
+    <script src="~/jquery/jquery.js"></script>
+
+    <script>
+        function moveItem() {
+            $('div:not([id]):not([class])').each(function () {
+                $(this).remove();
+            });
+        }
+
+        setTimeout(moveItem, 500);
+    </script>
     <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/modules/Cookie.js" asp-append-version="true"></script>
 </body>

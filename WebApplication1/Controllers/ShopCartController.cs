@@ -52,7 +52,6 @@ namespace WebApplication1.Controllers
                 return View("PageNotFound");
             }
             await _shopCart.RemoveToCart(await _allUser.GetUserAsync(User.Identity.Name), IdProduct);
-
             var shopCartItems = await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)));
 
             return Json(shopCartItems.Count);

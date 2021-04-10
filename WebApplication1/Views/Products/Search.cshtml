@@ -70,7 +70,7 @@
                     $("#loaderDiv").show();
                 },
                 data: {
-                    search : searchName,
+                    q : searchName,
                     filters: list
                 },
                 success: function (result) {
@@ -87,7 +87,7 @@
                     }
                 },
                 error: function () {
-                    alert("error!");
+
                 }
             });
         };

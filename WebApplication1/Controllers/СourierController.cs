@@ -21,14 +21,12 @@ namespace WebApplication1.Controllers
         }
 
         [Authorize(Roles = "moderator")]
-        // GET: СourierController
         public async Task<ActionResult> Index()
         {
             return View(await allOrders.GetOrdersAsync(
                 new OrderSpecification().
                 IncludeDetails().IncludeCourier().SortByCourier().
-                WithoutTracking()
-                ));
+                WithoutTracking()));
         }
 
         [Authorize(Roles = "courier")]

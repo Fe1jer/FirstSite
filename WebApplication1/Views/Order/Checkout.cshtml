@@ -15,7 +15,7 @@
                     foreach (var el in Model.ShopCartItems)
                     {
                         <li class="list-group-item d-flex justify-content-between lh-sm">
-                            <div>
+                            <div class="h-auto">
                                 <h6 class="my-0"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Company @el.Product.Name</font></font></h6>
                                 <small class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Category</font></font></small>
                             </div>
@@ -43,7 +43,7 @@
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label asp-for="Order.Name" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Name" class="form-control" />
                             <span asp-validation-for="Order.Name" class="text-danger"></span>
                         </div>
@@ -51,7 +51,7 @@
 
                     <div class="col-sm-6">
                         <label asp-for="Order.Surname" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Surname" class="form-control" />
                             <span asp-validation-for="Order.Surname" class="text-danger"></span>
                         </div>
@@ -67,7 +67,7 @@
                     </div>
                     <div class="col-12">
                         <label asp-for="Order.Email" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Email" class="form-control" value="@User.Identity.Name" />
                             <span asp-validation-for="Order.Email" class="text-danger"></span>
                         </div>
@@ -75,7 +75,7 @@
 
                     <div class="col-12">
                         <label asp-for="Order.Address" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Address" class="form-control" />
                             <span asp-validation-for="Order.Address" class="text-danger"></span>
                         </div>
@@ -83,7 +83,7 @@
 
                     <div class="col-12">
                         <label asp-for="Order.Phone" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Phone" class="form-control" />
                             <span asp-validation-for="Order.Phone" class="text-danger"></span>
                         </div>
@@ -120,7 +120,7 @@
                     </div>
                     <div class="col-md-3">
                         <label asp-for="Order.Zip" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.Zip" class="form-control" />
                             <span asp-validation-for="Order.Zip" class="text-danger"></span>
                         </div>
@@ -161,7 +161,7 @@
                 <div class="row gy-3">
                     <div class="col-md-6">
                         <label asp-for="Order.CCName" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.CCName" class="form-control" />
                             <span asp-validation-for="Order.CCName" class="text-danger"></span>
                         </div>
@@ -169,7 +169,7 @@
 
                     <div class="col-md-6">
                         <label asp-for="Order.CCNumber" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.CCNumber" class="form-control" />
                             <span asp-validation-for="Order.CCNumber" class="text-danger"></span>
                         </div>
@@ -177,7 +177,7 @@
 
                     <div class="col-md-3">
                         <label asp-for="Order.CCExpiration" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.CCExpiration" class="form-control" />
                             <span asp-validation-for="Order.CCExpiration" class="text-danger"></span>
                         </div>
@@ -185,7 +185,7 @@
 
                     <div class="col-md-3">
                         <label asp-for="Order.CCCVV" class="form-label"></label>
-                        <div>
+                        <div class="input-group">
                             <input asp-for="Order.CCCVV" class="form-control" />
                             <span asp-validation-for="Order.CCCVV" class="text-danger"></span>
                         </div>
@@ -199,8 +199,3 @@
         </div>
     </div>
 </main>
-<hr class="featurette-heading">
-<footer class="container">
-    <p class="float-end"><a href="#">Подняться</a></p>
-    <p>© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
-</footer>

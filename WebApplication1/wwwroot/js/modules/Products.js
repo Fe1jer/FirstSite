@@ -13,7 +13,7 @@
         '</div>' +
         '<div class="card-body">' +
         '<div class="box">' +
-        '<div>' +
+        '<div class="h-auto">' +
         '<h5>' + company + ' ' + name + '</h5>' +
         '<p style="font-size: .9375rem; margin-bottom: 0.9rem;">' + shortDesc + '</p>' +
         '</div>' +
