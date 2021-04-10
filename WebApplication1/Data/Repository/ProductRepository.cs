@@ -49,8 +49,11 @@ namespace WebApplication1.Data.Repository
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
         {
             var collection = await  GetAllAsync();
-            collection = collection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList()
-                .Union(collection.Where(i => i.Company.ToLower().Contains(searchText.ToLower()))).Distinct().ToList();
+            if (searchText != null)
+            {
+                collection = collection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList()
+                    .Union(collection.Where(i => i.Company.ToLower().Contains(searchText.ToLower()))).Distinct().ToList();
+            }
             return collection;
         }
 

@@ -27,15 +27,15 @@ namespace WebApplication1
 
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
-            services.AddTransient<IProductFilter, ProductFilterRepository>();
+            services.AddTransient<IProductsManager, ProductsManagerRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
             services.AddTransient<IPasswordHasher, PasswordHasherRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<IProductFilter, ProductFilterRepository>();
+            services.AddTransient<IProductsManager, ProductsManagerRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
+            services.AddAntiforgery(o => o.HeaderName = "XSRF-TOKEN");
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddMemoryCache();
             services.AddSession();

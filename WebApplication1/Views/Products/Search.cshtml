@@ -19,28 +19,77 @@
         <div class="row">
             <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
                 @Html.AntiForgeryToken()
-                @using (Html.BeginForm("Search", "Products", FormMethod.Post))
+                @using (Html.BeginForm("Search", "Products", FormMethod.Get))
                 {
-                    @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
                     <input type="hidden" name="search" value="@Model.SearchName" />
+                    @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
                 }
             </nav>
-            <main class="col-md-9 ms-sm-auto col-lg-10 mt-2 row" style="margin-right: 0px;margin-left: 0px;">
-                @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
-                {
-                    ShowProductViewModel showProduct = new ShowProductViewModel { Filter = null, ShopCartItems = Model.ProductsListViewModel.ShopCartItems };
-                    foreach (Product product in Model.ProductsListViewModel.AllProducts)
+            <main class="px-4 col-md-10 mt-2" style="position: relative">
+                <div id="content" class="row">
+                    @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
                     {
-                        showProduct.Product = product;
-                        @await Html.PartialAsync("ShowProduct", showProduct)
+                        foreach (ShowProductViewModel showProduct in Model.ProductsListViewModel.AllProducts)
+                        {
+                            @await Html.PartialAsync("ShowProduct", showProduct)
+                        }
                     }
-                }
-                else
-                {
-                    <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
-                }
+                    else
+                    {
+                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                    }
+                </div>
+                <div id="loaderDiv" class="loading" style="display: none"></div>
             </main>
         </div>
     </div>
+    <script src="~/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/js/modules/CheckboxFilter.js"></script>
+    <script src="~/js/modules/Products.js"></script>
+
+    <script>
+        var xhr;
+        function filterProducts () {
+            var filtersHref = [];
+            var list = [];
+            var searchName = '@Model.SearchName';
+            $('.form-check-input:checked').each(function () {
+                filtersHref.push('&filters=' + $(this).val());
+                list.push($(this).val());
+            });
+            var winLocHref = window.location.href.split("&");
+            history.pushState(null, null, winLocHref[0] + filtersHref.join(''));
+            if (xhr) {
+                xhr.abort();
+            }
+            xhr = $.ajax({
+                type: 'POST',
+                url: '@Url.Action("SearchAjax", "Products")',
+                beforeSend: function () {
+                    $("#loaderDiv").show();
+                },
+                data: {
+                    search : searchName,
+                    filters: list
+                },
+                success: function (result) {
+                    $("#loaderDiv").hide();
+                    $('#content').empty();
+                    if (JSON.stringify(result) != '[]') {
+                        $.each(result,
+                            function (num, item) {
+                                $('#content').append(ShowProduct(item, '@(User.IsInRole("admin") || User.IsInRole("moderator"))'));
+                            });
+                    }
+                    else {
+                        $('#content').append(resultProductsEmpty());
+                    }
+                },
+                error: function () {
+                    alert("error!");
+                }
+            });
+        };
+    </script>
 </body>

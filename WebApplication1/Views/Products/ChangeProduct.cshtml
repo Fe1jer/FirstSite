@@ -8,7 +8,7 @@
         <form asp-action="ChangeProduct" asp-route-id="@Model.Id" method="post">
             <div class="row">
 
-                <div class="col-lg-6 py-3 order-2 order-lg-1">
+                <div class="col-lg-6 order-2 order-lg-1">
                     <div class="col-sm-6">
                         <label asp-for="Img" class="form-label"></label>
                         <div>
@@ -16,7 +16,7 @@
                             <span asp-validation-for="Img" class="text-danger"></span>
                         </div>
                     </div>
-                    <img class="w-100" src="@Model?.Img" />
+                    <img class="w-100 py-3" src="@Model?.Img" />
                 </div>
                 <div class=" col-lg-6 col-xl-5 pl-lg-5 mb-5 order-1 order-lg-2">
 

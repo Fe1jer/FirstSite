@@ -1,4 +1,6 @@
-﻿@model ProductsListViewModel
+﻿
+@model ProductsListViewModel
+
 <div class="position-sticky pt-3 bg-light shadow">
     <ul class="nav flex-column">
 
@@ -28,10 +30,10 @@
                 @if (Model.Filter != null)
                 {
 
-                    foreach (KeyValuePair<string, int> item in Model.Filter)
+                    foreach (string item in Model.Filter)
                     {
-                        int categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
-                        int filterId = item.Value - 1;
+                        int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
+                        int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
                         i = Model.FilterSort[categoryId].Selections[filterId].Name;
                         Model.Filter.Remove(i);
                         if (selection.Name == i)
@@ -41,15 +43,14 @@
                     }
                 }
 
-                string name = String.Format("filters[{0}-{1}]", category.ID, counter++);
-                <label class="nav-link" style="padding:3px 11px">
-                    <input class="form-check-input" id="@selection.Name" onclick="setCheck()" type="checkbox" name="@name" value="@selection.ID"
+                string name = String.Format("{0}-{1}", category.ID, counter++);
+                <label class="nav-link" style="padding: 3px 11px">
+                    <input class="form-check-input" id="@selection.Name" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
                            @(i == selection.Name ? "checked" : "") />
                     <span>@selection.Name</span>
                 </label>
             }
             <hr />
         }
-        <input class="btn btn-primary" id="button" style="position: fixed;bottom: 40px;left: 100px; z-index: auto; display: none; width: 220px" type="submit" />
     }
 </div>

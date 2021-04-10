@@ -48,22 +48,25 @@
                             </li>
                         }
                     </ul>
-                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex">
+                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3 pt-1 pb-1">
                         <input class="form-control me-2" name="search" type="search" placeholder="Поиск" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="dropdown text-end mx-3">
+                        <div class="dropdown pt-1 pb-1">
                             <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="@User.FindFirst("Avatar").Value.ToString()" alt="avatar" style="object-fit: cover; width: 40px; height: 40px; border-radius: 50%;" />
                             </a>
-                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1" style="">
+                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
+                                <li><p class="dropdown-item-text text-nowrap my-0">Приветствуем <b>@User.FindFirst("Name").Value.ToString()</b></p></li>
+                                <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Профиль</font></font></a></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Settings"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Настройки</font></font></a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Выйти</font></font></a></li>
                             </ul>
+
                         </div>
                     }
                     else

@@ -9,15 +9,20 @@ p{
 
 .box {
     overflow: hidden;
-    height: 110px;
-    line-height: 25px;
+    height: 86px;
+    line-height: 20px;
 }
+
+    .box h5 {
+        line-height: 21px;
+        margin: 1px 0;
+    }
 
     .box:before {
         content: "";
         float: left;
         width: 5px;
-        height: 130px;
+        height: 110px;
     }
 
     .box > *:first-child {
@@ -31,7 +36,7 @@ p{
         box-sizing: content-box;
         float: right;
         position: relative;
-        top: -50px;
+        top: -44px;
         left: 100%;
         width: 3em;
         margin-left: -3em;
@@ -41,51 +46,9 @@ p{
         background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
     }
 
-/* стили для мноточия '…' */
-.block-with-text {
-    /* спрятать текст если у более N строк */
-    overflow: hidden;
-    /* для установки '…' в абсолютную позицию */
-    position: relative;
-    /* используйте это значение для расчёта высоты блока */
-    line-height: 1.5em;
-    /* max-height = line-height (1.2) * число строк (3) */
-    max-height: 45px;
-    /* исправлиление проблемы когда последнее слово не соединяется с правой стороны */
-    text-align: justify;
-    /* место для многоточия '…' */
-    padding-right: 1em;
-}
-
-    /* создаём многоточие … */
-    .block-with-text:before {
-        /* многоточие в конце */
-        content: '…';
-        /* абсолютное позиционирование */
-        position: absolute;
-        /* установить позицию в правый нижний угол блока */
-        right: 0;
-        bottom: 0;
-    }
-
-    /* спрятать многоточие … если у нас есть текст, который меньше или равен количеству максимальный строк */
-    .block-with-text:after {
-        content: "";
-        position: absolute;
-        /* установить позицию в правый нижний угол блока */
-        right: 0;
-        /* установить width и height */
-        width: 1em;
-        height: 1em;
-        margin-top: 0.2em;
-        /* цвет фона перед блоком */
-        background: white;
-    }
-
 h3{
     margin: 0em;
 }
-
 
 .scale {
     display: inline-block; /* Строчно-блочный элемент */
@@ -93,7 +56,7 @@ h3{
 }
 
     .scale img {
-        transform: scale(0.85);
+        transform: scale(0.9);
         transition: 1s; /* Время эффекта */
         display: block; /* Убираем небольшой отступ снизу */
     }

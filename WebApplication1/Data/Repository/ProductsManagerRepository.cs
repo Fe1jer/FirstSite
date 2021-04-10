@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Globalization;
 using System.Linq;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
@@ -7,11 +8,11 @@ using WebApplication1.ViewModels;
 
 namespace WebApplication1.Data.Repository
 {
-    public class ProductFilterRepository : IProductFilter
+    public class ProductsManagerRepository : IProductsManager
     {
         private List<FilterCategoryVM> filter;
 
-        public ProductFilterRepository()
+        public ProductsManagerRepository()
         {
 
         }
@@ -51,17 +52,18 @@ namespace WebApplication1.Data.Repository
             return this.filter;
         }
 
-        public List<Product> SortProducts(List<Product> products, Dictionary<string, int> filters)
+        public List<Product> SortProducts(List<Product> products, List<string> filters)
         {
             List<FilterCategoryVM> filterCategories = GetFilterCategoriesByProducts(products);
             int categoryId = 0;
+            int filterId = 0;
             List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
-            foreach (KeyValuePair<string, int> item in filters)
+            foreach (string item in filters)
             {
-                if (item.Value != 0)
+                if (item != null)
                 {
-                    categoryId = Convert.ToInt32(item.Key.Split('-')[0]) - 1;
-                    int filterId = item.Value - 1;
+                    categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
+                    filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
                     string i = filterCategories[categoryId].Selections[filterId].Name;
                     if (categoryId == 0)
                     {
@@ -104,6 +106,36 @@ namespace WebApplication1.Data.Repository
             }
             return products;
         }
+        public List<ShowProductViewModel> FindProductsInTheCart(List<Product> products, List<ShopCartItem> cartItems)
+        {
+            List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
+            foreach (Product product in products)
+            {
+                ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
+                bool itemInCart = false;
+
+                foreach (ShopCartItem shopCart in cartItems)
+                {
+                    if (shopCart.Product == product)
+                    {
+                        itemInCart = true;
+                        cartItems.Remove(shopCart);
+                        break;
+                    }
+                }
+                if (itemInCart)
+                {
+                    showProduct.IsInCart = true;
+                }
+                else
+                {
+                    showProduct.IsInCart = false;
+                }
+                showProducts.Add(showProduct);
+            }
+
+            return showProducts;
+        }
     }
 }

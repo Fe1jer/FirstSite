@@ -6,9 +6,9 @@ namespace WebApplication1.ViewModels
 {
     public class ProductsListViewModel
     {
-        public IEnumerable<Product> AllProducts { get; set; }
+        public IEnumerable<ShowProductViewModel> AllProducts { get; set; }
         public List<ShopCartItem> ShopCartItems { get; set; }
-        public Dictionary<string, int> Filter { get; set; }
+        public List<string> Filter { get; set; }
         public List<FilterCategoryVM> FilterSort { get; set; }
     }
 }

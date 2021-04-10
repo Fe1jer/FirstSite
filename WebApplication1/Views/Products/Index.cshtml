@@ -13,7 +13,7 @@
             <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
-            <div class="w-100">
+            <div id="filterHeader" class="w-100">
                 @await Html.PartialAsync("FilterHeader", Model)
             </div>
         </div>
@@ -22,28 +22,75 @@
                 <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
                     @using (Html.BeginForm("Index", "Products", FormMethod.Get))
                     {
-                        @Html.AntiForgeryToken()
                         @await Html.PartialAsync("ProductsFilter", Model)
                     }
                 </nav>
-                <main class="col-md-9 ms-sm-auto col-lg-10 mt-2 row" style="margin-right: 0px;margin-left: 0px;">
-                    @if (Model.AllProducts.Count() != 0)
-                    {
-                        ShowProductViewModel showProduct = new ShowProductViewModel { Filter = Model.Filter, ShopCartItems = Model.ShopCartItems };
-                        foreach (Product product in Model.AllProducts)
+                <main class="px-4 col-md-10 mt-2" style="position: relative">
+                    <div id="content" class="row">
+                        @if (Model.AllProducts.Count() != 0)
                         {
-                            showProduct.Product = product;
-                            @await Html.PartialAsync("ShowProduct", showProduct)
+                            foreach (ShowProductViewModel showProduct in Model.AllProducts)
+                            {
+                                @await Html.PartialAsync("ShowProduct", showProduct)
+                            }
                         }
-                    }
-                    else
-                    {
-                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
-                    }
+                        else
+                        {
+                            <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                        }
+                    </div>
+                    <div id="loaderDiv" class="loading" style="display: none"></div>
                 </main>
             </div>
         </div>
     </div>
+    <script src="~/jquery/jquery.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/js/modules/CheckboxFilter.js"></script>
+    <script src="~/js/modules/Products.js"></script>
+    <script>
+        var xhr;
+        function filterProducts() {
+            var ArrFiltersHref = [];
+            var list = [];
+            $('#filterHeader').empty();
+            $('.form-check-input:checked').each(function () {
+                ArrFiltersHref.push('&filters=' + $(this).val());
+                list.push($(this).val());
+                $('#filterHeader').append(showFilter($(this)));
+            });
+            filtersHref = '?' + ArrFiltersHref.join('').slice(1);
+            var winLocHref = window.location.href.split("?");
+            history.pushState(null, null, winLocHref[0] + filtersHref);
+            if (xhr) {
+                xhr.abort();
+            }
+            xhr = $.ajax({
+                type: 'POST',
+                url: '@Url.Action("IndexAjax", "Products")',
+                beforeSend: function () {
+                    $("#loaderDiv").show();
+                },
+                data: {
+                    filters: list
+                },
+                success: function (result) {
+                    $("#loaderDiv").hide();
+                    $('#content').empty();
+                    if (JSON.stringify(result) != '[]') {
+                        $.each(result,
+                            function (num, item) {
+                                $('#content').append(ShowProduct(item, '@(User.IsInRole("admin") || User.IsInRole("moderator"))'));
+                            });
+                    }
+                    else {
+                        $('#content').append(resultProductsEmpty());
+                    }
+                },
+                error: function () {
+                }
+            });
+        };
+    </script>
 </body>
 </html>
