@@ -4,31 +4,16 @@
 }
 <html>
 <head>
-    <link href="/css/signin.css" rel="stylesheet">
+    <link href="/css/signin.css" rel="stylesheet" asp-append-version="true">
+    <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
     <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @@media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
+        #container {
+            display: contents;
         }
     </style>
-
-
-    <!-- Custom styles for this template -->
-    <link href="signin.css" rel="stylesheet" asp-append-version="true">
-    <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
-
 </head>
 <body>
-    <form asp-action="Register" method="post" class="form-horizontal mt-5">
+    <form asp-action="Register" method="post" class="form-horizontal">
         <div class="row justify-content-center g-3 bg-white shadow" style="padding-top: 3.3rem;">
             <h1 class="text-center">Регистрация пользователя</h1>
             <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>

@@ -113,7 +113,6 @@ namespace WebApplication1.Data.Repository
             foreach (Product product in products)
             {
                 ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
-                showProduct.Product.Name = showProduct.Product.Name.Replace(" ", "-");
                 bool itemInCart = false;
 
                 foreach (ShopCartItem shopCart in cartItems)

@@ -257,7 +257,8 @@ namespace WebApplication1.Controllers
             {
                 new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
                 new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name),
-                new Claim("Avatar", user.Img)
+                new Claim("Avatar", user.Img),
+                new Claim("Name", user.Name)
             };
             ClaimsIdentity id = new ClaimsIdentity(claims, "Cookie", ClaimsIdentity.DefaultNameClaimType,
                 ClaimsIdentity.DefaultRoleClaimType);

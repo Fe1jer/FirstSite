@@ -189,33 +189,5 @@ namespace WebApplication1.Controlles
 
             return Json(showProducts);
         }
-
-        [HttpPost, Route("Products/AddToCart"), Authorize]
-        public async Task<IActionResult> AddToCart(int IdProduct)
-        {
-            if (IdProduct == 0)
-            {
-                return View("PageNotFound");
-            }
-            Product item = await _allProducts.GetProductByIdAsync(IdProduct);
-            if (item != null)
-            {
-                await _shopCart.AddToCart(await _allUser.GetUserAsync(User.Identity.Name), item);
-            }
-
-            return new EmptyResult();
-        }
-
-        [HttpPost, Route("Products/RemoveToCart"), Authorize]
-        public async Task<IActionResult> RemoveToCart(int IdProduct)
-        {
-            if (IdProduct == 0)
-            {
-                return View("PageNotFound");
-            }
-            await _shopCart.RemoveToCart(await _allUser.GetUserAsync(User.Identity.Name), IdProduct);
-
-            return new EmptyResult();
-        }
     }
 }
