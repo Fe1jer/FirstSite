@@ -97,6 +97,11 @@ namespace WebApplication1.Controllers
                 if (user != null && user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
                 {
                     await _users.DeleteUserAsync(user);
+                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                }
+                else if (user != null && user.EmailConfirmed == false)
+                {
+                    ModelState.AddModelError("", "Подтвердите регистрацию на почте.");
                 }
                 else if (user != null && _hasher.VerifyHashedPassword(user.Password, model.Password))
                 {
@@ -104,7 +109,10 @@ namespace WebApplication1.Controllers
 
                     return RedirectToAction("Index", "Home");
                 }
-                ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                else
+                {
+                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                }
             }
             return View(model);
         }

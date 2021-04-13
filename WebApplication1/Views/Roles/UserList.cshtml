@@ -1,26 +1,31 @@
 ﻿@model List<User>
 @{
-    ViewData["Title"] = "Спиоск пользователей";
+    ViewData["Title"] = "Список пользователей";
 }
-<form asp-controller="Roles" asp-action="UserList" class="input-group">
+<form asp-controller="Roles" asp-action="UserList" class="input-group mt-3">
     <div class="form-outline">
-        <input class="form-control me-2" type="search" name="search" placeholder="Поиск" aria-label="Search">
+        <input class="form-control" type="search" name="search" placeholder="Поиск" aria-label="Search">
     </div>
     <button class="btn btn-outline-success" type="submit">Поиск</button>
 </form>
 
-<h2>@ViewData["Title"]</h2>
+<h2 class="mt-4">@ViewData["Title"]</h2>
 
 @{
     string role = "";
-    foreach (var user in Model)
+    foreach (User user in Model)
     {
         @if (role != user.Role.Name)
         {
             role = user.Role.Name;
             <h5 class="text-danger">@role</h5>
         }
-        <div class="d-flex justify-content-between">
+        string style = "";
+        if (user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
+        {
+            style = "background: orangered;";
+        }
+        <div class="d-flex justify-content-between" style="@style">
             <div class="row">
                 <p>
                     @user.Email

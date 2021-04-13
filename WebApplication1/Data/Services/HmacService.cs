@@ -31,7 +31,7 @@ namespace WebApplication1.Data.Services
 
         public static bool VerifyPasswordResetHmacCode(string codeBase64Url, string stringUserId)
         {
-            if(codeBase64Url == null || stringUserId == null)
+            if (codeBase64Url == null || stringUserId == null)
             {
                 return false;
             }

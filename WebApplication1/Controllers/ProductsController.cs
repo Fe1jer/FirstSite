@@ -1,8 +1,6 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
-using System.IO;
 using System.Linq;
 using System.Threading;
 using System.Threading.Tasks;
@@ -28,7 +26,7 @@ namespace WebApplication1.Controlles
             _allProducts = iAllProducts;
         }
 
-        [HttpGet, Route("Products/Search")]
+        [HttpGet, Route("Catalog/Search")]
         public async Task<IActionResult> Search(string q, List<string> filters)
         {
             var products = await _allProducts.SearchProductsAsync(q);
@@ -122,7 +120,7 @@ namespace WebApplication1.Controlles
             }
         }
 
-        [Route("Products/Product/{name}")]
+        [Route("Products/{name}")]
         public async Task<IActionResult> Product(int id)
         {
             int i = 0;
@@ -143,11 +141,11 @@ namespace WebApplication1.Controlles
             }
             else
             {
-                return View("PageNotFound");
+                return NotFound();
             }
         }
 
-        [Route("Products")]
+        [Route("Catalog")]
         public async Task<IActionResult> Index(List<string> filters)
         {
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
@@ -167,7 +165,7 @@ namespace WebApplication1.Controlles
         }
 
         [HttpPost]
-        [Route("Products/IndexAjax")]
+        [Route("Catalog/IndexAjax")]
         public async Task<IActionResult> IndexAjax(List<string> filters)
         {
             var products = await _allProducts.GetProductsAsync(new ProductSpecification().SortByFavourite());
@@ -179,7 +177,7 @@ namespace WebApplication1.Controlles
         }
 
         [HttpPost]
-        [Route("Products/SearchAjax")]
+        [Route("Catalog/SearchAjax")]
         public async Task<IActionResult> SearchAjax(string q, List<string> filters)
         {
             var products = await _allProducts.SearchProductsAsync(q);

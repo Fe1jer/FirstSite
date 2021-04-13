@@ -10,7 +10,7 @@
     <div class="row">
         <div class="navbar navbar-expand-lg navbar-light bg-light p-2 shadow">
             <h2>Все товары @Model.AllProducts.Count()</h2>
-            <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
+            <button class="navbar-toggler position-sticky d-lg-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
                 <span class="navbar-toggler-icon"></span>
             </button>
             <div id="filterHeader" class="w-100">
@@ -19,13 +19,13 @@
         </div>
         <div class="container-fluid">
             <div class="row">
-                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
+                <nav id="sidebarMenu" class="col-lg-2 d-lg-block sidebar collapse" style="padding:0">
                     @using (Html.BeginForm("Index", "Products", FormMethod.Get))
                     {
                         @await Html.PartialAsync("ProductsFilter", Model)
                     }
                 </nav>
-                <main class="px-4 col-md-10 mt-2" style="position: relative">
+                <main class="px-4 col-lg-10 mt-2" style="position: relative">
                     <div id="content" class="row">
                         @if (Model.AllProducts.Count() != 0)
                         {
@@ -48,6 +48,7 @@
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/js/modules/CheckboxFilter.js"></script>
     <script src="~/js/modules/Products.js"></script>
+    <script src="~/js/modules/ShopCart.js"></script>
     <script>
         var xhr;
         function filterProducts() {
@@ -87,8 +88,12 @@
                         $('#content').append(resultProductsEmpty());
                     }
                 },
-                error: function () {
-
+                error: function (err) {
+                    if (err.statusText != 'abort') {
+                        $("#loaderDiv").hide();
+                        $('#content').empty();
+                        $('#content').append(productsErrorResult());
+                    }
                 }
             });
         };

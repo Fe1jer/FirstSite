@@ -1,5 +1,4 @@
 ﻿using System.Collections.Generic;
-using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 
 namespace WebApplication1.ViewModels

@@ -11,7 +11,7 @@
         <button class="navbar-toggler position-sticky d-md-none collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#sidebarMenu" aria-controls="sidebarMenu" aria-expanded="false" aria-label="Toggle navigation">
             <span class="navbar-toggler-icon"></span>
         </button>
-        <div class="w-100">
+        <div id="filterHeader" class="w-100">
             @await Html.PartialAsync("FilterHeader", Model.ProductsListViewModel)
         </div>
     </div>
@@ -21,8 +21,8 @@
                 @Html.AntiForgeryToken()
                 @using (Html.BeginForm("Search", "Products", FormMethod.Get))
                 {
-                    <input type="hidden" name="search" value="@Model.SearchName" />
-                    @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
+                <input type="hidden" name="search" value="@Model.SearchName" />
+                @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
                 }
             </nav>
             <main class="px-4 col-md-10 mt-2" style="position: relative">
@@ -31,12 +31,12 @@
                     {
                         foreach (ShowProductViewModel showProduct in Model.ProductsListViewModel.AllProducts)
                         {
-                            @await Html.PartialAsync("ShowProduct", showProduct)
+                    @await Html.PartialAsync("ShowProduct", showProduct)
                         }
                     }
                     else
                     {
-                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                    <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
                     }
                 </div>
                 <div id="loaderDiv" class="loading" style="display: none"></div>
@@ -47,16 +47,18 @@
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
     <script src="~/js/modules/CheckboxFilter.js"></script>
     <script src="~/js/modules/Products.js"></script>
-
+    <script src="~/js/modules/ShopCart.js"></script>
     <script>
         var xhr;
         function filterProducts () {
             var filtersHref = [];
             var list = [];
+            $('#filterHeader').empty();
             var searchName = '@Model.SearchName';
             $('.form-check-input:checked').each(function () {
                 filtersHref.push('&filters=' + $(this).val());
                 list.push($(this).val());
+                $('#filterHeader').append(showFilter($(this)));
             });
             var winLocHref = window.location.href.split("&");
             history.pushState(null, null, winLocHref[0] + filtersHref.join(''));
@@ -86,8 +88,12 @@
                         $('#content').append(resultProductsEmpty());
                     }
                 },
-                error: function () {
-
+                error: function (err) {
+                    if (err.statusText != 'abort') {
+                        $("#loaderDiv").hide();
+                        $('#content').empty();
+                        $('#content').append(productsErrorResult());
+                    }
                 }
             });
         };
