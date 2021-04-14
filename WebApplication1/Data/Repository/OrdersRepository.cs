@@ -20,20 +20,22 @@ namespace WebApplication1.Data.Repository
 
         public async Task AddOrder(User user, Order order)
         {
-            List<OrderDetail> a = new List<OrderDetail>();
+            List<OrderDetail> orderDetails = new List<OrderDetail>();
             foreach (var el in await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user)))
             {
                 var orderDetail = new OrderDetail()
                 {
                     ProductId = el.Product.Id,
                     OrderId = order.Id,
-                    Prise = el.Product.Price
+                    Price = el.Product.Price
                 };
-                a.Add(orderDetail);
+                orderDetails.Add(orderDetail);
             }
-            order.OrderDetails = a;
+            order.IdUser = user.Id;
+            order.OrderDetails = orderDetails;
             order.Courier = null;
             order.OrderTime = DateTime.Now;
+            order.IsRelevant = true;
             await AddAsync(order);
         }
 
@@ -45,6 +47,12 @@ namespace WebApplication1.Data.Repository
         public async Task<Order> GetOrderByIdAsync(int id)
         {
             return await GetByIdAsync(id);
+        }
+
+        public async Task CompletedOrderAsync(Order order)
+        {
+            order.IsRelevant = false;
+            await UpdateAsync(order);
         }
 
         public async Task DeleteOrderAsync(Order order)

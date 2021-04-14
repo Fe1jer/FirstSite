@@ -2,6 +2,7 @@
 using System.Threading.Tasks;
 using WebApplication1.Data.Models;
 using WebApplication1.Data.Specifications.Base;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Data.Interfaces
 {
@@ -15,5 +16,8 @@ namespace WebApplication1.Data.Interfaces
         Task UpdateProductAsync(Product product);
         Task<Product> GetProductByNameAsync(string name);
         Task DeleteProductAsync(Product product);
+        List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products);
+        List<Product> SortProducts(List<Product> products, List<string> filters);
+        List<ShowProductViewModel> FindProductsInTheCart(List<Product> products, List<ShopCartItem> cartItems);
     }
 }

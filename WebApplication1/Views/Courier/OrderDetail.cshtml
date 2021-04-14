@@ -2,4 +2,51 @@
 @{
     ViewData["Title"] = "Полная информация о заказе";
 }
-<h2>@ViewData["Title"]</h2>
+<h2 class="mb-3 text-center">@ViewData["Title"]</h2>
+<main>
+    <div class="row g-3">
+        <div class="col-md-5 col-lg-4 order-md-last">
+            <h4 class="d-flex justify-content-between align-items-center mb-3">
+                <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Список покупок</font></font></span>
+                <span class="badge bg-secondary rounded-pill"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Model.OrderDetails.Count</font></font></span>
+            </h4>
+            <ul class="list-group mb-3">
+                @{
+                    foreach (var el in Model.OrderDetails)
+                    {
+                        <li class="list-group-item d-flex justify-content-between lh-sm">
+                            <div class="h-auto">
+                                <h6 class="my-0"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Company @el.Product.Name</font></font></h6>
+                                <small class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Category</font></font></small>
+                            </div>
+                            <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></span>
+                        </li>
+                    }
+                }
+                <li class="list-group-item d-flex justify-content-between">
+                    <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Итого</font></font></span>
+                    <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Model.OrderDetails.Sum(p => p.Price).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></strong>
+                </li>
+            </ul>
+        </div>
+        <div class="col-md-7 col-lg-8">
+            <div class="row g-3">
+                <div class="col-12">
+                    <p><b>Имя: </b>@Model.Surname @Model.Name</p>
+                </div>
+                <div class="col-12">
+                    <p><b>Электронный адрес: </b>@Model.Email</p>
+                </div>
+                <div class="col-12">
+                    <p><b>Адрес: </b>@Model.Country @Model.City @Model.Address</p>
+                </div>
+                <div class="col-12">
+                    <p><b>Телефон: </b>@Model.Phone</p>
+                </div>
+                <div class="col-md-3">
+                    <p><b>Почтовый индекс: </b>@Model.Zip</p>
+                </div>
+            </div>
+        </div>
+    </div>
+</main>

@@ -10,6 +10,8 @@ namespace WebApplication1.Data.Models
     {
         public User Courier { get; set; }
 
+        public int IdUser { get; set; }
+
         [Display(Name = "Имя")]
         [StringLength(10)]
         [Required(ErrorMessage = "Введите имя")]
@@ -25,6 +27,14 @@ namespace WebApplication1.Data.Models
         [Required(ErrorMessage = "Длина адреса не менее 7 символов")]
         public string Address { get; set; }
 
+        [Display(Name = "Страна")]
+        [Required(ErrorMessage = "Укажите страну")]
+        public string Country { get; set; }
+
+        [Display(Name = "Город")]
+        [Required(ErrorMessage = "Укажите город")]
+        public string City { get; set; }
+
         [Display(Name = "Номер телефона")]
         [DataType(DataType.PhoneNumber)]
         [StringLength(13, MinimumLength = 7)]
@@ -36,11 +46,6 @@ namespace WebApplication1.Data.Models
         [StringLength(25, MinimumLength = 7)]
         [Required(ErrorMessage = "Длина электронная почты не менее 7 символов")]
         public string Email { get; set; }
-
-        [Display(Name = "Имя пользователя")]
-        [StringLength(10)]
-        [Required(ErrorMessage = "Введите действительное имя пользователя")]
-        public string UserName { get; set; }
 
         [Display(Name = "Почтовый индекс")]
         [StringLength(6, MinimumLength = 6)]
@@ -76,5 +81,6 @@ namespace WebApplication1.Data.Models
         public DateTime OrderTime { get; set; }
 
         public List<OrderDetail> OrderDetails { get; set; }
+        public bool IsRelevant { get; set; }
     }
 }

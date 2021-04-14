@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
@@ -24,9 +26,12 @@ namespace WebApplication1.Controllers
         public async Task<ActionResult> Index()
         {
             return View(await allOrders.GetOrdersAsync(
-                new OrderSpecification().
-                IncludeDetails().IncludeCourier().SortByCourier().
-                WithoutTracking()));
+                new OrderSpecification()
+                .IncludeDetails()
+                .IncludeCourier()
+                .SortByCourier()
+                .WhereActual()
+                .WithoutTracking()));
         }
 
         [Authorize(Roles = "courier")]
@@ -36,6 +41,7 @@ namespace WebApplication1.Controllers
                 .WhereCourierEmail(User.Identity.Name)
                 .IncludeCourier()
                 .IncludeDetails()
+                .WhereActual()
                 .WithoutTracking()));
         }
 
@@ -67,14 +73,17 @@ namespace WebApplication1.Controllers
             return RedirectToAction("Index");
         }
 
-        public async Task<ActionResult> OrderDetail(int idOrder)
+        public ActionResult OrderDetail(int idOrder)
         {
-            return View(await allOrders.GetOrderByIdAsync(idOrder));
+            Order order = allOrders.GetOrdersAsync(new OrderSpecification()
+                .IncludeDetails()
+                .WithoutTracking()).Result.Where(p=>p.Id == idOrder).FirstOrDefault();
+            return View(order);
         }
 
         public async Task<ActionResult> Delete(int idOrder)
         {
-            await allOrders.DeleteOrderAsync(await allOrders.GetOrderByIdAsync(idOrder));
+            await allOrders.CompletedOrderAsync(await allOrders.GetOrderByIdAsync(idOrder));
             if (User.IsInRole("moderator"))
             {
                 return RedirectToAction("Index");

@@ -11,7 +11,6 @@
             </h4>
             <ul class="list-group mb-3">
                 @{
-                    int sum = 0;
                     foreach (var el in Model.ShopCartItems)
                     {
                         <li class="list-group-item d-flex justify-content-between lh-sm">
@@ -21,12 +20,11 @@
                             </div>
                             <span class="text-muted"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@el.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></span>
                         </li>
-                        sum += el.Product.Price;
                     }
                 }
                 <li class="list-group-item d-flex justify-content-between">
                     <span><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Итого</font></font></span>
-                    <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@sum.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></strong>
+                    <strong><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@Model.ShopCartItems.Sum(p=>p.Price).ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</font></font></strong>
                 </li>
             </ul>
 
@@ -40,6 +38,7 @@
         <div class="col-md-7 col-lg-8">
             <h4 class="mb-3"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Платежный адрес</font></font></h4>
             <form asp-action="Checkout" method="post" class="form-horizontal">
+                <input type="hidden" name="CountShopCartItems" value="@Model.ShopCartItems.Count"/>
                 <div class="row g-3">
                     <div class="col-sm-6">
                         <label asp-for="Order.Name" class="form-label"></label>
@@ -48,22 +47,12 @@
                             <span asp-validation-for="Order.Name" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-sm-6">
                         <label asp-for="Order.Surname" class="form-label"></label>
                         <div class="input-group">
                             <input asp-for="Order.Surname" class="form-control" />
                             <span asp-validation-for="Order.Surname" class="text-danger"></span>
                         </div>
-                    </div>
-
-                    <div class="col-12">
-                        <label asp-for="Order.UserName" class="form-label"></label>
-                        <div class="input-group">
-                            <span class="input-group-text"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">@@</font></font></span>
-                            <input asp-for="Order.UserName" class="form-control" />
-                        </div>
-                        <span asp-validation-for="Order.UserName" class="text-danger"></span>
                     </div>
                     <div class="col-12">
                         <label asp-for="Order.Email" class="form-label"></label>
@@ -72,7 +61,6 @@
                             <span asp-validation-for="Order.Email" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-12">
                         <label asp-for="Order.Address" class="form-label"></label>
                         <div class="input-group">
@@ -80,7 +68,6 @@
                             <span asp-validation-for="Order.Address" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-12">
                         <label asp-for="Order.Phone" class="form-label"></label>
                         <div class="input-group">
@@ -88,34 +75,18 @@
                             <span asp-validation-for="Order.Phone" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-md-5">
-                        <label for="country" class="form-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Страна</font></font></label>
-                        <select class="form-select" id="country" required="">
-                            <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Выберите...</font></font></option>
-                            <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Соединенные Штаты</font></font></option>
-                        </select>
-                        <div class="invalid-feedback">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    Пожалуйста, выберите действительную страну.
-                                </font>
-                            </font>
+                        <label asp-for="Order.Country" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Order.Country" class="form-control" />
+                            <span asp-validation-for="Order.Country" class="text-danger"></span>
                         </div>
                     </div>
-
                     <div class="col-md-4">
-                        <label for="state" class="form-label"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">состояние</font></font></label>
-                        <select class="form-select" id="state" required="">
-                            <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Выберите...</font></font></option>
-                            <option><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Калифорния</font></font></option>
-                        </select>
-                        <div class="invalid-feedback">
-                            <font style="vertical-align: inherit;">
-                                <font style="vertical-align: inherit;">
-                                    Укажите действительное состояние.
-                                </font>
-                            </font>
+                        <label asp-for="Order.City" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Order.City" class="form-control" />
+                            <span asp-validation-for="Order.City" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-md-3">
@@ -125,18 +96,6 @@
                             <span asp-validation-for="Order.Zip" class="text-danger"></span>
                         </div>
                     </div>
-                </div>
-
-                <hr class="my-4">
-
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="same-address">
-                    <label class="form-check-label" for="same-address"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Адрес доставки такой же, как мой платежный адрес</font></font></label>
-                </div>
-
-                <div class="form-check">
-                    <input type="checkbox" class="form-check-input" id="save-info">
-                    <label class="form-check-label" for="save-info"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Сохраните эту информацию для следующего раза</font></font></label>
                 </div>
 
                 <hr class="my-4">

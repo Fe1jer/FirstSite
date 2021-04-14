@@ -34,12 +34,19 @@ namespace WebApplication1.Controllers
         }
 
         [HttpPost]
-        public async Task<IActionResult> Checkout(Order order)
+        public async Task<IActionResult> Checkout(Order order, int countShopCartItems)
         {
             if (ModelState.IsValid)
             {
-                await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
-                return RedirectToAction("Complete");
+                if (countShopCartItems != 0)
+                {
+                    await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
+                    return RedirectToAction("Complete");
+                }
+                else
+                {
+                    return RedirectToAction("Failed");
+                }
             }
             OrderViewModel orderR = new OrderViewModel
             {
@@ -54,6 +61,13 @@ namespace WebApplication1.Controllers
         {
             await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
+            return View();
+        }
+
+        public async Task<IActionResult> Failed()
+        {
+            await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
+            ViewBag.Message = "Заказ не был обработан";
             return View();
         }
     }

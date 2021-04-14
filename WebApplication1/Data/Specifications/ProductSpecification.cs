@@ -32,12 +32,6 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
-        /*public ProductSpecification WhereCategoryId(int id)
-        {
-            AddWhere(product => product.CategoryId == id);
-            return this;
-        }*/
-
         public ProductSpecification WhereAvailable(bool isAvailable)
         {
             AddWhere(product => product.Available == isAvailable);

@@ -13,5 +13,6 @@ namespace WebApplication1.Data.Interfaces
         Task UpdateCourierOrdersAsync(int idOrder, User courier);
         Task DeleteOrderAsync(Order order);
         Task AddOrder(User user, Order order);
+        Task CompletedOrderAsync(Order order);
     }
 }

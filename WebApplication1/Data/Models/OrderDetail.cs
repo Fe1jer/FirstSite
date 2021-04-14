@@ -6,7 +6,7 @@ namespace WebApplication1.Data.Models
     {
         public int OrderId { get; set; }
         public int ProductId { get; set; }
-        public uint Prise { get; set; }
+        public uint Price { get; set; }
         public virtual Product Product { get; set; }
         public virtual Order Order { get; set; }
     }

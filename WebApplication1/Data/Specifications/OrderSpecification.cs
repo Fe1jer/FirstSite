@@ -33,6 +33,12 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
+        public OrderSpecification WhereActual()
+        {
+            AddWhere(order => order.IsRelevant == true);
+            return this;
+        }
+
         public OrderSpecification SortByDate()
         {
             AddDescendingOrdering(order => order.OrderTime);
