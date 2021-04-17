@@ -13,6 +13,17 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\slick\config.rb" />
+    <None Include="wwwroot\slick\fonts\slick.svg" />
+    <None Include="wwwroot\slick\slick-theme.less" />
+    <None Include="wwwroot\slick\slick-theme.scss" />
+    <None Include="wwwroot\slick\slick.js" />
+    <None Include="wwwroot\slick\slick.less" />
+    <None Include="wwwroot\slick\slick.min.js" />
+    <None Include="wwwroot\slick\slick.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />

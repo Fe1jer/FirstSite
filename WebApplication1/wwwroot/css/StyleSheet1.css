@@ -25,13 +25,9 @@ li.toc-entry a {
     color: #77757a;
 }
 
-.sidebar .nav-link {
-    color: #333;
-}
-
 .card-image {
     width: 318px;
-    height: 260px;
+    height: 220px;
     object-fit: contain;
 }
 
@@ -56,9 +52,8 @@ h6 {
     white-space: pre-wrap;
 }
 
-h2 {
-    margin-right: 15px;
-    white-space: nowrap;
+.multiple-items .row {
+    --bs-gutter-x: 0.6rem;
 }
 
 button.position-right {

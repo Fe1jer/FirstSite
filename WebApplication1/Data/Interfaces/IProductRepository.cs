@@ -19,5 +19,6 @@ namespace WebApplication1.Data.Interfaces
         List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products);
         List<Product> SortProducts(List<Product> products, List<string> filters);
         List<ShowProductViewModel> FindProductsInTheCart(List<Product> products, List<ShopCartItem> cartItems);
+        List<ShowProductViewModel> DeleteIfInCart(List<Product> products, List<ShopCartItem> cartItems);
     }
 }

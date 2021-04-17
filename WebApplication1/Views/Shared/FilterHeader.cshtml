@@ -1,9 +1,8 @@
 ﻿@model ProductsListViewModel
 
-@if (Model.Filter != null)
-{
+@{
     int counter = 1;
-    foreach (string item in Model.Filter)
+    foreach (string item in Model?.Filter)
     {
         int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
         int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;

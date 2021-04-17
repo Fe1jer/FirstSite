@@ -11,6 +11,16 @@
     <meta charset="utf-8">
 </head>
 <body>
+    <script src="~/jquery/jquery.js"></script>
+    <script>
+        function moveItem() {
+            $('div:not([id]):not([class])').each(function () {
+                $(this).remove();
+            });
+        }
+
+        setTimeout(moveItem, 100);
+    </script>
     <header id="header">
         <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
@@ -94,17 +104,6 @@
         <p class="float-end mx-5"><a href="#">Подняться</a></p>
         <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
     </footer>
-    <script src="~/jquery/jquery.js"></script>
-
-    <script>
-        function moveItem() {
-            $('div:not([id]):not([class])').each(function () {
-                $(this).remove();
-            });
-        }
-
-        setTimeout(moveItem, 100);
-    </script>
     <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/modules/Cookie.js" asp-append-version="true"></script>
 </body>

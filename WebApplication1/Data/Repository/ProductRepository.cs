@@ -184,5 +184,32 @@ namespace WebApplication1.Data.Repository
 
             return showProducts;
         }
+        public List<ShowProductViewModel> DeleteIfInCart(List<Product> products, List<ShopCartItem> cartItems)
+        {
+            List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
+
+            foreach (Product product in products)
+            {
+                ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
+                bool itemInCart = false;
+
+                foreach (ShopCartItem shopCart in cartItems)
+                {
+                    if (shopCart.Product == product)
+                    {
+                        itemInCart = true;
+                        cartItems.Remove(shopCart);
+                        break;
+                    }
+                }
+                if (!itemInCart)
+                {
+                    showProduct.IsInCart = false;
+                }
+                showProducts.Add(showProduct);
+            }
+
+            return showProducts;
+        }
     }
 }

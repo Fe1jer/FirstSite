@@ -1,0 +1,62 @@
+﻿@model IEnumerable<CaruselItem>
+
+<div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
+    <ol class="carousel-indicators">
+        @{
+            int i = 0;
+            string active;
+            foreach (CaruselItem car in Model)
+            {
+                if (i == 0)
+                {
+                    active = "active";
+                }
+                else
+                {
+                    active = "";
+                }
+                <li data-bs-target="#myCarousel" data-bs-slide-to=@i class="@active"></li>
+                i++;
+            }
+        }
+    </ol>
+    <div class="carousel-inner">
+        @{
+            i = 0;
+            foreach (CaruselItem productImage in Model)
+            {
+                if (i == 0)
+                {
+                    active = "active";
+                }
+                else
+                {
+                    active = "";
+                }
+                <div class="carousel-item @active">
+                    <svg class="" width="100%" height="100%" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
+                        <img class="exmpl wrapper scale card-img-top" height="130" src="@productImage.Img" alt="@productImage.Img" />
+
+                    </svg>
+
+                    <div class="container">
+                        <div class="carousel-caption">
+                            <h1>@productImage.ShortDesc</h1>
+                            <p>@productImage.LongDesc</p>
+                            <p><a class="btn btn-lg btn-primary" href="#" role="button">Перейти</a></p>
+                        </div>
+                    </div>
+                </div>
+                i++;
+            }
+        }
+    </div>
+    <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
+        <span class="carousel-control-prev-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Previous</span>
+    </a>
+    <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
+        <span class="carousel-control-next-icon" aria-hidden="true"></span>
+        <span class="visually-hidden">Next</span>
+    </a>
+</div>

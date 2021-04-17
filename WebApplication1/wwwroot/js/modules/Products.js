@@ -17,7 +17,12 @@
         '<p style="font-size: .9375rem; margin-bottom: 0.9rem;">' + shortDesc + '</p>' +
         '</div>' +
         '</div>' +
-        '<p><b>Цена: $' + Intl.NumberFormat('en-US').format(JSON.stringify(item.product.price)) + '</b></p>' +
+        '<div class="d-flex justify-content-between">' +
+        '<p class="mx-0"><b>Цена: $' + Intl.NumberFormat('en-US').format(JSON.stringify(item.product.price)) + '</b></p>'
+    if (JSON.stringify(item.product.isFavourite) == 'true') {
+        msg = msg + '<p class="mx-0 text-danger">РеCUMмендуем</p>'
+    }
+    msg = msg + '</div >' +
         '<div id="cardButtons" class="d-flex justify-content-between align-items-center">' +
         '<a type="button" class="btn btn-outline-warning" href="/Products/Product/' + name + '?id=' + JSON.stringify(item.product.id) + '" >' +
         '<font style="vertical-align: inherit;">' +
@@ -29,11 +34,19 @@
     if (isModer == 'True') {
         msg = msg + buttonEditProduct(JSON.stringify(item.product.id));
     }
-    if (InCart == 'true') {
-        msg = msg + buttonRemoveToCart(JSON.stringify(item.product.id));
+
+    if (JSON.stringify(item.product.available) != 'false') {
+        if (InCart == 'true') {
+            msg = msg + buttonRemoveToCart(JSON.stringify(item.product.id));
+        }
+        else {
+            msg = msg + buttonAddToCart(JSON.stringify(item.product.id));
+        }
     }
     else {
-        msg = msg + buttonAddToCart(JSON.stringify(item.product.id));
+        msg = msg + '<a class="text-end btn btn-outline-secondary isDisabled">' +
+            'Нет в наличии' +
+                    '</a>'
     }
     msg = msg + '</div>' +
         '</div>' +

@@ -12,22 +12,22 @@ namespace WebApplication1.Controllers
     [Authorize]
     public class OrderController : Controller
     {
-        private readonly IOrdersRepository allOrders;
+        private readonly IOrdersRepository _ordersRepository;
         private readonly IShopCart shopCart;
-        private readonly IUserRepository _allUser;
+        private readonly IUserRepository _productRepository;
 
-        public OrderController(IShopCart shopCart, IOrdersRepository allOrders, IUserRepository allUser)
+        public OrderController(IShopCart shopCart, IOrdersRepository IOrdersRepository, IUserRepository IProductRepository)
         {
-            _allUser = allUser;
+            _productRepository = IProductRepository;
             this.shopCart = shopCart;
-            this.allOrders = allOrders;
+            this._ordersRepository = IOrdersRepository;
         }
 
         public async Task<IActionResult> Checkout()
         {
             OrderViewModel orderR = new OrderViewModel
             {
-                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
+                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _productRepository.GetUserAsync(User.Identity.Name)))
             };
 
             return View(orderR);
@@ -40,7 +40,7 @@ namespace WebApplication1.Controllers
             {
                 if (countShopCartItems != 0)
                 {
-                    await allOrders.AddOrder(await _allUser.GetUserAsync(User.Identity.Name), order);
+                    await _ordersRepository.AddOrder(await _productRepository.GetUserAsync(User.Identity.Name), order);
                     return RedirectToAction("Complete");
                 }
                 else
@@ -51,7 +51,7 @@ namespace WebApplication1.Controllers
             OrderViewModel orderR = new OrderViewModel
             {
                 Order = order,
-                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name)))
+                ShopCartItems = (List<ShopCartItem>)await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _productRepository.GetUserAsync(User.Identity.Name)))
             };
 
             return View(orderR);
@@ -59,14 +59,14 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Complete()
         {
-            await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
+            await shopCart.EmptyTheCart(await _productRepository.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ успешно обработан";
             return View();
         }
 
         public async Task<IActionResult> Failed()
         {
-            await shopCart.EmptyTheCart(await _allUser.GetUserAsync(User.Identity.Name));
+            await shopCart.EmptyTheCart(await _productRepository.GetUserAsync(User.Identity.Name));
             ViewBag.Message = "Заказ не был обработан";
             return View();
         }

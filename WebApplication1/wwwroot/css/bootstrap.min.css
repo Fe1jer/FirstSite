@@ -625,7 +625,7 @@ progress {
 }
 
 .row {
-    --bs-gutter-x: 1.5rem;
+    --bs-gutter-x: 1rem;
     --bs-gutter-y: 0;
     display: flex;
     flex-wrap: wrap;
@@ -3943,6 +3943,10 @@ textarea.form-control-lg {
     transition: color .15s ease-in-out,background-color .15s ease-in-out,border-color .15s ease-in-out
 }
 
+.sidebar .nav-link {
+    color: #333;
+}
+
 @media (prefers-reduced-motion:reduce) {
     .nav-link {
         transition: none
@@ -4041,6 +4045,10 @@ textarea.form-control-lg {
         justify-content: space-between
     }
 
+    .navbar h2 {
+        margin-right: 15px;
+        white-space: nowrap;
+    }
 .navbar-brand {
     padding-top: .3125rem;
     padding-bottom: .3125rem;
@@ -4437,7 +4445,7 @@ textarea.form-control-lg {
 
 .card-body {
     flex: 1 1 auto;
-    padding: 1rem 1rem
+    padding: 0.7rem 0.7rem
 }
 
 .card-title {

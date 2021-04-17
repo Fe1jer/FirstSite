@@ -13,29 +13,29 @@ namespace WebApplication1.Controlles
 {
     public class ProductsController : Controller
     {
-        private readonly IProductRepository _allProducts;
-        private readonly IUserRepository _allUser;
+        private readonly IProductRepository _productRepository;
+        private readonly IUserRepository _userRepository;
         private readonly IShopCart _shopCart;
 
-        public ProductsController(IShopCart shopCart, IProductRepository iAllProducts, IUserRepository allUser)
+        public ProductsController(IShopCart shopCart, IProductRepository IProductRepository, IUserRepository IUserRepository)
         {
             _shopCart = shopCart;
-            _allUser = allUser;
-            _allProducts = iAllProducts;
+            _userRepository = IUserRepository;
+            _productRepository = IProductRepository;
         }
 
         [HttpGet, Route("Catalog/Search")]
         public async Task<IActionResult> Search(string q, List<string> filters)
         {
-            var products = await _allProducts.SearchProductsAsync(q);
-            List<FilterCategoryVM> filterCategories = _allProducts.GetFilterCategoriesByProducts(products.ToList());
-            products = _allProducts.SortProducts(products.ToList(), filters);
-            List<ShowProductViewModel> showProducts = _allProducts.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
+            var products = await _productRepository.SearchProductsAsync(q);
+            products = products.OrderByDescending(p => p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
+            List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());
+            products = _productRepository.SortProducts(products.ToList(), filters);
+            List<ShowProductViewModel> showProducts = _productRepository.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name))));
 
             var productObj = new ProductsListViewModel
             {
                 AllProducts = showProducts,
-                ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
                 FilterSort = filterCategories,
                 Filter = filters
             };
@@ -51,13 +51,13 @@ namespace WebApplication1.Controlles
         [Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> ChangeProduct(int id)
         {
-            User user = await _allUser.GetUserAsync(User.Identity.Name);
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
             {
                 return RedirectToAction("Logout", "Account");
             }
 
-            Product obj = await _allProducts.GetProductByIdAsync(id);
+            Product obj = await _productRepository.GetProductByIdAsync(id);
 
             return View(obj);
         }
@@ -67,7 +67,7 @@ namespace WebApplication1.Controlles
         {
             if (ModelState.IsValid)
             {
-                await _allProducts.UpdateProductAsync(obj);
+                await _productRepository.UpdateProductAsync(obj);
 
                 return RedirectToAction("Index");
             }
@@ -78,8 +78,8 @@ namespace WebApplication1.Controlles
         [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            Product product = await _allProducts.GetProductByIdAsync(id);
-            await _allProducts.DeleteProductAsync(product);
+            Product product = await _productRepository.GetProductByIdAsync(id);
+            await _productRepository.DeleteProductAsync(product);
 
             return RedirectToAction("Index");
         }
@@ -87,7 +87,7 @@ namespace WebApplication1.Controlles
         [Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> AddProduct()
         {
-            User user = await _allUser.GetUserAsync(User.Identity.Name);
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
             {
                 return RedirectToAction("Logout", "Account");
@@ -99,11 +99,11 @@ namespace WebApplication1.Controlles
         [HttpPost, Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> AddProduct(Product obj)
         {
-            if (await _allProducts.GetProductByNameAsync(obj.Name) == null)
+            if (await _productRepository.GetProductByNameAsync(obj.Name) == null)
             {
                 if (ModelState.IsValid)
                 {
-                    await _allProducts.AddProductAsync(obj);
+                    await _productRepository.AddProductAsync(obj);
 
                     return RedirectToAction("Index");
                 }
@@ -122,12 +122,12 @@ namespace WebApplication1.Controlles
         public async Task<IActionResult> Product(int id)
         {
             int i = 0;
-            Product obj = await _allProducts.GetProductByIdAsync(id);
+            Product obj = await _productRepository.GetProductByIdAsync(id);
             if (obj != null)
             {
                 ShopCartItem item = _shopCart.GetShopItemsAsync(new ShopCartSpecification()
                     .IncludeProduct()
-                    .WhereUser(await _allUser.GetUserAsync(User.Identity.Name))).Result
+                    .WhereUser(await _userRepository.GetUserAsync(User.Identity.Name))).Result
                     .Where(o => o.Product.Id == id).FirstOrDefault() ?? null;
                 if (item != null)
                 {
@@ -146,16 +146,22 @@ namespace WebApplication1.Controlles
         [Route("Catalog")]
         public async Task<IActionResult> Index(List<string> filters)
         {
-            var products = await _allProducts.GetProductsAsync();
-            products = products.OrderByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
-            List<FilterCategoryVM> filterCategories = _allProducts.GetFilterCategoriesByProducts(products.ToList());
-            products = _allProducts.SortProducts(products.ToList(), filters);
-            List<ShowProductViewModel> showProducts = _allProducts.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
+            IEnumerable<int> vs = new List<int>() { 1,2,3,4,5};
+            vs.Where(p => p > 0);
+            foreach(int item in vs)
+            {
+                int a = item;
+            }
+
+            var products = await _productRepository.GetProductsAsync();
+            products = products.OrderByDescending(p=>p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
+            List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());
+            products = _productRepository.SortProducts(products.ToList(), filters);
+            List<ShowProductViewModel> showProducts = _productRepository.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name))));
 
             var productObj = new ProductsListViewModel
             {
                 AllProducts = showProducts,
-                ShopCartItems = (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))),
                 FilterSort = filterCategories,
                 Filter = filters
             };
@@ -167,10 +173,10 @@ namespace WebApplication1.Controlles
         [Route("Catalog/IndexAjax")]
         public async Task<IActionResult> IndexAjax(List<string> filters)
         {
-            var products = await _allProducts.GetProductsAsync();
-            products = products.OrderByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
-            products = _allProducts.SortProducts(products.ToList(), filters);
-            List<ShowProductViewModel> showProducts = _allProducts.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
+            var products = await _productRepository.GetProductsAsync();
+            products = products.OrderByDescending(p => p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
+            products = _productRepository.SortProducts(products.ToList(), filters);
+            List<ShowProductViewModel> showProducts = _productRepository.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name))));
             Thread.Sleep(1000);
 
             return Json(showProducts);
@@ -180,9 +186,10 @@ namespace WebApplication1.Controlles
         [Route("Catalog/SearchAjax")]
         public async Task<IActionResult> SearchAjax(string q, List<string> filters)
         {
-            var products = await _allProducts.SearchProductsAsync(q);
-            products = _allProducts.SortProducts(products.ToList(), filters);
-            List<ShowProductViewModel> showProducts = _allProducts.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _allUser.GetUserAsync(User.Identity.Name))));
+            var products = await _productRepository.SearchProductsAsync(q);
+            products = products.OrderByDescending(p => p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
+            products = _productRepository.SortProducts(products.ToList(), filters);
+            List<ShowProductViewModel> showProducts = _productRepository.FindProductsInTheCart(products.ToList(), (List<ShopCartItem>)await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name))));
             Thread.Sleep(1000);
 
             return Json(showProducts);
