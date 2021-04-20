@@ -9,7 +9,7 @@ namespace WebApplication1.Validation
         {
             DateTime? dt = (DateTime?)value;
 
-            if ((dt == null || dt <= DateTime.Now) && dt >= DateTime.Now.AddYears(-100))
+            if (dt == null || (dt <= DateTime.Now && dt >= DateTime.Now.AddYears(-100)))
             {
                 return ValidationResult.Success;
             }

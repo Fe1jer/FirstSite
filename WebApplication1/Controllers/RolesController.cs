@@ -12,37 +12,37 @@ namespace WebApplication1.Controllers
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
-        private readonly IUserRepository _users;
-        private readonly IRoleRepository _roles;
+        private readonly IUserRepository _userRepository;
+        private readonly IRoleRepository _rolesRepository;
 
-        public RolesController(IUserRepository users, IRoleRepository roles)
+        public RolesController(IUserRepository IUolesRepository, IRoleRepository IRolesRepository)
         {
-            _roles = roles;
-            _users = users;
+            _rolesRepository = IRolesRepository;
+            _userRepository = IUolesRepository;
         }
 
         public async Task<IActionResult> Index()
         {
-            return View(await _roles.GetRolesAsync(new RoleSpecification().SortByName()));
+            return View(await _rolesRepository.GetRolesAsync(new RoleSpecification().SortByName()));
         }
 
         public async Task<IActionResult> UserList(string search)
         {
             if (search != null)
             {
-                return View(await _users.GetUsersAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
+                return View(await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
             }
-            return View(await _users.GetUsersAsync(new UserSpecification().IncludeRole().SortByRole()));
+            return View(await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().SortByRole()));
         }
 
         public async Task<IActionResult> Edit(int userId)
         {
-            User user = await _users.GetUserAsync(userId);
+            User user = await _userRepository.GetUserAsync(userId);
             if (user != null)
             {
                 // получем список ролей пользователя
                 var userRole = user.Role;
-                IEnumerable<Role> allRoles = await _roles.GetRolesAsync(new RoleSpecification().SortByName());
+                IEnumerable<Role> allRoles = await _rolesRepository.GetRolesAsync(new RoleSpecification().SortByName());
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
@@ -58,12 +58,12 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<IActionResult> Edit(int userId, string nameRole)
         {
-            User user = await _users.GetUserAsync(userId);
+            User user = await _userRepository.GetUserAsync(userId);
             if (user != null)
             {
-                Role role = await _roles.GetRoleAsync(nameRole);
+                Role role = await _rolesRepository.GetRoleAsync(nameRole);
                 user.Role = role;
-                await _users.UpdateUserAsync(user);
+                await _userRepository.UpdateUserAsync(user);
 
                 return RedirectToAction("UserList");
             }

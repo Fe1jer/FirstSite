@@ -4,10 +4,8 @@
 }
 <h2>@ViewData["Title"]</h2>
 <main>
-    @{
-        foreach (var order in Model)
-        {
-            @await Html.PartialAsync("CardOrder", order)
-        }
+    @foreach (var order in Model)
+    {
+        @await Html.PartialAsync("CardOrder", order)
     }
 </main>

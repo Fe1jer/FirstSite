@@ -62,7 +62,7 @@
                                 <li><p class="dropdown-item-text text-nowrap my-0">Приветствуем <b>@User.FindFirst("Name").Value.ToString()</b></p></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Профиль</font></font></a></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Settings"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Настройки</font></font></a></li>
+                                <li><a class="dropdown-item disabled" asp-controller="Account" asp-action="Settings"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Настройки</font></font></a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Выйти</font></font></a></li>
                             </ul>
@@ -80,8 +80,17 @@
                 </div>
             </div>
         </nav>
-
     </header>
+    <script src="~/jquery/jquery.min.js"></script>
+    <script>
+        function moveItem() {
+            $('div:not([id]):not([class])').each(function () {
+                $(this).remove();
+            });
+        }
+
+        setTimeout(moveItem, 200);
+    </script>
     <div class="container" id="container">
         @RenderBody()
     </div>
@@ -90,21 +99,10 @@
         <button class="btn btn-info cookie_accept">Принять</button>
     </div>
     <footer id="footer">
-        <hr class="featurette-heading">
+        <hr>
         <p class="float-end mx-5"><a href="#">Подняться</a></p>
         <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
     </footer>
-    <script src="~/jquery/jquery.js"></script>
-
-    <script>
-        function moveItem() {
-            $('div:not([id]):not([class])').each(function () {
-                $(this).remove();
-            });
-        }
-
-        setTimeout(moveItem, 100);
-    </script>
     <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
     <script src="~/js/modules/Cookie.js" asp-append-version="true"></script>
 </body>

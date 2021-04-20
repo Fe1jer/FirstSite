@@ -5,7 +5,8 @@ namespace WebApplication1.ViewModels
 {
     public class HomeViewModel
     {
-        public IEnumerable<Product> FavProducts { get; set; }
-        public IEnumerable<HomeProduct> AutoOnTheCover { get; set; }
+        public IEnumerable<ShowProductViewModel> FavProducts { get; set; }
+        public IEnumerable<CaruselItem> CaruselItems { get; set; }
+        public IEnumerable<News> NewsList { get; set; }
     }
 }

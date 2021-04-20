@@ -5,141 +5,29 @@
 <head>
     <title>Carousel</title>
     <link rel="stylesheet" href="~/css/carousel.css" type="text/css" asp-append-version="true" />
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @@media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
+    <link rel="stylesheet" href="~/slick/slick-theme.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/slick/slick.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 </head>
 <body>
     <main>
-        <div id="myCarousel" class="carousel slide" data-bs-ride="carousel">
-            <ol class="carousel-indicators">
-                @{
-                    int i = 0;
-                    string active;
-                    foreach (HomeProduct car in Model.AutoOnTheCover)
-                    {
-                        if (i == 0)
-                        {
-                            active = "active";
-                        }
-                        else
-                        {
-                            active = "";
-                        }
-                        <li data-bs-target="#myCarousel" data-bs-slide-to=@i class="@active"></li>
-                        i++;
-                    }
-                }
-            </ol>
-            <div class="carousel-inner">
-                @{
-                    i = 0;
-                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
-                    {
-                        if (i == 0)
-                        {
-                            active = "active";
-                        }
-                        else
-                        {
-                            active = "";
-                        }
-                        <div class="carousel-item @active">
-                            <svg class="" width="100%" height="100%" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                                <img class="exmpl wrapper scale card-img-top" height="130" src="@productImage.Img" alt="@productImage.Img" />
-
-                            </svg>
-
-                            <div class="container">
-                                <div class="carousel-caption">
-                                    <h1>@productImage.ShortDesc.</h1>
-                                    <p>@productImage.LongDesc.</p>
-                                    <p><a class="btn btn-lg btn-primary" href="#" role="button">Перейти</a></p>
-                                </div>
-                            </div>
-                        </div>
-                        i++;
-                    }
+        @await Html.PartialAsync("PhotoCarusel", Model.CaruselItems)
+        <div class="marketing">
+            <h2 class="text-center text-danger">Рекомендуем</h2>
+            <div class="multiple-items">
+                @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
+                {
+                    @await Html.PartialAsync("ShowProduct", showProduct);
                 }
             </div>
-            <a class="carousel-control-prev" href="#myCarousel" role="button" data-bs-slide="prev">
-                <span class="carousel-control-prev-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Previous</span>
-            </a>
-            <a class="carousel-control-next" href="#myCarousel" role="button" data-bs-slide="next">
-                <span class="carousel-control-next-icon" aria-hidden="true"></span>
-                <span class="visually-hidden">Next</span>
-            </a>
-        </div>
-
-
-        <!-- Marketing messaging and featurettes
-        ================================================== -->
-        <!-- Wrap the rest of the page in another container to center all the content. -->
-
-        <div class="container marketing">
-
-            <!-- Three columns of text below the carousel -->
-            <div class="row">
-                @{
-                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
-                    {
-                        <div class="col-lg-4">
-                            <svg class="bd-placeholder-img rounded-circle" width="140" height="140" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 140x140" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#777" /><text x="50%" y="50%" fill="#777" dy=".3em">140x140</text></svg>
-
-                            <h2>Heading</h2>
-                            <p>Donec sed odio dui. Etiam porta sem malesuada magna mollis euismod. Nullam id dolor id nibh ultricies vehicula ut id elit. Morbi leo risus, porta ac consectetur ac, vestibulum at eros. Praesent commodo cursus magna.</p>
-                            <p><a class="btn btn-secondary" href="#" role="button">View details &raquo;</a></p>
-                        </div>
-                    }
-                }
-                @{
-                    i = 0;
-                    string textOrder;
-                    string imgOrder;
-                    foreach (HomeProduct productImage in Model.AutoOnTheCover)
-                    {
-                        <hr class="featurette-divider">
-                        if (i % 2 == 1)
-                        {
-                            textOrder = "order-md-2";
-                            imgOrder = "order-md-1";
-                        }
-                        else
-                        {
-                            textOrder = "";
-                            imgOrder = "";
-                        }
-                        <div class="row featurette">
-                            <div class="col-md-7 @textOrder">
-                                <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It’ll blow your mind.</span></h2>
-                                <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-                            </div>
-                            <div class="col-md-5 @imgOrder">
-                                <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee" /><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-
-                            </div>
-                        </div>
-                        i++;
-                    }
-                }
-
-                <hr class="featurette-heading">
-                <!-- /END THE FEATURETTES -->
-            </div>
+            <h2 class="text-center text-danger">Новости</h2>
+            @foreach (News item in Model.NewsList)
+            {
+                @await Html.PartialAsync("CardNews", item);
+            }
         </div>
     </main>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/js/modules/ShopCart.js"></script>
+    <script type="text/javascript" src="~/slick/slick.min.js"></script>
 </body>

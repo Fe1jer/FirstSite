@@ -2,7 +2,7 @@
 
 namespace WebApplication1.Data.Models
 {
-    public class HomeProduct : Entity
+    public class CaruselItem : Entity
     {
         public string ShortDesc { set; get; }
         public string LongDesc { set; get; }

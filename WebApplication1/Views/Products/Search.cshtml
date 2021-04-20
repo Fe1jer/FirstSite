@@ -21,30 +21,29 @@
                 @Html.AntiForgeryToken()
                 @using (Html.BeginForm("Search", "Products", FormMethod.Get))
                 {
-                <input type="hidden" name="search" value="@Model.SearchName" />
-                @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
+                    <input type="hidden" name="search" value="@Model.SearchName" />
+                    @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
                 }
             </nav>
-            <main class="px-4 col-md-10 mt-2" style="position: relative">
+            <main class="px-md-4 col-md-10 mt-2" style="position: relative">
                 <div id="content" class="row">
                     @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
                     {
                         foreach (ShowProductViewModel showProduct in Model.ProductsListViewModel.AllProducts)
                         {
-                    @await Html.PartialAsync("ShowProduct", showProduct)
+                            @await Html.PartialAsync("ShowProduct", showProduct)
                         }
                     }
                     else
                     {
-                    <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
                     }
                 </div>
                 <div id="loaderDiv" class="loading" style="display: none"></div>
             </main>
         </div>
     </div>
-    <script src="~/jquery/jquery.js"></script>
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.js"></script>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/js/modules/CheckboxFilter.js"></script>
     <script src="~/js/modules/Products.js"></script>
     <script src="~/js/modules/ShopCart.js"></script>

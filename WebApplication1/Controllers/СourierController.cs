@@ -13,19 +13,19 @@ namespace WebApplication1.Controllers
     [Authorize(Roles = "courier, moderator")]
     public class CourierController : Controller
     {
-        private readonly IOrdersRepository allOrders;
-        private readonly IUserRepository allUser;
+        private readonly IOrdersRepository _ordersRepository;
+        private readonly IUserRepository _userRepository;
 
-        public CourierController(IOrdersRepository allOrders, IUserRepository allUser)
+        public CourierController(IOrdersRepository IOrdersRepository, IUserRepository IUserRepository)
         {
-            this.allOrders = allOrders;
-            this.allUser = allUser;
+            _ordersRepository = IOrdersRepository;
+            _userRepository = IUserRepository;
         }
 
         [Authorize(Roles = "moderator")]
         public async Task<ActionResult> Index()
         {
-            return View(await allOrders.GetOrdersAsync(
+            return View(await _ordersRepository.GetOrdersAsync(
                 new OrderSpecification()
                 .IncludeDetails()
                 .IncludeCourier()
@@ -37,7 +37,7 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "courier")]
         public async Task<ActionResult> CourierOrders()
         {
-            return View(await allOrders.GetOrdersAsync(new OrderSpecification()
+            return View(await _ordersRepository.GetOrdersAsync(new OrderSpecification()
                 .WhereCourierEmail(User.Identity.Name)
                 .IncludeCourier()
                 .IncludeDetails()
@@ -48,7 +48,7 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "courier")]
         public async Task<ActionResult> Renouncement(int idOrder)
         {
-            await allOrders.UpdateCourierOrdersAsync(idOrder, null);
+            await _ordersRepository.UpdateCourierOrdersAsync(idOrder, null);
             return RedirectToAction("CourierOrders");
         }
 
@@ -57,8 +57,8 @@ namespace WebApplication1.Controllers
         {
             ChangeCourierViewModels model = new ChangeCourierViewModels
             {
-                Order = await allOrders.GetOrderByIdAsync(idOrder),
-                AllCouriers = await allUser.GetUsersAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
+                Order = await _ordersRepository.GetOrderByIdAsync(idOrder),
+                AllCouriers = await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
             };
 
             return View(model);
@@ -68,14 +68,14 @@ namespace WebApplication1.Controllers
         [HttpPost]
         public async Task<ActionResult> Edit(int idOrder, int idCourier)
         {
-            User courier = await allUser.GetUserAsync(idCourier);
-            await allOrders.UpdateCourierOrdersAsync(idOrder, courier);
+            User courier = await _userRepository.GetUserAsync(idCourier);
+            await _ordersRepository.UpdateCourierOrdersAsync(idOrder, courier);
             return RedirectToAction("Index");
         }
 
         public ActionResult OrderDetail(int idOrder)
         {
-            Order order = allOrders.GetOrdersAsync(new OrderSpecification()
+            Order order = _ordersRepository.GetOrdersAsync(new OrderSpecification()
                 .IncludeDetails()
                 .WithoutTracking()).Result.Where(p=>p.Id == idOrder).FirstOrDefault();
             return View(order);
@@ -83,7 +83,7 @@ namespace WebApplication1.Controllers
 
         public async Task<ActionResult> Delete(int idOrder)
         {
-            await allOrders.CompletedOrderAsync(await allOrders.GetOrderByIdAsync(idOrder));
+            await _ordersRepository.CompletedOrderAsync(await _ordersRepository.GetOrderByIdAsync(idOrder));
             if (User.IsInRole("moderator"))
             {
                 return RedirectToAction("Index");

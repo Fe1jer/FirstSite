@@ -18,14 +18,14 @@ namespace WebApplication1.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserRepository _users;
+        private readonly IUserRepository _productRepository;
         private readonly IPasswordHasher _hasher;
         private readonly IRoleRepository _roles;
         private readonly IWebHostEnvironment _appEnvironment;
 
-        public AccountController(IUserRepository users, IPasswordHasher hasher, IRoleRepository roles, IWebHostEnvironment appEnvironment)
+        public AccountController(IUserRepository IProductRepository, IPasswordHasher hasher, IRoleRepository roles, IWebHostEnvironment appEnvironment)
         {
-            _users = users;
+            _productRepository = IProductRepository;
             _hasher = hasher;
             _roles = roles;
             _appEnvironment = appEnvironment;
@@ -42,18 +42,18 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _users.GetUserAsync(model.Email);
+                User user = await _productRepository.GetUserAsync(model.Email);
 
                 if (user == null)
                 {
                     // добавляем пользователя в бд
-                    user = _users.CreateUser(model);
+                    user = _productRepository.CreateUser(model);
 
                     Role userRole = await _roles.GetRoleAsync("user");
 
                     if (userRole != null)
                         user.Role = userRole;
-                    await _users.AddUserAsync(user);
+                    await _productRepository.AddUserAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
@@ -71,7 +71,7 @@ namespace WebApplication1.Controllers
                     else
                     {
                         user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                        await _users.UpdateUserAsync(user);
+                        await _productRepository.UpdateUserAsync(user);
 
                         return View("RegisterConfirmation");
                     }
@@ -93,10 +93,10 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _users.GetUserAsync(model.Email);
+                User user = await _productRepository.GetUserAsync(model.Email);
                 if (user != null && user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
                 {
-                    await _users.DeleteUserAsync(user);
+                    await _productRepository.DeleteUserAsync(user);
                     ModelState.AddModelError("", "Некорректные логин и(или) пароль");
                 }
                 else if (user != null && user.EmailConfirmed == false)
@@ -120,7 +120,7 @@ namespace WebApplication1.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            User user = await _users.GetUserAsync(User.Identity.Name);
+            User user = await _productRepository.GetUserAsync(User.Identity.Name);
             ProfileViewModel model = new ProfileViewModel
             {
                 Email = user.Email,
@@ -142,7 +142,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _users.GetUserAsync(User.Identity.Name);
+                User user = await _productRepository.GetUserAsync(User.Identity.Name);
                 if (model.Img != null)
                 {
                     // удаляем старый файл из папки Files в каталоге 
@@ -162,7 +162,7 @@ namespace WebApplication1.Controllers
                     await Authenticate(user);
                 }
                 user.Role = await _roles.GetRoleAsync(user.RoleId);
-                await _users.UpdateUserAsync(user, model);
+                await _productRepository.UpdateUserAsync(user, model);
 
                 return RedirectToAction("Profile");
             }
@@ -184,7 +184,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _users.GetUserAsync(model.Email);
+                var user = await _productRepository.GetUserAsync(model.Email);
                 if (user == null)
                 {
                     // пользователь с данным email может отсутствовать в бд
@@ -199,7 +199,7 @@ namespace WebApplication1.Controllers
                 else
                 {
                     user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                    await _users.UpdateUserAsync(user);
+                    await _productRepository.UpdateUserAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
@@ -225,7 +225,7 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _users.GetUserAsync(model.Email);
+                var user = await _productRepository.GetUserAsync(model.Email);
                 if (!HmacService.VerifyPasswordResetHmacCode(model.Code, model.userId))
                 {
                     ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
@@ -233,7 +233,7 @@ namespace WebApplication1.Controllers
                 else
                 {
                     user.Password = _hasher.HashPassword(model.Password);
-                    await _users.UpdateUserAsync(user);
+                    await _productRepository.UpdateUserAsync(user);
                     return View("ResetPasswordConfirmation");
                 }
             }
@@ -249,11 +249,11 @@ namespace WebApplication1.Controllers
                 ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
                 return View("Error");
             }
-            var user = await _users.GetUserAsync(userId);
+            var user = await _productRepository.GetUserAsync(userId);
 
             user.EmailConfirmed = true;
             user.LockoutEnd = null;
-            await _users.UpdateUserAsync(user);
+            await _productRepository.UpdateUserAsync(user);
             await Authenticate(user);
             return RedirectToAction("Index", "Home");
         }

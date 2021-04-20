@@ -13,6 +13,15 @@
   </ItemGroup>
 
   <ItemGroup>
+    <None Include="wwwroot\slick\config.rb" />
+    <None Include="wwwroot\slick\fonts\slick.svg" />
+    <None Include="wwwroot\slick\slick-theme.less" />
+    <None Include="wwwroot\slick\slick-theme.scss" />
+    <None Include="wwwroot\slick\slick.less" />
+    <None Include="wwwroot\slick\slick.scss" />
+  </ItemGroup>
+
+  <ItemGroup>
     <PackageReference Include="EntityFramework" Version="6.4.4" />
     <PackageReference Include="MailKit" Version="2.11.1" />
     <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
@@ -27,6 +36,11 @@
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
+  </ItemGroup>
+
+  <ItemGroup>
+    <Folder Include="wwwroot\jquery\" />
+    <Folder Include="wwwroot\lib\jquery-ajax-unobtrusive\" />
   </ItemGroup>
 
   <ProjectExtensions><VisualStudio><UserProperties libman_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
