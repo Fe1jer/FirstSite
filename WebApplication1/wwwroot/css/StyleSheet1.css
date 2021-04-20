@@ -10,7 +10,6 @@
     align-items: center;
 }
 
-
 .isDisabled {
     cursor: not-allowed;
     opacity: 0.5;
@@ -79,9 +78,10 @@ a {
     background-color: transparent;
     padding-left: 0
 }
-    #myInput:focus {
-        outline: 3px solid #ddd;
-    }
+
+#myInput:focus {
+    outline: 3px solid #ddd;
+}
 
 .dropdown {
     position: relative;
@@ -139,4 +139,113 @@ a {
     display: block;
     overflow: hidden;
     text-overflow: ellipsis;
+}
+
+.box-news {
+    overflow: hidden;
+}
+
+    .box-news:before {
+        content: "";
+        float: left;
+        width: 5px;
+        height: 120px;
+    }
+
+    .box-news > *:first-child {
+        float: right;
+        width: 100%;
+        margin-left: -5px;
+    }
+
+    .box-news:after {
+        content: "\02026";
+        box-sizing: content-box;
+        float: right;
+        position: relative;
+        top: -29px;
+        left: 100%;
+        width: 3em;
+        margin-left: -3em;
+        padding-right: 5px;
+        text-align: right;
+        background-size: 100% 100%;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    }
+
+.card-img__news {
+    float: left;
+    width: 320px;
+    position: relative;
+    text-align: center;
+}
+
+.card-body__news {
+    margin: 15px 15px 15px 340px;
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.card__news {
+    padding-bottom: 30px;
+    height: 172px;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.card-footer__news {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.text-header__news {
+    font-size: 17px;
+}
+
+.card-footer__news p {
+    color: #999;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.card-footer__news a {
+    color: #698493;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.card-img__news img {
+    height: 170px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .25rem 0 0 .25rem;
+}
+
+.card-header__news {
+    line-height: 20px;
+    height: 113px;
+}
+
+@media (max-width: 528px) {
+    .card-img__news {
+        margin-bottom: 1rem;
+        width: 100%;
+        float: none;
+    }
+
+    .card-body__news {
+        margin-left: 1rem;
+    }
+
+    .card__news {
+        height: 342px;
+    }
+
+    .card-img__news img {
+        border-radius: .25rem .25rem 0 0;
+    }
 }

@@ -18,38 +18,33 @@
         }
     </ul>
     <hr />
-    @{
-        foreach (var category in Model.FilterSort)
+    @foreach (var category in Model?.FilterSort)
+    {
+        int counter = 1;
+        <b class="px-2">@category.Name</b>
+        foreach (var selection in category?.Selections)
         {
-            int counter = 1;
-            <b class="px-2">@category.Name</b>
-            foreach (var selection in category.Selections)
+            string i = null;
+
+            foreach (string item in Model?.Filter)
             {
-                string i = null;
-                @if (Model.Filter != null)
+                int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
+                int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
+                i = Model.FilterSort[categoryId].Selections[filterId].Name;
+                Model.Filter.Remove(i);
+                if (selection.Name == i)
                 {
-
-                    foreach (string item in Model.Filter)
-                    {
-                        int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
-                        int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
-                        i = Model.FilterSort[categoryId].Selections[filterId].Name;
-                        Model.Filter.Remove(i);
-                        if (selection.Name == i)
-                        {
-                            break;
-                        }
-                    }
+                    break;
                 }
-
-                string name = String.Format("{0}-{1}", category.ID, counter++);
-                <label class="nav-link" style="padding: 3px 11px">
-                    <input class="form-check-input" id="@selection.Name" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
-                           @(i == selection.Name ? "checked" : "") />
-                    <span>@selection.Name</span>
-                </label>
             }
-            <hr />
+            string name = String.Format("{0}-{1}", category.ID, counter++);
+            <label class="nav-link" style="padding: 3px 11px">
+                <input class="form-check-input" id="@selection.Name" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
+                       @(i == selection.Name ? "checked" : "") />
+                <span>@selection.Name</span>
+            </label>
         }
+        <hr />
     }
+
 </div>

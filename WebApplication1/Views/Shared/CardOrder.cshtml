@@ -18,8 +18,8 @@
             }
         }
     </div>
-    <div class="col-lg-3">
-        @foreach (OrderDetail orderDetail in Model.OrderDetails)
+    <div class="col-lg-4">
+        @foreach (OrderDetail orderDetail in Model?.OrderDetails)
         {
             <p>
                 <b>@orderDetail.Product.Category:</b> @orderDetail.Product.Name
@@ -70,4 +70,3 @@
         }
     </div>
 </div>
-<hr style="margin: 0.4rem 0;" />

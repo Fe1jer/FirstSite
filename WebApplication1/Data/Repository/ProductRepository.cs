@@ -205,8 +205,8 @@ namespace WebApplication1.Data.Repository
                 if (!itemInCart)
                 {
                     showProduct.IsInCart = false;
+                    showProducts.Add(showProduct);
                 }
-                showProducts.Add(showProduct);
             }
 
             return showProducts;

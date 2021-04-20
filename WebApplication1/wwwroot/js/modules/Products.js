@@ -3,7 +3,7 @@
     var company = JSON.stringify(item.product.company).slice(1, -1);
     var shortDesc = JSON.stringify(item.product.shortDesc).slice(1, -1);
     var InCart = JSON.stringify(item.isInCart);
-    var msg = '<div class="col-lg-4 mt-2 mb-3">' +
+    var msg = '<div class="col-lg-4 mt-2 mb-2">' +
         '<div class="card shadow-sm">' +
         '<div class="scale">' +
         '<a href="/Products/Product/' + name + '?id=' + JSON.stringify(item.product.id) + '" >' +
@@ -35,7 +35,7 @@
         msg = msg + buttonEditProduct(JSON.stringify(item.product.id));
     }
 
-    if (JSON.stringify(item.product.available) != 'false') {
+    if (JSON.stringify(item.product.available) == 'true') {
         if (InCart == 'true') {
             msg = msg + buttonRemoveToCart(JSON.stringify(item.product.id));
         }

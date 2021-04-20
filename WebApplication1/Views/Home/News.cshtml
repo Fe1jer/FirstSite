@@ -8,93 +8,26 @@
     <link rel="stylesheet" href="~/slick/slick-theme.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/slick/slick.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
-
-    <style>
-        .bd-placeholder-img {
-            font-size: 1.125rem;
-            text-anchor: middle;
-            -webkit-user-select: none;
-            -moz-user-select: none;
-            user-select: none;
-        }
-
-        @@media (min-width: 768px) {
-            .bd-placeholder-img-lg {
-                font-size: 3.5rem;
-            }
-        }
-    </style>
 </head>
 <body>
     <main>
         @await Html.PartialAsync("PhotoCarusel", Model.CaruselItems)
-
-        <!-- Marketing messaging and featurettes
-        ================================================== -->
-        <!-- Wrap the rest of the page in another container to center all the content. -->
-
         <div class="marketing">
-
-            <!-- Three columns of text below the carousel -->
+            <h2 class="text-center text-danger">Рекомендуем</h2>
             <div class="multiple-items">
-                @foreach (ShowProductViewModel showProduct in Model.FavProducts)
+                @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
                 {
-                    @await Html.PartialAsync("ShowProduct", showProduct)
+                    @await Html.PartialAsync("ShowProduct", showProduct);
                 }
             </div>
-            @{
-                int i = 0;
-                string textOrder;
-                string imgOrder;
-                foreach (CaruselItem productImage in Model.CaruselItems)
-                {
-                    <hr class="featurette-divider">
-                    if (i % 2 == 1)
-                    {
-                        textOrder = "order-md-2";
-                        imgOrder = "order-md-1";
-                    }
-                    else
-                    {
-                        textOrder = "";
-                        imgOrder = "";
-                    }
-                    <div class="row featurette">
-                        <div class="col-md-7 @textOrder">
-                            <h2 class="featurette-heading">First featurette heading. <span class="text-muted">It’ll blow your mind.</span></h2>
-                            <p class="lead">Donec ullamcorper nulla non metus auctor fringilla. Vestibulum id ligula porta felis euismod semper. Praesent commodo cursus magna, vel scelerisque nisl consectetur. Fusce dapibus, tellus ac cursus commodo.</p>
-                        </div>
-                        <div class="col-md-5 @imgOrder">
-                            <svg class="bd-placeholder-img bd-placeholder-img-lg featurette-image img-fluid mx-auto" width="500" height="500" xmlns="http://www.w3.org/2000/svg" role="img" aria-label="Placeholder: 500x500" preserveAspectRatio="xMidYMid slice" focusable="false"><title>Placeholder</title><rect width="100%" height="100%" fill="#eee" /><text x="50%" y="50%" fill="#aaa" dy=".3em">500x500</text></svg>
-                        </div>
-                    </div>
-                    i++;
-                }
+            <h2 class="text-center text-danger">Новости</h2>
+            @foreach (News item in Model.NewsList)
+            {
+                @await Html.PartialAsync("CardNews", item);
             }
-
-            <hr class="featurette-heading">
-            <!-- /END THE FEATURETTES -->
         </div>
     </main>
+    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script src="~/js/modules/ShopCart.js"></script>
     <script type="text/javascript" src="~/slick/slick.min.js"></script>
-    <script type="text/javascript">
-        $(document).ready(function () {
-            if ($(window).width() > 1200) {
-                $('.multiple-items').slick({
-                    infinite: true,
-                    dots: true,
-                    slidesToShow: 4,
-                    slidesToScroll: 1,
-                });
-            } else {
-                $('.multiple-items').slick({
-                    infinite: true,
-                    dots: true,
-                    slidesToShow: 1,
-                    slidesToScroll: 1,
-                });
-            }
-        });
-
-    </script>
 </body>

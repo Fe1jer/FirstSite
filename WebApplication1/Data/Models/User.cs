@@ -17,7 +17,6 @@ namespace WebApplication1.Data.Models
 
         public virtual DateTimeOffset? LockoutEnd { get; set; }
 
-
         [Display(Name = "Пароль")]
         public string Password { get; set; }
 

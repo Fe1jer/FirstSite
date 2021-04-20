@@ -146,13 +146,6 @@ namespace WebApplication1.Controlles
         [Route("Catalog")]
         public async Task<IActionResult> Index(List<string> filters)
         {
-            IEnumerable<int> vs = new List<int>() { 1,2,3,4,5};
-            vs.Where(p => p > 0);
-            foreach(int item in vs)
-            {
-                int a = item;
-            }
-
             var products = await _productRepository.GetProductsAsync();
             products = products.OrderByDescending(p=>p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
             List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());

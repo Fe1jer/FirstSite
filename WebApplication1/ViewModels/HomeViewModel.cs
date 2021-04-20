@@ -7,5 +7,6 @@ namespace WebApplication1.ViewModels
     {
         public IEnumerable<ShowProductViewModel> FavProducts { get; set; }
         public IEnumerable<CaruselItem> CaruselItems { get; set; }
+        public IEnumerable<News> NewsList { get; set; }
     }
 }
