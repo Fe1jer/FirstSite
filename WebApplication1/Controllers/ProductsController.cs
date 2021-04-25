@@ -49,7 +49,7 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> ChangeProduct(int id)
+        public async Task<IActionResult> Edit(int id)
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
@@ -63,7 +63,7 @@ namespace WebApplication1.Controlles
         }
 
         [HttpPost, Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> ChangeProduct(Product obj)
+        public async Task<IActionResult> Edit(Product obj)
         {
             if (ModelState.IsValid)
             {
@@ -76,7 +76,7 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> DeleteProduct(int id)
+        public async Task<IActionResult> Delete(int id)
         {
             Product product = await _productRepository.GetProductByIdAsync(id);
             await _productRepository.DeleteProductAsync(product);
@@ -85,7 +85,7 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> AddProduct()
+        public async Task<IActionResult> Create()
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
@@ -97,7 +97,7 @@ namespace WebApplication1.Controlles
         }
 
         [HttpPost, Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> AddProduct(Product obj)
+        public async Task<IActionResult> Create(Product obj)
         {
             if (await _productRepository.GetProductByNameAsync(obj.Name) == null)
             {

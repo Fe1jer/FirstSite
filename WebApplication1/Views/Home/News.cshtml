@@ -12,22 +12,24 @@
 <body>
     <main>
         @await Html.PartialAsync("PhotoCarusel", Model.CaruselItems)
-        <div class="marketing">
-            <h2 class="text-center text-danger">Рекомендуем</h2>
-            <div class="multiple-items">
-                @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
-                {
-                    @await Html.PartialAsync("ShowProduct", showProduct);
-                }
-            </div>
-            <h2 class="text-center text-danger">Новости</h2>
-            @foreach (News item in Model.NewsList)
+        <h2 class="text-center text-danger">Рекомендуем</h2>
+        <div class="multiple-items">
+            @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
             {
-                @await Html.PartialAsync("CardNews", item);
+                @await Html.PartialAsync("ShowProduct", showProduct);
             }
         </div>
+        <h2 class="text-center text-danger pt-4">Новости</h2>
+        @if (User.IsInRole("moderator") || User.IsInRole("admin"))
+        {
+            <a type="button" class="btn btn-outline-primary" asp-action="Create">Добавить новость</a>
+        }
+        @foreach (News item in Model.NewsList)
+        {
+            @await Html.PartialAsync("CardNews", item);
+        }
     </main>
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
-    <script src="~/js/modules/ShopCart.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/js/modules/shopCart.js"></script>
     <script type="text/javascript" src="~/slick/slick.min.js"></script>
 </body>

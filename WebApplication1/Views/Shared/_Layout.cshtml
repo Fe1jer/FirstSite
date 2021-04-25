@@ -12,7 +12,7 @@
 </head>
 <body>
     <header id="header">
-        <nav class="navbar navbar-expand-md navbar-dark fixed-top bg-dark">
+        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
             <div class="container-fluid">
                 <a class="navbar-brand" href="/">Интернет магазин</a>
                 <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
@@ -48,32 +48,31 @@
                             </li>
                         }
                     </ul>
-                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3 pt-1 pb-1">
+                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3" style="width: 320px">
                         <input class="form-control me-2" name="q" type="search" placeholder="Поиск" aria-label="Search">
                         <button class="btn btn-outline-success" type="submit">Поиск</button>
                     </form>
                     @if (User.Identity.IsAuthenticated)
                     {
-                        <div class="dropdown pt-1 pb-1">
+                        <div class="dropdown mt-2-dropdown">
                             <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                                 <img src="@User.FindFirst("Avatar").Value.ToString()" alt="avatar" style="object-fit: cover; width: 40px; height: 40px; border-radius: 50%;" />
                             </a>
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                                 <li><p class="dropdown-item-text text-nowrap my-0">Приветствуем <b>@User.FindFirst("Name").Value.ToString()</b></p></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Профиль</font></font></a></li>
-                                <li><a class="dropdown-item disabled" asp-controller="Account" asp-action="Settings"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Настройки</font></font></a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Профиль</a></li>
+                                <li><a class="dropdown-item disabled" asp-controller="Account" asp-action="Settings">Настройки</a></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Выйти</font></font></a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Выйти</a></li>
                             </ul>
-
                         </div>
                     }
                     else
                     {
                         <ul class="navbar-nav">
                             <li class="nav-item active">
-                                <a class="nav-link" aria-current="page" asp-controller="Account" asp-action="Login">Войти</a>
+                                <a class="nav-link ps-0" aria-current="page" asp-controller="Account" asp-action="Login">Войти</a>
                             </li>
                         </ul>
                     }
@@ -83,19 +82,23 @@
     </header>
     <script src="~/jquery/jquery.min.js"></script>
     <script>
-        function moveItem() {
-            $('div:not([id]):not([class])').each(function () {
-                $(this).remove();
-            });
-        }
+        $(document).ready(function () {
+            function moveItem() {
+                $('div:not([id]):not([class])').each(function () {
+                    $(this).remove();
+                });
+            }
 
-        setTimeout(moveItem, 200);
+            setTimeout(moveItem, 100);
+            setTimeout(moveItem, 500);
+        });
     </script>
     <div class="container" id="container">
         @RenderBody()
     </div>
     <div id="cookie_notification">
-        <p class="text-dark abs">Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.</p>
+        <p class="text-dark abs">Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie. 
+        Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.</p>
         <button class="btn btn-info cookie_accept">Принять</button>
     </div>
     <footer id="footer">
@@ -104,6 +107,6 @@
         <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
     </footer>
     <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="~/js/modules/Cookie.js" asp-append-version="true"></script>
+    <script src="~/js/modules/cookie.js" asp-append-version="true"></script>
 </body>
 </html>

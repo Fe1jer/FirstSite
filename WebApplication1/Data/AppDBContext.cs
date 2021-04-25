@@ -1,5 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using WebApplication1.Data.Models;
+using WebApplication1.ViewModels;
 
 namespace WebApplication1.Data
 {

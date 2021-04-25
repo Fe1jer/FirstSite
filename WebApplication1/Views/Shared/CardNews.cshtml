@@ -2,17 +2,21 @@
 
 <div class="card__news mt-4">
     <div class="card-img__news">
-        <img class="bd-placeholder-img" src="@Model.Img" alt="@Model.Img" />
+        <a href="@Model.Href">
+            <img src="@Model.Img" alt="@Model.Img" />
+        </a>
     </div>
     <div class="card-body__news">
         <div class="box-news card-header__news">
             <div class="">
-                <h4 class="card-title" style="line-height: 22px;">@Model.Name</h4>
+                <a href="@Model.Href">
+                    <h4 class="card-title text-dark" style="line-height: 22px;">@Model.Name</h4>
+                </a>
                 <p class="text-header__news">@Model.Desc</p>
             </div>
         </div>
         <div class="card-footer__news">
-            <a href="#">Подробнее</a>
+            <a href="@Model.Href">Подробнее</a>
             <p class="float-end d-flex mt-1 mb-0">@Model.CreateData.ToString("dd.MM.yy")</p>
         </div>
     </div>

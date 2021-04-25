@@ -1,66 +1,76 @@
 ﻿body {
     background: #fcfcfc;
-    padding-top: 4.5rem;
+    padding-top: 3.5rem;
 }
 
 p{
     margin: 0.3em auto;
 }
 
-.box {
-    overflow: hidden;
-    height: 86px;
-    line-height: 20px;
+mt-2-dropdown{
+    margin: 0;
 }
 
-    .box h5 {
-        line-height: 21px;
-        margin: 1px 0;
+@media (max-width: 991px) {
+    .mt-2-dropdown {
+        margin-top: 0.5rem;
     }
-
-    .box:before {
-        content: "";
-        float: left;
-        width: 5px;
-        height: 110px;
-    }
-
-    .box > *:first-child {
-        float: right;
-        width: 100%;
-        margin-left: -5px;
-    }
-
-    .box:after {
-        content: "\02026";
-        box-sizing: content-box;
-        float: right;
-        position: relative;
-        top: -44px;
-        left: 100%;
-        width: 3em;
-        margin-left: -3em;
-        padding-right: 5px;
-        text-align: right;
-        background-size: 100% 100%;
-        background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
-    }
-
-h3{
-    margin: 0em;
 }
 
-.scale {
-    display: inline-block; /* Строчно-блочный элемент */
-    overflow: hidden; /* Скрываем всё за контуром */
-}
-
-    .scale img {
-        transform: scale(0.9);
-        transition: 1s; /* Время эффекта */
-        display: block; /* Убираем небольшой отступ снизу */
+    .box {
+        overflow: hidden;
+        height: 86px;
+        line-height: 20px;
     }
 
-        .scale img:hover {
-            transform: scale(1); /* Увеличиваем масштаб */
+        .box h5 {
+            line-height: 21px;
+            margin: 1px 0;
         }
+
+        .box:before {
+            content: "";
+            float: left;
+            width: 5px;
+            height: 110px;
+        }
+
+        .box > *:first-child {
+            float: right;
+            width: 100%;
+            margin-left: -5px;
+        }
+
+        .box:after {
+            content: "\02026";
+            box-sizing: content-box;
+            float: right;
+            position: relative;
+            top: -44px;
+            left: 100%;
+            width: 3em;
+            margin-left: -3em;
+            padding-right: 5px;
+            text-align: right;
+            background-size: 100% 100%;
+            background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+        }
+
+    h3 {
+        margin: 0em;
+    }
+
+    .scale {
+        display: inline-block; /* Строчно-блочный элемент */
+        overflow: hidden; /* Скрываем всё за контуром */
+    }
+
+        .scale img {
+            transform: scale(0.9);
+            transition: 1s; /* Время эффекта */
+            display: block; /* Убираем небольшой отступ снизу */
+        }
+
+            .scale img:hover {
+                transform: scale(1); /* Увеличиваем масштаб */
+            }

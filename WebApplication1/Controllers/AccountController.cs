@@ -151,7 +151,7 @@ namespace WebApplication1.Controllers
                         System.IO.File.Delete($"wwwroot{user.Img}");
                     }
                     // путь к папке Files
-                    string path = "/img/UsersAvatar/" + model.Email + model.Img.FileName;
+                    string path = "/img/UsersAvatar/" + model.Email + "_" + model.Img.FileName;
                     // сохраняем файл в папку Files в каталоге wwwroot
                     using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                     {

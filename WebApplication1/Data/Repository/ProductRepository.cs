@@ -45,18 +45,24 @@ namespace WebApplication1.Data.Repository
         public async Task<Product> GetProductByNameAsync(string name)
         {
             var collection = await GetAllAsync();
+
             return collection.FirstOrDefault(n => n.Name.Equals(name));
         }
 
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
         {
-            var collection = await GetAllAsync();
-            if (searchText != null)
+            var products = await GetAllAsync();
+            if(searchText != null)
             {
-                collection = collection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList()
-                    .Union(collection.Where(i => i.Company.ToLower().Contains(searchText.ToLower()))).Distinct().ToList();
+                List<string> searchWords = searchText.Split(" ").ToList();
+                foreach (string word in searchWords)
+                {
+                    products = products.Where(i => i.Name.ToLower().Contains(word.ToLower())).ToList()
+                        .Union(products.Where(i => i.Company.ToLower().Contains(word.ToLower()))).Distinct().ToList();
+                }
             }
-            return collection;
+
+            return products;
         }
 
         public async Task AddProductAsync(Product product)
@@ -64,16 +70,21 @@ namespace WebApplication1.Data.Repository
             await AddAsync(product);
         }
 
-
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products)
         {
             List<FilterCategoryVM> filter = new List<FilterCategoryVM>();
             IEnumerable<string> Categories = products.Select(i => i.Category).Distinct().ToList();
             IEnumerable<string> Countries = products.Select(i => i.Country).Distinct().ToList();
             IEnumerable<string> Companies = products.Select(i => i.Company).Distinct().ToList();
-            Dictionary<string, IEnumerable<string>> filterCategory = new Dictionary<string, IEnumerable<string>>() { { "Категория", Categories }, { "Компания", Companies }, { "Страна производитель", Countries } };
-
+            Dictionary<string, IEnumerable<string>> filterCategory =
+                new Dictionary<string, IEnumerable<string>>()
+                {
+                    { "Категория", Categories },
+                    { "Компания", Companies },
+                    { "Страна производитель", Countries }
+                };
             int categoryId = 1;
+
             foreach (KeyValuePair<string, IEnumerable<string>> item in filterCategory)
             {
                 FilterCategoryVM category = new FilterCategoryVM
@@ -82,7 +93,9 @@ namespace WebApplication1.Data.Repository
                     Name = item.Key,
                     Selections = new List<FilterSelectionVM>()
                 };
+
                 int selectionId = 1;
+
                 foreach (string i in item.Value)
                 {
                     FilterSelectionVM filterSelection = new FilterSelectionVM
@@ -105,13 +118,16 @@ namespace WebApplication1.Data.Repository
             int categoryId = 0;
             int filterId = 0;
             List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
+
             foreach (string item in filters)
             {
                 if (item != null)
                 {
                     categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
                     filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
+
                     string i = filterCategories[categoryId].Selections[filterId].Name;
+
                     if (categoryId == 0)
                     {
                         filter[0].Add(i);
@@ -151,6 +167,7 @@ namespace WebApplication1.Data.Repository
                 }
                 categoryId++;
             }
+
             return products;
         }
         public List<ShowProductViewModel> FindProductsInTheCart(List<Product> products, List<ShopCartItem> cartItems)
@@ -184,7 +201,7 @@ namespace WebApplication1.Data.Repository
 
             return showProducts;
         }
-        public List<ShowProductViewModel> DeleteIfInCart(List<Product> products, List<ShopCartItem> cartItems)
+        public List<ShowProductViewModel> RemoveIfInCart(List<Product> products, List<ShopCartItem> cartItems)
         {
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
