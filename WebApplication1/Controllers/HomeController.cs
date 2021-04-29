@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -41,6 +42,58 @@ namespace WebApplication1.Controllers
         public ViewResult Index()
         {
             return View();
+        }
+
+        [Authorize(Roles = "admin, moderator")]
+        public ActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
+        public async Task<IActionResult> Create(CreateNewsViewModel model)
+        {
+            if (ModelState.IsValid)
+            {
+                await _newsRepository.CreateNews(model);
+                return RedirectToAction(nameof(Index));
+            }
+
+            return View();
+        }
+
+        [Route("/News/{name}")]
+        public async Task<IActionResult> Details(int id)
+        {
+            var news = await _newsRepository.GetNewsByIdAsync(id);
+            return View(news);
+        }
+
+        [Authorize(Roles = "admin, moderator")]
+        public ActionResult Edit(int id)
+        {
+            return View();
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
+        public async Task<IActionResult> Edit()
+        {
+            try
+            {
+                return RedirectToAction(nameof(Index));
+            }
+            catch
+            {
+                return View();
+            }
+        }
+
+        [Authorize(Roles = "admin, moderator")]
+        public async Task<RedirectToActionResult> Delete(int id)
+        {
+            return RedirectToAction(nameof(Index));
         }
     }
 }

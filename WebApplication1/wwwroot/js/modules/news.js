@@ -20,8 +20,8 @@ $('#caruselCheck').change(function () {
 
 $(document).ready(function () {
     var xhr;
-    var $result = $('#search_box-result');
-    $('#search').on('keyup', function () {
+    $('#search__news').on('keyup', function () {
+        var $result = $(this).siblings('#search_box-result');
         var search = $(this).val();
         if (xhr) {
             xhr.abort();
@@ -32,16 +32,16 @@ $(document).ready(function () {
                 url: "/Catalog/SearchAjax",
                 data: { q: search },
                 success: function (msg) {
-                    $result.html('<ul class="search_result"></ul>')
+                    $result.html('<ul class="search_result" id="search_result"></ul>')
                     if (JSON.stringify(msg) != '[]') {
 
                         $.each(msg.slice(0, 8),
                             function (num, item) {
-                                $('.search_result').append(ShowProduct(item));
+                                $result.children('#search_result').append(ShowProduct(item));
                             });
                         $result.fadeIn();
                     } else {
-                        $('.search_result').append(emptyResult());
+                        $result.children('#search_result').html(emptyResult());
                         $result.fadeIn();
                     }
                 }
@@ -53,10 +53,14 @@ $(document).ready(function () {
     });
 
     $(document).mouseup(function (e) {
-        var container = $result;
+        var container = $('#search_box__news');
         if (container.has(e.target).length === 0) {
-            container.hide();
+            container.children('#search_box-result').hide();
         }
+    });
+
+    $('#search__news').mousedown(function (e) {
+        $(this).siblings('#search_box-result').show();
     });
 
     if (document.getElementById('productCheck').checked) {
@@ -81,5 +85,6 @@ function ShowProduct(item) {
 }
 
 function setProduct(id, name, company) {
-    $('#ProductHref').val('/Products/' + name.replace(/ /g, ' - ') + ' ? id = ' + id);
+    $('#ProductHref').val('/Products/' + name.replace(/ /g, '-') + '?id=' + id);
+    $('#selectedProduct').html  (company + ' ' + name);
 }

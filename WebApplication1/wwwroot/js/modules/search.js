@@ -17,7 +17,6 @@
 
                         $.each(msg.slice(0, 8),
                             function (num, item) {
-                                console.log("a");
                                 $result.children('#search_result').append(searchProduct(item));
                             });
                         $result.fadeIn();
