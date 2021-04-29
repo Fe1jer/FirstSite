@@ -14,56 +14,25 @@ namespace WebApplication1.Controllers
     {
         private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
-        private readonly IShopCart _shopCart;
+        private readonly INewsRepository _newsRepository;
 
-        public HomeController(IShopCart shopCart, IProductRepository IProductRepository, IUserRepository IUserRepository)
+        public HomeController(IProductRepository IProductRepository, IUserRepository IUserRepository, INewsRepository newsRepository)
         {
+            _newsRepository = newsRepository;
             _userRepository = IUserRepository;
-            _shopCart = shopCart;
             _productRepository = IProductRepository;
         }
 
         public async Task<ViewResult> News()
         {
-            IEnumerable<CaruselItem> caruselItems = new CaruselItem[]
-            {
-                new CaruselItem
-                {
-                    ShortDesc = "Самый технологичный",
-                    LongDesc = "С iphone 12 вы будете иметь все самые новые технологии современных смартфонов",
-                    Img = "/img/iphone-12.jpg",
-                },
-                new CaruselItem
-                {
-                    ShortDesc = "Гибкий экран",
-                    LongDesc = "С таким смартфоном на вас будут обращать внимание все",
-                    Img = "/img/z-flip.jpg"
-                },
-                new CaruselItem
-                {
-                    ShortDesc = "Каждое фото - как с обложки",
-                    LongDesc = "Делайте фотографии днём и ночью, с Huawei P10 вы будете богом или богиней Instagram",
-                    Img = "/img/huawei-p10.png",
-                }
-            };
-            var products = await _productRepository.GetProductsAsync();
-            products = products.OrderByDescending(p => p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
-           List<ShowProductViewModel> showProducts = await _productRepository.RemoveIfInCart(products.ToList(), User.Identity.Name);
-            List<News> news = new List<News>();
-            for (int i = 0; i <= 11; i++)
-            {
-                news.Add(new News
-                {
-                    Name = "Название новости",
-                    Desc = "Это более длинное поле с вспомогательным текстом как естественный ввод к дополнительному контенту. Этот контент может быть немного длиннее.",
-                    Img = "/img/huawei-p10.png",
-                    CreateData = DateTime.Now
-                });
-            }
+            IEnumerable<CaruselItem> caruselItems = await _newsRepository.GetFavNewsAsync();
+            var products = await _productRepository.GetProductsAsync(new ProductSpecification().SortByRelevance().Take(8));
+            List<ShowProductViewModel> showProducts = await _productRepository.RemoveIfInCart(products.ToList(), User.Identity.Name);
+            var news = await _newsRepository.GetNewsAsync(new NewsSpecification().SortById());
             var homeProducts = new HomeViewModel
             {
                 CaruselItems = caruselItems,
-                FavProducts = showProducts.Take(8),
+                FavProducts = showProducts,
                 NewsList = news.Take(8)
             };
 
