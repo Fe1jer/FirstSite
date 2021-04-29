@@ -1,0 +1,76 @@
+﻿@model CreateNewsViewModel
+@{
+    ViewData["Title"] = "Добавление новости";
+}
+<h4>@ViewData["Title"]</h4>
+<hr />
+<main>
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+    <form asp-action="Create" class="row" enctype="multipart/form-data">
+        <div id="form" class="col-lg-8 row mt-0 gy-3">
+            <div asp-validation-summary="ModelOnly" class="text-danger mt-0"></div>
+            <div class="col-5 form-group mt-0">
+                <label asp-for="Name" class="control-label"></label>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-12 form-group">
+                <label asp-for="Img" class="control-label"></label>
+                <input asp-for="Img" type="file" class="form-control w-auto" />
+                <span asp-validation-for="Img" class="text-danger"></span>
+            </div>
+            <div class="col-12 form-group">
+                <label asp-for="Desc" class="control-label"></label>
+                <input asp-for="Desc" class="form-control" />
+                <span asp-validation-for="Desc" class="text-danger"></span>
+            </div>
+            <div class="col-12 row mt-3">
+                <div id="caruselDiv" class="col-lg-6">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input id="caruselCheck" class="form-check-input" asp-for="IsCaruselNews" /> @Html.DisplayNameFor(model => model.IsCaruselNews)
+                        </label>
+                    </div>
+                    <div id="favImgDiv" class="form-group mt-3" style="display:none">
+                        <label asp-for="FavImg" class="control-label"></label>
+                        <input asp-for="FavImg" type="file" class="form-control w-auto" />
+                        <span asp-validation-for="FavImg" class="text-danger"></span>
+                    </div>
+                </div>
+                <div class="col-lg-6">
+                    <div class="form-group form-check">
+                        <label class="form-check-label">
+                            <input id="productCheck" class="form-check-input" asp-for="IsProductHref" /> @Html.DisplayNameFor(model => model.IsProductHref)
+                        </label>
+                    </div>
+                </div>
+            </div>
+            <div id="textDiv" class="col-12 form-group">
+                <label asp-for="Text" class="form-label"></label>
+                <div class="input-group">
+                    <textarea class="w-100" asp-for="Text"></textarea>
+                    <span asp-validation-for="Text" class="text-danger"></span>
+                </div>
+            </div>
+        </div>
+        <div id="productList" style="display:none;" class="col-lg-4">
+            <div class="form-group mb-3">
+                <label asp-for="ProductId" class="control-label"></label>
+                <input min="1" asp-for="ProductId" class="form-control" id="idProduct" />
+                <span asp-validation-for="ProductId" class="text-danger"></span>
+            </div>
+            <div class="search_box">
+                <input class="form-control" type="text" name="search" id="search" autocomplete="off" aria-label="Search" placeholder="Введите название товара">
+                <div id="search_box-result"></div>
+            </div>
+        </div>
+        <div class="mt-3">
+            <button class="btn btn-primary btn-lg" type="submit">Сохранить</button>
+        </div>
+        <input type="hidden" asp-for="CreateData" value="@DateTime.Now" />
+    </form>
+</main>
+<div class="">
+    <a asp-action="News">Назад</a>
+</div>
+<script type="text/javascript" src="~/js/modules/news.js"></script> 
