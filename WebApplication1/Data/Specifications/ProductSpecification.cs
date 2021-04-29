@@ -16,6 +16,14 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
+        public ProductSpecification SortByRelevance()
+        {
+            AddDescendingOrdering(product => product.Available);
+            AddDescendingOrdering(product => product.IsFavourite);
+            AddDescendingOrdering(product => product.Id);
+            return this;
+        }
+
         public ProductSpecification WhereInPriceRange(double min, double max)
         {
             if (min > max)
@@ -23,12 +31,6 @@ namespace WebApplication1.Data.Specifications
                 throw new ArgumentException("Min is greater than max!");
             }
             AddWhere(product => product.Price >= min && product.Price <= max);
-            return this;
-        }
-
-        public ProductSpecification WhereId(int id)
-        {
-            AddWhere(product => product.Id == id);
             return this;
         }
 
@@ -47,11 +49,6 @@ namespace WebApplication1.Data.Specifications
             AddDescendingOrdering(product => product.Price);
             return this;
         }
-        public ProductSpecification SortByFavourite()
-        {
-            AddDescendingOrdering(product => product.IsFavourite);
-            return this;
-        }
 
         public ProductSpecification IncludeCategory()
         {
@@ -67,6 +64,12 @@ namespace WebApplication1.Data.Specifications
         public ProductSpecification WithTracking()
         {
             IsNoTracking = false;
+            return this;
+        }
+
+        public new ProductSpecification Take(int count)
+        {
+            base.Take = count;
             return this;
         }
     }

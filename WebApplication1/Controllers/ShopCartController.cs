@@ -35,7 +35,7 @@ namespace WebApplication1.Controllers
             {
                 return View("PageNotFound");
             }
-            Product item = await _productRepository.GetProductByIdAsync(IdProduct);
+            Product item = await _productRepository.GetProductAsync(IdProduct);
             if (item != null)
             {
                 await _shopCart.AddToCart(await _userRepository.GetUserAsync(User.Identity.Name), item);

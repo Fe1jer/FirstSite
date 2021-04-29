@@ -2,7 +2,6 @@
 @{
     ViewData["Title"] = "Все товары";
 }
-<html>
 <head>
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 </head>
@@ -59,9 +58,9 @@
                 list.push($(this).val());
                 $('#filterHeader').append(showFilter($(this)));
             });
-            filtersHref = '?' + ArrFiltersHref.join('').slice(1);
+            var filtersHref = '?' + ArrFiltersHref.join('').slice(1);
             var winLocHref = window.location.href.split("?");
-            history.pushState(null, null, winLocHref[0] + filtersHref);
+            history.pushState(null, null, winLocHref[0] + ((filtersHref == "?") ? "" : filtersHref));
             if (xhr) {
                 xhr.abort();
             }
@@ -98,4 +97,3 @@
         };
     </script>
 </body>
-</html>

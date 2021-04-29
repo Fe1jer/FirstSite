@@ -19,14 +19,12 @@ namespace WebApplication1.Controllers
     public class AccountController : Controller
     {
         private readonly IUserRepository _productRepository;
-        private readonly IPasswordHasher _hasher;
         private readonly IRoleRepository _roles;
         private readonly IWebHostEnvironment _appEnvironment;
 
-        public AccountController(IUserRepository IProductRepository, IPasswordHasher hasher, IRoleRepository roles, IWebHostEnvironment appEnvironment)
+        public AccountController(IUserRepository IProductRepository, IRoleRepository roles, IWebHostEnvironment appEnvironment)
         {
             _productRepository = IProductRepository;
-            _hasher = hasher;
             _roles = roles;
             _appEnvironment = appEnvironment;
         }
@@ -52,7 +50,10 @@ namespace WebApplication1.Controllers
                     Role userRole = await _roles.GetRoleAsync("user");
 
                     if (userRole != null)
+                    {
                         user.Role = userRole;
+                    }
+
                     await _productRepository.AddUserAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
@@ -77,7 +78,9 @@ namespace WebApplication1.Controllers
                     }
                 }
                 else
+                {
                     ModelState.AddModelError("", "Пользователь с данной почтой уже существует");
+                }
             }
             return View(model);
         }
@@ -103,7 +106,7 @@ namespace WebApplication1.Controllers
                 {
                     ModelState.AddModelError("", "Подтвердите регистрацию на почте.");
                 }
-                else if (user != null && _hasher.VerifyHashedPassword(user.Password, model.Password))
+                else if (user != null && HashingService.VerifyHashedPassword(user.Password, model.Password))
                 {
                     await Authenticate(user); // аутентификация
 
@@ -232,7 +235,7 @@ namespace WebApplication1.Controllers
                 }
                 else
                 {
-                    user.Password = _hasher.HashPassword(model.Password);
+                    user.Password = HashingService.HashPassword(model.Password);
                     await _productRepository.UpdateUserAsync(user);
                     return View("ResetPasswordConfirmation");
                 }

@@ -1,12 +1,11 @@
 ﻿using System;
 using System.Security.Cryptography;
-using WebApplication1.Data.Interfaces;
 
-namespace WebApplication1.Data.Repository
+namespace WebApplication1.Data.Services
 {
-    public class PasswordHasherRepository : IPasswordHasher
+    public class HashingService
     {
-        public string HashPassword(string password)
+        public static string HashPassword(string password)
         {
             byte[] salt;
             byte[] buffer2;
@@ -25,7 +24,7 @@ namespace WebApplication1.Data.Repository
             return Convert.ToBase64String(dst);
         }
 
-        public bool VerifyHashedPassword(string hashedPassword, string password)
+        public static bool VerifyHashedPassword(string hashedPassword, string password)
         {
             byte[] buffer4;
             if (hashedPassword == null)
@@ -54,12 +53,27 @@ namespace WebApplication1.Data.Repository
 
         private static bool ByteArraysEqual(byte[] b1, byte[] b2)
         {
-            if (b1 == b2) return true;
-            if (b1 == null || b2 == null) return false;
-            if (b1.Length != b2.Length) return false;
+            if (b1 == b2)
+            {
+                return true;
+            }
+
+            if (b1 == null || b2 == null)
+            {
+                return false;
+            }
+
+            if (b1.Length != b2.Length)
+            {
+                return false;
+            }
+
             for (int i = 0; i < b1.Length; i++)
             {
-                if (b1[i] != b2[i]) return false;
+                if (b1[i] != b2[i])
+                {
+                    return false;
+                }
             }
             return true;
         }

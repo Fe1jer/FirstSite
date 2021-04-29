@@ -17,6 +17,5 @@ namespace WebApplication1.Data.Specifications.Base
 
         int Take { get; set; }
         int Skip { get; set; }
-
     }
 }

@@ -33,17 +33,22 @@
                 {
                     active = "";
                 }
+                string href = "";
+                if (productImage.Href != null)
+                {
+                    href = productImage.Href;
+                }
+                else
+                {
+                    href = Url.Action("Details", "Home", new { id = productImage.Id, name = productImage.Name }, null);
+                }
                 <div class="carousel-item @active">
-                    <svg class="" width="100%" height="100%" aria-hidden="true" preserveAspectRatio="xMidYMid slice" focusable="false">
-                        <img class="exmpl wrapper scale card-img-top" height="130" src="@productImage.Img" alt="@productImage.Img" />
-
-                    </svg>
-
+                    <img src="@productImage.Img" alt="@productImage.Img" />
                     <div class="container">
                         <div class="carousel-caption">
-                            <h1>@productImage.ShortDesc</h1>
-                            <p>@productImage.LongDesc</p>
-                            <p><a class="btn btn-lg btn-primary" href="#" role="button">Перейти</a></p>
+                            <h1>@productImage.Name</h1>
+                            <p>@productImage.Desc</p>
+                            <p><a class="btn btn-lg btn-primary" href="@href" role="button">Перейти</a></p>
                         </div>
                     </div>
                 </div>

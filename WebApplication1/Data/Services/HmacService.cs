@@ -18,15 +18,13 @@ namespace WebApplication1.Data.Services
                 .Concat(BitConverter.GetBytes(DateTime.UtcNow.ToBinary()))
                 .ToArray();
 
-            using (HMACSHA256 hmacSha256 = new HMACSHA256(key: _privateKey))
-            {
-                byte[] hash = hmacSha256.ComputeHash(buffer: message, offset: 0, count: message.Length);
+            using HMACSHA256 hmacSha256 = new HMACSHA256(key: _privateKey);
+            byte[] hash = hmacSha256.ComputeHash(buffer: message, offset: 0, count: message.Length);
 
-                byte[] outputMessage = message.Concat(hash).ToArray();
-                string outputCodeB64 = Convert.ToBase64String(outputMessage);
-                string outputCode = outputCodeB64.Replace('+', '-').Replace('/', '_');
-                return outputCode;
-            }
+            byte[] outputMessage = message.Concat(hash).ToArray();
+            string outputCodeB64 = Convert.ToBase64String(outputMessage);
+            string outputCode = outputCodeB64.Replace('+', '-').Replace('/', '_');
+            return outputCode;
         }
 
         public static bool VerifyPasswordResetHmacCode(string codeBase64Url, string stringUserId)
@@ -54,17 +52,18 @@ namespace WebApplication1.Data.Services
             long createdUtcBinary = BitConverter.ToInt64(message, 5);
             DateTime createdUtc = DateTime.FromBinary(createdUtcBinary);
 
-            if (createdUtc.Add(_passwordResetExpiry) < DateTime.UtcNow) return false;
+            if (createdUtc.Add(_passwordResetExpiry) < DateTime.UtcNow)
+            {
+                return false;
+            }
 
             const int _messageLength = 1 + sizeof(int) + sizeof(long);
 
-            using (HMACSHA256 hmacSha256 = new HMACSHA256(key: _privateKey))
-            {
-                byte[] hash = hmacSha256.ComputeHash(message, offset: 0, count: _messageLength);
+            using HMACSHA256 hmacSha256 = new HMACSHA256(key: _privateKey);
+            byte[] hash = hmacSha256.ComputeHash(message, offset: 0, count: _messageLength);
 
-                byte[] messageHash = message.Skip(_messageLength).ToArray();
-                return Enumerable.SequenceEqual(hash, messageHash);
-            }
+            byte[] messageHash = message.Skip(_messageLength).ToArray();
+            return Enumerable.SequenceEqual(hash, messageHash);
         }
     }
 }

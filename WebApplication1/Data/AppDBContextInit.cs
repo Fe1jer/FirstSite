@@ -15,14 +15,18 @@ namespace WebApplication1.Data
             //context.SaveChanges();
 
             if (!await context.Roles.AnyAsync())
+            {
                 await context.Roles.AddRangeAsync(
                      new Role { Name = "user" },
                      new Role { Name = "moder" },
                     new Role { Name = "courier" },
                     new Role { Name = "admin" }
                     );
+            }
+
             await context.SaveChangesAsync();
             if (!await context.Users.AnyAsync())
+            {
                 await context.Users.AddRangeAsync(
                      new User
                      {
@@ -51,8 +55,9 @@ namespace WebApplication1.Data
                         Name = "Viktor",
                         Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScY-9qDVs2yQiXkeEHGQfvxEPLWHh-o53ZuQ&usqp=CAU"
                     });
+            }
+
             await context.SaveChangesAsync();
         }
-
     }
 }

@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
@@ -77,7 +76,7 @@ namespace WebApplication1.Controllers
         {
             Order order = _ordersRepository.GetOrdersAsync(new OrderSpecification()
                 .IncludeDetails()
-                .WithoutTracking()).Result.Where(p=>p.Id == idOrder).FirstOrDefault();
+                .WithoutTracking()).Result.Where(p => p.Id == idOrder).FirstOrDefault();
             return View(order);
         }
 

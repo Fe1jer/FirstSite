@@ -35,10 +35,12 @@
       <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
     </PackageReference>
     <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="3.1.5" ExcludeAssets="All" />
     <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="wwwroot\img\news\" />
     <Folder Include="wwwroot\jquery\" />
     <Folder Include="wwwroot\lib\jquery-ajax-unobtrusive\" />
   </ItemGroup>

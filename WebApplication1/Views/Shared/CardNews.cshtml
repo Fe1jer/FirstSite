@@ -1,18 +1,33 @@
 ﻿@model News
 
 <div class="card__news mt-4">
+    @{
+        string href = "";
+        if (Model.ProductHref != null)
+        {
+            href = Model.ProductHref;
+        }
+        else
+        {
+            href = Url.Action("Details", "Home", new { id = Model.Id, name = Model.Name }, null);
+        }
+    }
     <div class="card-img__news">
-        <img class="bd-placeholder-img" src="@Model.Img" alt="@Model.Img" />
+        <a href="@href">
+            <img src="@Model.Img" alt="@Model.Img" />
+        </a>
     </div>
     <div class="card-body__news">
         <div class="box-news card-header__news">
             <div class="">
-                <h4 class="card-title" style="line-height: 22px;">@Model.Name</h4>
+                <a href="@href">
+                    <h4 class="card-title text-dark" style="line-height: 22px;">@Model.Name</h4>
+                </a>
                 <p class="text-header__news">@Model.Desc</p>
             </div>
         </div>
         <div class="card-footer__news">
-            <a href="#">Подробнее</a>
+            <a href="@href">Подробнее</a>
             <p class="float-end d-flex mt-1 mb-0">@Model.CreateData.ToString("dd.MM.yy")</p>
         </div>
     </div>

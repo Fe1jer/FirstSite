@@ -12,7 +12,10 @@ namespace WebApplication1.Data.Specifications
         {
             var query = baseQuery;
 
-            if (specification.Criteria != null) query = query.Where(specification.Criteria);
+            if (specification.Criteria != null)
+            {
+                query = query.Where(specification.Criteria);
+            }
 
             query = specification.Includes.Aggregate
                 (query, (current, include) => current.Include(include));
@@ -22,8 +25,22 @@ namespace WebApplication1.Data.Specifications
             query = specification.OrderByExpressions.Aggregate(query,
                 (current, expression) => current.OrderBy(expression));
 
-            query = specification.OrderByDescendingExpressions.Aggregate(query,
-                (current, expression) => current.OrderByDescending(expression));
+            if (specification.OrderByDescendingExpressions != null)
+            {
+                var count = specification.OrderByDescendingExpressions.Count;
+
+                for (int i = 0; i < count; ++i)
+                {
+                    if (query is IOrderedQueryable<T> orderedQuery)
+                    {
+                        query = orderedQuery.ThenByDescending(specification.OrderByDescendingExpressions[i]);
+                    }
+                    else
+                    {
+                        query = query.OrderByDescending(specification.OrderByDescendingExpressions[i]);
+                    }
+                }
+            }
 
             query = specification.WhereExpressions.Aggregate(query,
                 (current, expression) => current.Where(expression));

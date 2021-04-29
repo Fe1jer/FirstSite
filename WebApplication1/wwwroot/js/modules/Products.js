@@ -6,7 +6,7 @@
     var msg = '<div class="col-lg-4 mt-2 mb-2">' +
         '<div class="card shadow-sm">' +
         '<div class="scale">' +
-        '<a href="/Products/Product/' + name + '?id=' + JSON.stringify(item.product.id) + '" >' +
+        '<a href="/Products/' + name.replace(/ /g, '-') + '?id=' + JSON.stringify(item.product.id) + '" >' +
         '<img class="scale card-image w-100" src=' + JSON.stringify(item.product.img) + ' alt=' + name + ' />' +
         '</a>' +
         '</div>' +
@@ -24,7 +24,7 @@
     }
     msg = msg + '</div >' +
         '<div id="cardButtons" class="d-flex justify-content-between align-items-center">' +
-        '<a type="button" class="btn btn-outline-warning" href="/Products/Product/' + name + '?id=' + JSON.stringify(item.product.id) + '" >' +
+        '<a type="button" class="btn btn-outline-warning" href="/Products/' + name.replace(/ /g,'-') + '?id=' + JSON.stringify(item.product.id) + '" >' +
         '<font style="vertical-align: inherit;">' +
         '<font style="vertical-align: inherit;">' +
         'Подробнее' +

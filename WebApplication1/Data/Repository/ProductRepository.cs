@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Specifications;
 using WebApplication1.Data.Specifications.Base;
 using WebApplication1.ViewModels;
 
@@ -11,10 +12,13 @@ namespace WebApplication1.Data.Repository
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
+        private readonly IShopCart _shopCart;
+        private readonly IUserRepository _userRepository;
 
-        public ProductRepository(AppDBContext appDBContext) : base(appDBContext)
+        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IUserRepository userRepository) : base(appDBContext)
         {
-
+            _userRepository = userRepository;
+            _shopCart = shopCart;
         }
 
         public async Task<IReadOnlyList<Product>> GetProductsAsync()
@@ -27,13 +31,14 @@ namespace WebApplication1.Data.Repository
             return await GetAllAsync(specification);
         }
 
-        public async Task<Product> GetProductByIdAsync(int productId)
+        public async Task<Product> GetProductAsync(int productId)
         {
             return await GetByIdAsync(productId);
         }
 
-        public async Task DeleteProductAsync(Product product)
+        public async Task DeleteProductAsync(int id)
         {
+            Product product = await GetProductAsync(id);
             await DeleteAsync(product);
         }
 
@@ -42,21 +47,27 @@ namespace WebApplication1.Data.Repository
             await UpdateAsync(product);
         }
 
-        public async Task<Product> GetProductByNameAsync(string name)
+        public async Task<Product> GetProductAsync(string name)
         {
             var collection = await GetAllAsync();
+
             return collection.FirstOrDefault(n => n.Name.Equals(name));
         }
 
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
         {
-            var collection = await GetAllAsync();
+            var products = await GetAllAsync(new ProductSpecification().SortByRelevance());
             if (searchText != null)
             {
-                collection = collection.Where(i => i.Name.ToLower().Contains(searchText.ToLower())).ToList()
-                    .Union(collection.Where(i => i.Company.ToLower().Contains(searchText.ToLower()))).Distinct().ToList();
+                List<string> searchWords = searchText.Split(" ").ToList();
+                foreach (string word in searchWords)
+                {
+                    products = products.Where(i => i.Name.ToLower().Contains(word.ToLower())).ToList()
+                        .Union(products.Where(i => i.Company.ToLower().Contains(word.ToLower()))).Distinct().ToList();
+                }
             }
-            return collection;
+
+            return products;
         }
 
         public async Task AddProductAsync(Product product)
@@ -64,16 +75,21 @@ namespace WebApplication1.Data.Repository
             await AddAsync(product);
         }
 
-
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products)
         {
             List<FilterCategoryVM> filter = new List<FilterCategoryVM>();
             IEnumerable<string> Categories = products.Select(i => i.Category).Distinct().ToList();
             IEnumerable<string> Countries = products.Select(i => i.Country).Distinct().ToList();
             IEnumerable<string> Companies = products.Select(i => i.Company).Distinct().ToList();
-            Dictionary<string, IEnumerable<string>> filterCategory = new Dictionary<string, IEnumerable<string>>() { { "Категория", Categories }, { "Компания", Companies }, { "Страна производитель", Countries } };
-
+            Dictionary<string, IEnumerable<string>> filterCategory =
+                new Dictionary<string, IEnumerable<string>>()
+                {
+                    { "Категория", Categories },
+                    { "Компания", Companies },
+                    { "Страна производитель", Countries }
+                };
             int categoryId = 1;
+
             foreach (KeyValuePair<string, IEnumerable<string>> item in filterCategory)
             {
                 FilterCategoryVM category = new FilterCategoryVM
@@ -82,7 +98,9 @@ namespace WebApplication1.Data.Repository
                     Name = item.Key,
                     Selections = new List<FilterSelectionVM>()
                 };
+
                 int selectionId = 1;
+
                 foreach (string i in item.Value)
                 {
                     FilterSelectionVM filterSelection = new FilterSelectionVM
@@ -105,6 +123,7 @@ namespace WebApplication1.Data.Repository
             int categoryId = 0;
             int filterId = 0;
             List<List<string>> filter = new List<List<string>>() { new List<string>(), new List<string>(), new List<string>() };
+
             foreach (string item in filters)
             {
                 if (item != null)
@@ -151,10 +170,17 @@ namespace WebApplication1.Data.Repository
                 }
                 categoryId++;
             }
+
             return products;
         }
-        public List<ShowProductViewModel> FindProductsInTheCart(List<Product> products, List<ShopCartItem> cartItems)
+
+        public async Task<List<ShowProductViewModel>> FindProductsInTheCart(List<Product> products, string userName)
         {
+            var cartItems = _shopCart.GetShopItemsAsync(
+                new ShopCartSpecification().
+                IncludeProduct().
+                WhereUser(await _userRepository.GetUserAsync(userName))).GetAwaiter().GetResult().ToList();
+
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
             foreach (Product product in products)
@@ -184,8 +210,44 @@ namespace WebApplication1.Data.Repository
 
             return showProducts;
         }
-        public List<ShowProductViewModel> DeleteIfInCart(List<Product> products, List<ShopCartItem> cartItems)
+
+        public async Task<ShowProductViewModel> FindProductInTheCart(Product product, string userName)
         {
+            var cartItems = (await _shopCart.GetShopItemsAsync(
+               new ShopCartSpecification().
+               IncludeProduct().
+               WhereUser(await _userRepository.GetUserAsync(userName)))
+               ).ToList();
+            ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
+            bool itemInCart = false;
+
+            foreach (ShopCartItem shopCart in cartItems)
+            {
+                if (shopCart.Product == product)
+                {
+                    itemInCart = true;
+                    cartItems.Remove(shopCart);
+                    break;
+                }
+            }
+            if (itemInCart)
+            {
+                showProduct.IsInCart = true;
+            }
+            else
+            {
+                showProduct.IsInCart = false;
+            }
+
+            return showProduct;
+        }
+        public async Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string userName)
+        {
+            var cartItems = (await _shopCart.GetShopItemsAsync(
+                new ShopCartSpecification().
+                IncludeProduct().
+               WhereUser(await _userRepository.GetUserAsync(userName)))
+               ).ToList();
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
             foreach (Product product in products)

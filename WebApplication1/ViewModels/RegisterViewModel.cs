@@ -3,8 +3,10 @@ using WebApplication1.Validation;
 
 namespace WebApplication1.ViewModels
 {
+    [NamePasswordEqual]
     public class RegisterViewModel
     {
+        [EmailName(new string[] { "admin", "moder", "courier" }, ErrorMessage = "Недопустимый email")]
         [Display(Name = "Электронный адрес", Prompt = "Электронный адрес")]
         [Required(ErrorMessage = "Не указан Email")]
         [DataType(DataType.EmailAddress)]
