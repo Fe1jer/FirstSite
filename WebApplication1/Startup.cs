@@ -31,6 +31,7 @@ namespace WebApplication1
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<INewsRepository, NewsRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
             services.AddMvc(options => options.EnableEndpointRouting = false);

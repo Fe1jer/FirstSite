@@ -54,11 +54,6 @@
             </div>
         </div>
         <div id="productList" style="display:none;" class="col-lg-4">
-            <div class="form-group mb-3">
-                <label asp-for="ProductId" class="control-label"></label>
-                <input min="1" asp-for="ProductId" class="form-control" id="idProduct" />
-                <span asp-validation-for="ProductId" class="text-danger"></span>
-            </div>
             <div class="search_box">
                 <input class="form-control" type="text" name="search" id="search" autocomplete="off" aria-label="Search" placeholder="Введите название товара">
                 <div id="search_box-result"></div>
@@ -68,6 +63,7 @@
             <button class="btn btn-primary btn-lg" type="submit">Сохранить</button>
         </div>
         <input type="hidden" asp-for="CreateData" value="@DateTime.Now" />
+        <input type="hidden" asp-for="ProductHref" id="ProductHref" />
     </form>
 </main>
 <div class="">

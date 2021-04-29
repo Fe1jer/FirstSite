@@ -31,9 +31,7 @@ namespace WebApplication1.ViewModels
         [ValidateImg]
         public IFormFile FavImg { get; set; }
 
-        [Display(Name = "Id товара")]
-        [DataType(DataType.ImageUrl)]
-        public int? ProductId { get; set; }
+        public string ProductHref { get; set; }
 
         [Display(Name = "Является ссылкой на товар")]
         public bool IsProductHref { get; set; }

@@ -17,7 +17,7 @@ namespace WebApplication1.Validation
             {
                 return false;
             }
-            if (model.IsProductHref == true && model.ProductId == null)
+            if (model.IsProductHref == true && model.ProductHref == null)
             {
                 return false;
             }
