@@ -10,7 +10,7 @@ namespace WebApplication1.Data.Models
         public string Desc { get; set; }
         public string Text { get; set; }
         public string FavImg { get; set; }
-        public string Href { get; set; }
+        public string ProductHref { get; set; }
         public DateTime CreateData { get; set; }
     }
 }
