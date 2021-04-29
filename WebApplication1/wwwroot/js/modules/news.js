@@ -78,7 +78,7 @@ function ShowProduct(item) {
     var company = JSON.stringify(item.product.company).slice(1, -1);
     var a = "'";
     var msg = '<li onclick="setProduct(' + JSON.stringify(item.product.id) + ',' + a + name + a + ',' + a + company + a + ')" class="my-2 dropdown-item p-0" style="height: 40px; overflow: hidden; display: flex; cursor:pointer">' +
-        '<img class="scale" src=' + JSON.stringify(item.product.img) + ' alt=' + name + ' style="width:40px;height:40px;object-fit: contain;" />' +
+        '<img src=' + JSON.stringify(item.product.img) + ' alt=' + name + ' style="width:40px;height:40px;object-fit: contain;" />' +
         '<p class="my-auto ms-2">' + company + ' ' + name + '</p>' +
         '</li>';
     return msg;
