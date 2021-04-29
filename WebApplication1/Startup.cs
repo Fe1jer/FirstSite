@@ -30,7 +30,6 @@ namespace WebApplication1
             services.AddTransient<IOrdersRepository, OrdersRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
-            services.AddTransient<IPasswordHasher, PasswordHasherRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();

@@ -4,6 +4,7 @@ using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
+using WebApplication1.Data.Services;
 using WebApplication1.Data.Specifications;
 using WebApplication1.Data.Specifications.Base;
 using WebApplication1.ViewModels;
@@ -12,11 +13,9 @@ namespace WebApplication1.Data.Repository
 {
     public class UserRepository : Repository<User>, IUserRepository
     {
-        private readonly IPasswordHasher _passwordHasher;
 
-        public UserRepository(AppDBContext appDBContext, IPasswordHasher passwordHasher) : base(appDBContext)
+        public UserRepository(AppDBContext appDBContext) : base(appDBContext)
         {
-            _passwordHasher = passwordHasher;
         }
 
         public async Task<User> GetUserAsync(string email)
@@ -73,7 +72,7 @@ namespace WebApplication1.Data.Repository
             User user = new User
             {
                 Email = model.Email,
-                Password = _passwordHasher.HashPassword(model.Password),
+                Password = HashingService.HashPassword(model.Password),
                 Gender = model.Gender,
                 Name = model.Name,
                 LockoutEnd = DateTime.Now.AddMinutes(5),

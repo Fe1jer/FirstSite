@@ -48,8 +48,7 @@ namespace WebApplication1.Controllers
             };
             var products = await _productRepository.GetProductsAsync();
             products = products.OrderByDescending(p => p.Available).ThenByDescending(p => p.IsFavourite).ThenByDescending(p => p.Id).ToList();
-            List<ShopCartItem> shopCartItems = (await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name)))).ToList();
-            List<ShowProductViewModel> showProducts = _productRepository.DeleteIfInCart(products.ToList(), shopCartItems);
+           List<ShowProductViewModel> showProducts = await _productRepository.RemoveIfInCart(products.ToList(), User.Identity.Name);
             List<News> news = new List<News>();
             for (int i = 0; i <= 11; i++)
             {
