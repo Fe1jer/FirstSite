@@ -32,7 +32,7 @@
                     </ul>
                     <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3">
                         <div class="search_box" id="search_box">
-                            <input class="form-control" name="q" id="search" type="search" autocomplete="off" placeholder="Поиск" aria-label="Search">
+                            <input class="form-control" name="q" id="search" type="search" autocomplete="off" placeholder="Поиск товаров" aria-label="Search">
                             <div id="search_box-result"></div>
                         </div>
                         <button class="ms-2 btn btn-outline-success" type="submit">Поиск</button>
@@ -90,7 +90,7 @@
                 });
             }
 
-            setTimeout(moveItem, 100);
+            setTimeout(moveItem, 10);
             setTimeout(moveItem, 500);
         });
     </script>

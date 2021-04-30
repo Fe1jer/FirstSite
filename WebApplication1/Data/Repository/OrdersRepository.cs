@@ -18,10 +18,10 @@ namespace WebApplication1.Data.Repository
             this.shopCart = shopCart;
         }
 
-        public async Task AddOrder(User user, Order order)
+        public async Task AddAsync(User user, Order order)
         {
             List<OrderDetail> orderDetails = new List<OrderDetail>();
-            foreach (var el in await shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user)))
+            foreach (var el in await shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(user.Email)))
             {
                 var orderDetail = new OrderDetail()
                 {
@@ -39,14 +39,14 @@ namespace WebApplication1.Data.Repository
             await AddAsync(order);
         }
 
-        public async Task<IReadOnlyList<Order>> GetOrdersAsync()
+        public new async Task<IReadOnlyList<Order>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
-        public async Task<Order> GetOrderByIdAsync(int id)
+        public new async Task<Order> GetByIdAsync(int id)
         {
-            return await GetByIdAsync(id);
+            return await base.GetByIdAsync(id);
         }
 
         public async Task CompletedOrderAsync(Order order)
@@ -55,27 +55,22 @@ namespace WebApplication1.Data.Repository
             await UpdateAsync(order);
         }
 
-        public async Task DeleteOrderAsync(Order order)
+        public new async Task DeleteAsync(Order order)
         {
-            await DeleteAsync(order);
-        }
-
-        public async Task<IReadOnlyList<Order>> GetCourierOrdersAsync()
-        {
-            return await GetAllAsync();
+            await base.DeleteAsync(order);
         }
 
         public async Task UpdateCourierOrdersAsync(int idOrder, User courier)
         {
-            var orders = await GetAllAsync(new OrderSpecification().IncludeCourier());
+            var orders = await base.GetAllAsync(new OrderSpecification());
             Order order = orders.FirstOrDefault(n => n.Id == idOrder);
             order.Courier = courier;
             await UpdateAsync(order);
         }
 
-        public async Task<IReadOnlyList<Order>> GetOrdersAsync(ISpecification<Order> specification)
+        public new async Task<IReadOnlyList<Order>> GetAllAsync(ISpecification<Order> specification)
         {
-            return await GetAllAsync(specification);
+            return await base.GetAllAsync(specification);
         }
     }
 }

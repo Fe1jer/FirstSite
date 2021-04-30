@@ -13,50 +13,48 @@ namespace WebApplication1.Data.Repository
     public class ProductRepository : Repository<Product>, IProductRepository
     {
         private readonly IShopCart _shopCart;
-        private readonly IUserRepository _userRepository;
 
-        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IUserRepository userRepository) : base(appDBContext)
+        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart) : base(appDBContext)
         {
-            _userRepository = userRepository;
             _shopCart = shopCart;
         }
 
-        public async Task<IReadOnlyList<Product>> GetProductsAsync()
+        public new async Task<IReadOnlyList<Product>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
-        public async Task<IReadOnlyList<Product>> GetProductsAsync(ISpecification<Product> specification)
+        public new async Task<IReadOnlyList<Product>> GetAllAsync(ISpecification<Product> specification)
         {
-            return await GetAllAsync(specification);
+            return await base.GetAllAsync(specification);
         }
 
-        public async Task<Product> GetProductAsync(int productId)
+        public new async Task<Product> GetByIdAsync(int productId)
         {
-            return await GetByIdAsync(productId);
+            return await base.GetByIdAsync(productId);
         }
 
-        public async Task DeleteProductAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            Product product = await GetProductAsync(id);
+            Product product = await GetByIdAsync(id);
             await DeleteAsync(product);
         }
 
-        public async Task UpdateProductAsync(Product product)
+        public new async Task UpdateAsync(Product product)
         {
-            await UpdateAsync(product);
+            await base.UpdateAsync(product);
         }
 
-        public async Task<Product> GetProductAsync(string name)
+        public async Task<Product> GetByNameAsync(string name)
         {
-            var collection = await GetAllAsync();
+            var collection = await base.GetAllAsync();
 
             return collection.FirstOrDefault(n => n.Name.Equals(name));
         }
 
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
         {
-            var products = await GetAllAsync(new ProductSpecification().SortByRelevance());
+            var products = await base.GetAllAsync(new ProductSpecification().SortByRelevance());
             if (searchText != null)
             {
                 List<string> searchWords = searchText.Split(" ").ToList();
@@ -174,12 +172,11 @@ namespace WebApplication1.Data.Repository
             return products;
         }
 
-        public async Task<List<ShowProductViewModel>> FindProductsInTheCart(List<Product> products, string userName)
+        public async Task<List<ShowProductViewModel>> FindProductsInTheCart(List<Product> products, string email)
         {
-            var cartItems = _shopCart.GetShopItemsAsync(
+            var cartItems = _shopCart.GetAllAsync(
                 new ShopCartSpecification().
-                IncludeProduct().
-                WhereUser(await _userRepository.GetUserAsync(userName))).GetAwaiter().GetResult().ToList();
+                WhereUserEmail(email)).GetAwaiter().GetResult().ToList();
 
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
@@ -211,12 +208,11 @@ namespace WebApplication1.Data.Repository
             return showProducts;
         }
 
-        public async Task<ShowProductViewModel> FindProductInTheCart(Product product, string userName)
+        public async Task<ShowProductViewModel> FindProductInTheCart(Product product, string email)
         {
-            var cartItems = (await _shopCart.GetShopItemsAsync(
+            var cartItems = (await _shopCart.GetAllAsync(
                new ShopCartSpecification().
-               IncludeProduct().
-               WhereUser(await _userRepository.GetUserAsync(userName)))
+               WhereUserEmail(email))
                ).ToList();
             ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
             bool itemInCart = false;
@@ -241,12 +237,11 @@ namespace WebApplication1.Data.Repository
 
             return showProduct;
         }
-        public async Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string userName)
+        public async Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string email)
         {
-            var cartItems = (await _shopCart.GetShopItemsAsync(
+            var cartItems = (await _shopCart.GetAllAsync(
                 new ShopCartSpecification().
-                IncludeProduct().
-               WhereUser(await _userRepository.GetUserAsync(userName)))
+               WhereUserEmail(email))
                ).ToList();
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 

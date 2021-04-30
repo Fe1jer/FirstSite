@@ -20,37 +20,37 @@ namespace WebApplication1.Data.Repository
 
         public async Task<User> GetUserAsync(string email)
         {
-            var users = await GetAllAsync(new UserSpecification().IncludeRole());
+            var users = await base.GetAllAsync(new UserSpecification().IncludeRole());
             return users.FirstOrDefault(u => u.Email == email);
         }
 
         public async Task<User> GetUserAsync(int id)
         {
-            var users = await GetAllAsync(new UserSpecification().IncludeRole());
+            var users = await base.GetAllAsync(new UserSpecification().IncludeRole());
             return users.FirstOrDefault(u => u.Id == id);
         }
 
-        public async Task<IReadOnlyList<User>> GetUsersAsync()
+        public new async Task<IReadOnlyList<User>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
-        public async Task<IReadOnlyList<User>> GetUsersAsync(ISpecification<User> specification)
+        public new async Task<IReadOnlyList<User>> GetAllAsync(ISpecification<User> specification)
         {
-            return await GetAllAsync(specification);
+            return await base.GetAllAsync(specification);
         }
 
-        public async Task UpdateUserAsync(User user)
+        public new async Task UpdateAsync(User user)
         {
-            await UpdateAsync(user);
+            await base.UpdateAsync(user);
         }
 
-        public async Task DeleteUserAsync(User user)
+        public new async Task DeleteAsync(User user)
         {
-            await DeleteAsync(user);
+            await base.DeleteAsync(user);
         }
 
-        public async Task UpdateUserAsync(User user, ProfileViewModel model)
+        public async Task UpdateAsync(User user, ProfileViewModel model)
         {
             user.Email = model.Email;
             user.Name = model.Name;
@@ -59,12 +59,12 @@ namespace WebApplication1.Data.Repository
             user.Gender = model.Gender;
             user.PhoneNumber = model.PhoneNumber;
             user.DateOfBirth = model.DateOfBirth;
-            await UpdateAsync(user);
+            await base.UpdateAsync(user);
         }
 
-        public async Task AddUserAsync(User user)
+        public new async Task AddAsync(User user)
         {
-            await AddAsync(user);
+            await base.AddAsync(user);
         }
 
         public User CreateUser(RegisterViewModel model)

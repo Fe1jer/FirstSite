@@ -7,8 +7,12 @@ namespace WebApplication1.Data.Specifications
 {
     public class ShopCartSpecification : Specification<ShopCartItem>
     {
-        public ShopCartSpecification() : base() { }
-        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression) { }
+        public ShopCartSpecification() : base() {
+            AddInclude(shopCart => shopCart.Product);
+        }
+        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression) {
+            AddInclude(shopCart => shopCart.Product);
+        }
 
         public ShopCartSpecification WhereProduct(int id)
         {
@@ -22,9 +26,10 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
-        public ShopCartSpecification WhereUser(User user)
+        public ShopCartSpecification WhereUserEmail(string email)
         {
-            AddWhere(shopCart => shopCart.User == user);
+            AddInclude(shopCart => shopCart.User);
+            AddWhere(shopCart => shopCart.User.Email == email);
             return this;
         }
 
@@ -34,11 +39,6 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
-        public ShopCartSpecification IncludeProduct()
-        {
-            AddInclude(shopCart => shopCart.Product);
-            return this;
-        }
         public ShopCartSpecification WithoutTracking()
         {
             IsNoTracking = true;

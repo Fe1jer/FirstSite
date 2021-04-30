@@ -1,6 +1,5 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -13,28 +12,29 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
         private readonly INewsRepository _newsRepository;
+        private readonly IShopCart _shopCart;
 
-        public HomeController(IProductRepository IProductRepository, IUserRepository IUserRepository, INewsRepository newsRepository)
+        public HomeController(IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository)
         {
+            _shopCart = shopCart;
             _newsRepository = newsRepository;
-            _userRepository = IUserRepository;
             _productRepository = IProductRepository;
         }
 
         public async Task<ViewResult> News()
         {
             IEnumerable<CaruselItem> caruselItems = await _newsRepository.GetFavNewsAsync();
-            var products = await _productRepository.GetProductsAsync(new ProductSpecification().SortByRelevance().Take(8));
-            List<ShowProductViewModel> showProducts = await _productRepository.RemoveIfInCart(products.ToList(), User.Identity.Name);
-            var news = await _newsRepository.GetNewsAsync(new NewsSpecification().SortById());
+            var userShopCartItems = await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name));
+            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance().WhereNotOnTheList(userShopCartItems.Select(p=>p.Product).ToList()).Take(8));
+            List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
+            var news = await _newsRepository.GetNewsAsync(new NewsSpecification().SortById().Take(8));
             var homeProducts = new HomeViewModel
             {
                 CaruselItems = caruselItems,
                 FavProducts = showProducts,
-                NewsList = news.Take(8)
+                NewsList = news
             };
 
             return View(homeProducts);
@@ -66,22 +66,24 @@ namespace WebApplication1.Controllers
         [Route("/News/{name}")]
         public async Task<IActionResult> Details(int id)
         {
-            var news = await _newsRepository.GetNewsByIdAsync(id);
+            var news = await _newsRepository.GetByIdAsync(id);
             return View(news);
         }
 
         [Authorize(Roles = "admin, moderator")]
-        public ActionResult Edit(int id)
+        public async Task<IActionResult> Edit(int id)
         {
-            return View();
+            News news = await _newsRepository.GetByIdAsync(id);
+            return View(news);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> Edit()
+        public async Task<IActionResult> Edit(News news)
         {
             try
             {
+                await _newsRepository.UpdateAsync(news);
                 return RedirectToAction(nameof(Index));
             }
             catch
@@ -93,6 +95,7 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "admin, moderator")]
         public async Task<RedirectToActionResult> Delete(int id)
         {
+            await _newsRepository.DeleteAsync(id);
             return RedirectToAction(nameof(Index));
         }
     }

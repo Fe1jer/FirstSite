@@ -47,14 +47,14 @@ namespace WebApplication1.Controllers
                     // добавляем пользователя в бд
                     user = _productRepository.CreateUser(model);
 
-                    Role userRole = await _roles.GetRoleAsync("user");
+                    Role userRole = await _roles.GetByNameAsync("user");
 
                     if (userRole != null)
                     {
                         user.Role = userRole;
                     }
 
-                    await _productRepository.AddUserAsync(user);
+                    await _productRepository.AddAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
@@ -72,7 +72,7 @@ namespace WebApplication1.Controllers
                     else
                     {
                         user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                        await _productRepository.UpdateUserAsync(user);
+                        await _productRepository.UpdateAsync(user);
 
                         return View("RegisterConfirmation");
                     }
@@ -99,7 +99,7 @@ namespace WebApplication1.Controllers
                 User user = await _productRepository.GetUserAsync(model.Email);
                 if (user != null && user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
                 {
-                    await _productRepository.DeleteUserAsync(user);
+                    await _productRepository.DeleteAsync(user);
                     ModelState.AddModelError("", "Некорректные логин и(или) пароль");
                 }
                 else if (user != null && user.EmailConfirmed == false)
@@ -164,8 +164,8 @@ namespace WebApplication1.Controllers
                     await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
                     await Authenticate(user);
                 }
-                user.Role = await _roles.GetRoleAsync(user.RoleId);
-                await _productRepository.UpdateUserAsync(user, model);
+                user.Role = await _roles.GetByIdAsync(user.RoleId);
+                await _productRepository.UpdateAsync(user, model);
 
                 return RedirectToAction("Profile");
             }
@@ -202,7 +202,7 @@ namespace WebApplication1.Controllers
                 else
                 {
                     user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                    await _productRepository.UpdateUserAsync(user);
+                    await _productRepository.UpdateAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
@@ -236,7 +236,7 @@ namespace WebApplication1.Controllers
                 else
                 {
                     user.Password = HashingService.HashPassword(model.Password);
-                    await _productRepository.UpdateUserAsync(user);
+                    await _productRepository.UpdateAsync(user);
                     return View("ResetPasswordConfirmation");
                 }
             }
@@ -256,11 +256,12 @@ namespace WebApplication1.Controllers
 
             user.EmailConfirmed = true;
             user.LockoutEnd = null;
-            await _productRepository.UpdateUserAsync(user);
+            await _productRepository.UpdateAsync(user);
             await Authenticate(user);
             return RedirectToAction("Index", "Home");
         }
 
+        [ValidateAntiForgeryToken]
         private async Task Authenticate(User user)
         {
             // создаем один claim

@@ -7,12 +7,12 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IOrdersRepository
     {
-        Task<IReadOnlyList<Order>> GetOrdersAsync();
-        Task<IReadOnlyList<Order>> GetOrdersAsync(ISpecification<Order> specification);
-        Task<Order> GetOrderByIdAsync(int id);
+        Task<IReadOnlyList<Order>> GetAllAsync();
+        Task<IReadOnlyList<Order>> GetAllAsync(ISpecification<Order> specification);
+        Task<Order> GetByIdAsync(int id);
         Task UpdateCourierOrdersAsync(int idOrder, User courier);
-        Task DeleteOrderAsync(Order order);
-        Task AddOrder(User user, Order order);
+        Task DeleteAsync(Order order);
+        Task AddAsync(User user, Order order);
         Task CompletedOrderAsync(Order order);
     }
 }

@@ -55,17 +55,17 @@ namespace WebApplication1.Controlles
                 return RedirectToAction("Logout", "Account");
             }
 
-            Product obj = await _productRepository.GetProductAsync(id);
+            Product obj = await _productRepository.GetByIdAsync(id);
 
             return View(obj);
         }
 
-        [HttpPost, Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
+        [HttpPost, ValidateAntiForgeryToken, Route("Products/ChangeProduct")]
         public async Task<IActionResult> ChangeProduct(Product obj)
         {
             if (ModelState.IsValid)
             {
-                await _productRepository.UpdateProductAsync(obj);
+                await _productRepository.UpdateAsync(obj);
 
                 return RedirectToAction("Index");
             }
@@ -76,7 +76,7 @@ namespace WebApplication1.Controlles
         [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            await _productRepository.DeleteProductAsync(id);
+            await _productRepository.DeleteAsync(id);
 
             return RedirectToAction("Index");
         }
@@ -93,10 +93,10 @@ namespace WebApplication1.Controlles
             return View();
         }
 
-        [HttpPost, Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
+        [HttpPost, ValidateAntiForgeryToken, Route("Products/AddProduct")]
         public async Task<IActionResult> AddProduct(Product obj)
         {
-            if (await _productRepository.GetProductAsync(obj.Name) == null)
+            if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
                 if (ModelState.IsValid)
                 {
@@ -118,7 +118,7 @@ namespace WebApplication1.Controlles
         [Route("Products/{name}")]
         public async Task<IActionResult> Product(int id)
         {
-            Product obj = await _productRepository.GetProductAsync(id);
+            Product obj = await _productRepository.GetByIdAsync(id);
 
             if (obj != null)
             {
@@ -135,7 +135,7 @@ namespace WebApplication1.Controlles
         [Route("Catalog")]
         public async Task<IActionResult> Index(List<string> filters)
         {
-            var products = await _productRepository.GetProductsAsync(new ProductSpecification().SortByRelevance());
+            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance());
             List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
@@ -153,7 +153,7 @@ namespace WebApplication1.Controlles
         [Route("Catalog/IndexAjax")]
         public async Task<IActionResult> IndexAjax(List<string> filters)
         {
-            var products = await _productRepository.GetProductsAsync(new ProductSpecification().SortByRelevance());
+            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance());
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
 

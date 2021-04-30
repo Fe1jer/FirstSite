@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq.Expressions;
 using WebApplication1.Data.Models;
 using WebApplication1.Data.Specifications.Base;
@@ -31,6 +32,12 @@ namespace WebApplication1.Data.Specifications
                 throw new ArgumentException("Min is greater than max!");
             }
             AddWhere(product => product.Price >= min && product.Price <= max);
+            return this;
+        }
+
+        public ProductSpecification WhereNotOnTheList(List<Product> list)
+        {
+            AddWhere(Product => !list.Contains(Product));
             return this;
         }
 

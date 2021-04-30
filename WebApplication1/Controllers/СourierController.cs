@@ -24,9 +24,8 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "moderator")]
         public async Task<ActionResult> Index()
         {
-            return View(await _ordersRepository.GetOrdersAsync(
+            return View(await _ordersRepository.GetAllAsync(
                 new OrderSpecification()
-                .IncludeDetails()
                 .IncludeCourier()
                 .SortByCourier()
                 .WhereActual()
@@ -36,10 +35,9 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "courier")]
         public async Task<ActionResult> CourierOrders()
         {
-            return View(await _ordersRepository.GetOrdersAsync(new OrderSpecification()
+            return View(await _ordersRepository.GetAllAsync(new OrderSpecification()
                 .WhereCourierEmail(User.Identity.Name)
                 .IncludeCourier()
-                .IncludeDetails()
                 .WhereActual()
                 .WithoutTracking()));
         }
@@ -56,15 +54,15 @@ namespace WebApplication1.Controllers
         {
             ChangeCourierViewModels model = new ChangeCourierViewModels
             {
-                Order = await _ordersRepository.GetOrderByIdAsync(idOrder),
-                AllCouriers = await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
+                Order = await _ordersRepository.GetByIdAsync(idOrder),
+                AllCouriers = await _userRepository.GetAllAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
             };
 
             return View(model);
         }
 
         [Authorize(Roles = "moderator")]
-        [HttpPost]
+        [ValidateAntiForgeryToken, HttpPost]
         public async Task<ActionResult> Edit(int idOrder, int idCourier)
         {
             User courier = await _userRepository.GetUserAsync(idCourier);
@@ -74,15 +72,14 @@ namespace WebApplication1.Controllers
 
         public ActionResult OrderDetail(int idOrder)
         {
-            Order order = _ordersRepository.GetOrdersAsync(new OrderSpecification()
-                .IncludeDetails()
+            Order order = _ordersRepository.GetAllAsync(new OrderSpecification()
                 .WithoutTracking()).Result.Where(p => p.Id == idOrder).FirstOrDefault();
             return View(order);
         }
 
         public async Task<ActionResult> Delete(int idOrder)
         {
-            await _ordersRepository.CompletedOrderAsync(await _ordersRepository.GetOrderByIdAsync(idOrder));
+            await _ordersRepository.CompletedOrderAsync(await _ordersRepository.GetByIdAsync(idOrder));
             if (User.IsInRole("moderator"))
             {
                 return RedirectToAction("Index");

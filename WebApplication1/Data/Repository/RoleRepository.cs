@@ -13,25 +13,25 @@ namespace WebApplication1.Data.Repository
         {
 
         }
-        public async Task<Role> GetRoleAsync(int id)
+        public new async Task<Role> GetByIdAsync(int id)
         {
-            return await GetByIdAsync(id);
+            return await base.GetByIdAsync(id);
         }
 
-        public async Task<Role> GetRoleAsync(string name)
+        public async Task<Role> GetByNameAsync(string name)
         {
-            var users = await GetAllAsync();
+            var users = await base.GetAllAsync();
             return users.FirstOrDefault(u => u.Name == name);
         }
 
-        public async Task<IReadOnlyList<Role>> GetRolesAsync()
+        public new async Task<IReadOnlyList<Role>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
-        public async Task<IReadOnlyList<Role>> GetRolesAsync(ISpecification<Role> specification)
+        public new async Task<IReadOnlyList<Role>> GetAllAsync(ISpecification<Role> specification)
         {
-            return await GetAllAsync(specification);
+            return await base.GetAllAsync(specification);
         }
     }
 }

@@ -7,9 +7,9 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IRoleRepository
     {
-        Task<IReadOnlyList<Role>> GetRolesAsync();
-        Task<IReadOnlyList<Role>> GetRolesAsync(ISpecification<Role> specification);
-        Task<Role> GetRoleAsync(int id);
-        Task<Role> GetRoleAsync(string name);
+        Task<IReadOnlyList<Role>> GetAllAsync();
+        Task<IReadOnlyList<Role>> GetAllAsync(ISpecification<Role> specification);
+        Task<Role> GetByIdAsync(int id);
+        Task<Role> GetByNameAsync(string name);
     }
 }

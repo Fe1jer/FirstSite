@@ -8,14 +8,14 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IUserRepository
     {
-        Task AddUserAsync(User user);
-        Task UpdateUserAsync(User user);
-        Task UpdateUserAsync(User user, ProfileViewModel model);
+        Task AddAsync(User user);
+        Task UpdateAsync(User user);
+        Task UpdateAsync(User user, ProfileViewModel model);
         Task<User> GetUserAsync(string email);
         Task<User> GetUserAsync(int id);
-        Task DeleteUserAsync(User user);
-        Task<IReadOnlyList<User>> GetUsersAsync(ISpecification<User> specification);
-        Task<IReadOnlyList<User>> GetUsersAsync();
+        Task DeleteAsync(User user);
+        Task<IReadOnlyList<User>> GetAllAsync(ISpecification<User> specification);
+        Task<IReadOnlyList<User>> GetAllAsync();
         User CreateUser(RegisterViewModel model);
     }
 }

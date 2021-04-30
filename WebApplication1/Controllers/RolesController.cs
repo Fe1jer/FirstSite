@@ -23,16 +23,12 @@ namespace WebApplication1.Controllers
 
         public async Task<IActionResult> Index()
         {
-            return View(await _rolesRepository.GetRolesAsync(new RoleSpecification().SortByName()));
+            return View(await _rolesRepository.GetAllAsync(new RoleSpecification().SortByName()));
         }
 
         public async Task<IActionResult> UserList(string search)
         {
-            if (search != null)
-            {
-                return View(await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
-            }
-            return View(await _userRepository.GetUsersAsync(new UserSpecification().IncludeRole().SortByRole()));
+            return View(await _userRepository.GetAllAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
         }
 
         public async Task<IActionResult> Edit(int userId)
@@ -42,7 +38,7 @@ namespace WebApplication1.Controllers
             {
                 // получем список ролей пользователя
                 var userRole = user.Role;
-                IEnumerable<Role> allRoles = await _rolesRepository.GetRolesAsync(new RoleSpecification().SortByName());
+                IEnumerable<Role> allRoles = await _rolesRepository.GetAllAsync(new RoleSpecification().SortByName());
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
@@ -55,15 +51,15 @@ namespace WebApplication1.Controllers
             return NotFound();
         }
 
-        [HttpPost]
+        [ValidateAntiForgeryToken, HttpPost]
         public async Task<IActionResult> Edit(int userId, string nameRole)
         {
             User user = await _userRepository.GetUserAsync(userId);
             if (user != null)
             {
-                Role role = await _rolesRepository.GetRoleAsync(nameRole);
+                Role role = await _rolesRepository.GetByNameAsync(nameRole);
                 user.Role = role;
-                await _userRepository.UpdateUserAsync(user);
+                await _userRepository.UpdateAsync(user);
 
                 return RedirectToAction("UserList");
             }

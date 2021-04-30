@@ -23,7 +23,7 @@ namespace WebApplication1.Controllers
 
         public async Task<ViewResult> Index()
         {
-            var shopCartItems = await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name)));
+            var shopCartItems = await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name));
 
             return View(shopCartItems);
         }
@@ -35,10 +35,10 @@ namespace WebApplication1.Controllers
             {
                 return View("PageNotFound");
             }
-            Product item = await _productRepository.GetProductAsync(IdProduct);
+            Product item = await _productRepository.GetByIdAsync(IdProduct);
             if (item != null)
             {
-                await _shopCart.AddToCart(await _userRepository.GetUserAsync(User.Identity.Name), item);
+                await _shopCart.AddAsync(User.Identity.Name, item);
             }
 
             return new EmptyResult();
@@ -51,8 +51,8 @@ namespace WebApplication1.Controllers
             {
                 return View("PageNotFound");
             }
-            await _shopCart.RemoveToCart(await _userRepository.GetUserAsync(User.Identity.Name), IdProduct);
-            var shopCartItems = await _shopCart.GetShopItemsAsync(new ShopCartSpecification().IncludeProduct().WhereUser(await _userRepository.GetUserAsync(User.Identity.Name)));
+            await _shopCart.DeleteAsync(User.Identity.Name, IdProduct);
+            var shopCartItems = await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name));
 
             return Json(shopCartItems.Count);
         }

@@ -20,14 +20,14 @@ namespace WebApplication1.Data.Repository
             _appEnvironment = appEnvironment;
         }
 
-        public async Task<IReadOnlyList<News>> GetNewsAsync()
+        public new async Task<IReadOnlyList<News>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
         public async Task<IReadOnlyList<CaruselItem>> GetFavNewsAsync()
         {
-            var news = await GetAllAsync(new NewsSpecification().WhereIsCaruselItem());
+            var news = await GetAllAsync(new NewsSpecification().WhereIsCaruselItem().SortById().Take(8));
             List<CaruselItem> caruselItems = new List<CaruselItem>();
 
             foreach (News item in news)
@@ -51,25 +51,25 @@ namespace WebApplication1.Data.Repository
             return await GetAllAsync(specification);
         }
 
-        public async Task<News> GetNewsByIdAsync(int newsId)
+        public new async Task<News> GetByIdAsync(int newsId)
         {
-            return await GetByIdAsync(newsId);
+            return await base.GetByIdAsync(newsId);
         }
 
-        public async Task DeleteNewsAsync(int id)
+        public async Task DeleteAsync(int id)
         {
-            News news = await GetNewsByIdAsync(id);
+            News news = await GetByIdAsync(id);
             await DeleteAsync(news);
         }
 
-        public async Task UpdateNewsAsync(News news)
+        public new async Task UpdateAsync(News news)
         {
-            await UpdateAsync(news);
+            await base.UpdateAsync(news);
         }
 
-        public async Task AddNewsAsync(News news)
+        public new async Task AddAsync(News news)
         {
-            await AddAsync(news);
+            await base.AddAsync(news);
         }
 
         public async Task CreateNews(CreateNewsViewModel model)
@@ -95,7 +95,7 @@ namespace WebApplication1.Data.Repository
                 news.Text = model.Text;
             }
 
-            await AddNewsAsync(news);
+            await AddAsync(news);
         }
 
         private async Task<string> CreateImg(IFormFile img)

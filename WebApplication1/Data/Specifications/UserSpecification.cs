@@ -29,7 +29,10 @@ namespace WebApplication1.Data.Specifications
 
         public UserSpecification WhereEmail(string email)
         {
-            AddWhere(user => user.Email.ToLower().Contains(email.ToLower()));
+            if (email != null)
+            {
+                AddWhere(user => user.Email.ToLower().Contains(email.ToLower()));
+            }
             return this;
         }
 

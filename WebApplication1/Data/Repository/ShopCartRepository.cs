@@ -10,13 +10,16 @@ namespace WebApplication1.Data.Repository
 {
     public class ShopCartRepository : Repository<ShopCartItem>, IShopCart
     {
-        public ShopCartRepository(AppDBContext appDBContext) : base(appDBContext)
-        {
+        private readonly IUserRepository _userRepository;
 
+        public ShopCartRepository(AppDBContext appDBContext, IUserRepository userRepository) : base(appDBContext)
+        {
+            _userRepository = userRepository;
         }
 
-        public async Task AddToCart(User user, Product product)
+        public async Task AddAsync(string email, Product product)
         {
+            User user = await _userRepository.GetUserAsync(email);
             ShopCartItem shopCartItem = new ShopCartItem
             {
                 User = user,
@@ -27,34 +30,35 @@ namespace WebApplication1.Data.Repository
             await AddAsync(shopCartItem);
         }
 
-        public async Task RemoveToCart(User user, int id)
+        public async Task DeleteAsync(string email, int id)
         {
-            ShopCartItem order = GetAllAsync(new ShopCartSpecification().IncludeProduct().WhereUser(user).WhereProduct(id)).Result.FirstOrDefault();
-            await DeleteAsync(order);
+            ShopCartItem order = base.GetAllAsync(new ShopCartSpecification().WhereUserEmail(email).WhereProduct(id)).Result.FirstOrDefault();
+            await base.DeleteAsync(order);
         }
 
-        public async Task RemoveToCart(ShopCartItem product)
+        public new async Task DeleteAsync(ShopCartItem product)
         {
-            await DeleteAsync(product);
+            await base.DeleteAsync(product);
         }
 
-        public async Task EmptyTheCart(User user)
+        public async Task EmptyTheCart(string email)
         {
-            IEnumerable<ShopCartItem> items = await GetShopItemsAsync(new ShopCartSpecification().WhereUser(user));
+            User user = await _userRepository.GetUserAsync(email);
+            IEnumerable<ShopCartItem> items = await GetAllAsync(new ShopCartSpecification().WhereUserEmail(user.Email));
             foreach (ShopCartItem item in items)
             {
-                await DeleteAsync(item);
+                await base.DeleteAsync(item);
             }
         }
 
-        public async Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync()
+        public new async Task<IReadOnlyList<ShopCartItem>> GetAllAsync()
         {
-            return await GetAllAsync();
+            return await base.GetAllAsync();
         }
 
-        public async Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync(ISpecification<ShopCartItem> specification)
+        public new async Task<IReadOnlyList<ShopCartItem>> GetAllAsync(ISpecification<ShopCartItem> specification)
         {
-            return await GetAllAsync(specification);
+            return await base.GetAllAsync(specification);
         }
     }
 }

@@ -7,6 +7,12 @@ namespace WebApplication1.Data.Specifications
     {
         public NewsSpecification() : base() { }
 
+        public new NewsSpecification Take(int count)
+        {
+            base.Take = count;
+            return this;
+        }
+
         public NewsSpecification WhereIsCaruselItem()
         {
             AddWhere(order => order.FavImg != null);

@@ -8,12 +8,12 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface INewsRepository
     {
-        Task<IReadOnlyList<News>> GetNewsAsync();
+        Task<IReadOnlyList<News>> GetAllAsync();
         Task<IReadOnlyList<News>> GetNewsAsync(ISpecification<News> specification);
-        Task<News> GetNewsByIdAsync(int newsId);
-        Task DeleteNewsAsync(int id);
-        Task UpdateNewsAsync(News news);
-        Task AddNewsAsync(News news);
+        Task<News> GetByIdAsync(int newsId);
+        Task DeleteAsync(int id);
+        Task UpdateAsync(News news);
+        Task AddAsync(News news);
         Task CreateNews(CreateNewsViewModel model);
         Task<IReadOnlyList<CaruselItem>> GetFavNewsAsync();
     }

@@ -7,11 +7,11 @@ namespace WebApplication1.Data.Interfaces
 {
     public interface IShopCart
     {
-        Task AddToCart(User user, Product product);
-        Task RemoveToCart(User user, int id);
-        Task RemoveToCart(ShopCartItem product);
-        Task EmptyTheCart(User user);
-        Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync();
-        Task<IReadOnlyList<ShopCartItem>> GetShopItemsAsync(ISpecification<ShopCartItem> specification);
+        Task AddAsync(string email, Product product);
+        Task DeleteAsync(string email, int id);
+        Task DeleteAsync(ShopCartItem product);
+        Task EmptyTheCart(string email);
+        Task<IReadOnlyList<ShopCartItem>> GetAllAsync();
+        Task<IReadOnlyList<ShopCartItem>> GetAllAsync(ISpecification<ShopCartItem> specification);
     }
 }

@@ -7,13 +7,19 @@ namespace WebApplication1.Data.Specifications
 {
     public class OrderSpecification : Specification<Order>
     {
-        public OrderSpecification() : base() { }
+        public OrderSpecification() : base()
+        {
+            IncludeDetails();
+        }
 
         public OrderSpecification(int id) : this(order => order.Id == id) { }
 
         public OrderSpecification(string address) : this(order => order.Address.ToLower().Contains(address.ToLower())) { }
 
-        public OrderSpecification(Expression<Func<Order, bool>> expression) : base(expression) { }
+        public OrderSpecification(Expression<Func<Order, bool>> expression) : base(expression)
+        {
+            IncludeDetails();
+        }
 
         public OrderSpecification WhereName(string name)
         {
@@ -56,16 +62,13 @@ namespace WebApplication1.Data.Specifications
             AddInclude(order => order.Courier);
             return this;
         }
-        public OrderSpecification IncludeDetails(string includeString)
-        {
-            AddInclude(includeString);
-            return this;
-        }
-        public OrderSpecification IncludeDetails()
+
+        private OrderSpecification IncludeDetails()
         {
             AddInclude("OrderDetails.Product");
             return this;
         }
+
         public OrderSpecification WithoutTracking()
         {
             IsNoTracking = true;
