@@ -12,9 +12,9 @@ namespace WebApplication1.Data.Interfaces
         Task<IReadOnlyList<News>> GetNewsAsync(ISpecification<News> specification);
         Task<News> GetByIdAsync(int newsId);
         Task DeleteAsync(int id);
-        Task UpdateAsync(News news);
+        Task UpdateAsync(ChangeNewsViewModel news);
         Task AddAsync(News news);
-        Task CreateNews(CreateNewsViewModel model);
+        Task CreateAsync(CreateNewsViewModel model);
         Task<IReadOnlyList<CaruselItem>> GetFavNewsAsync();
     }
 }

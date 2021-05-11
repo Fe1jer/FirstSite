@@ -2,9 +2,8 @@
 
 namespace WebApplication1.Data.Models
 {
-    public class CaruselItem
+    public class CaruselItem : Entity
     {
-        public int Id { set; get; }
         public string Name { set; get; }
         public string Desc { set; get; }
         public string Img { set; get; }

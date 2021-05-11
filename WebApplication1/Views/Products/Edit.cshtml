@@ -1,13 +1,13 @@
 ﻿@model Product
 @{
-    ViewData["Title"] = "Добавление товара";
+    ViewData["Title"] = "Изменение товара";
 }
 <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
-<section class="product-details mb-4">
+<section class="product-details mb-4 mt-2">
     <div class="container-fluid">
-        <form asp-action="AddProduct" method="post">
+        <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
             <div class="row">
-                <div class="col-lg-6 py-3 order-2 order-lg-1">
+                <div class="col-lg-6 order-2 order-lg-1">
                     <div class="col-sm-6">
                         <label asp-for="Img" class="form-label"></label>
                         <div class="input-group">
@@ -15,10 +15,9 @@
                             <span asp-validation-for="Img" class="text-danger"></span>
                         </div>
                     </div>
-                    <img class="w-100" src="@Model?.Img" />
+                    <img class="w-100 py-3" src="@Model?.Img" />
                 </div>
-                <div class=" col-lg-6 col-xl-5 pl-lg-5 mb-5 order-1 order-lg-2">
-
+                <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
                     <div class="row">
                         <div class="col-sm-4">
                             <label asp-for="Category" class="form-label"></label>
@@ -41,7 +40,6 @@
                                 <span asp-validation-for="Name" class="text-danger"></span>
                             </div>
                         </div>
-                        <div class="validation" asp-validation-summary="ModelOnly"></div>
                     </div>
                     <div class="input-group">
                         <label asp-for="ShortDesc" class="form-label"></label>
@@ -77,32 +75,58 @@
                         <div class="container">
                             <label asp-for="IsFavourite" class="form-label"></label>
                             <input asp-for="IsFavourite" type="checkbox" />
-                            <span asp-validation-for="IsFavourite" class="text-danger"></span>
                         </div>
                         <div class="container">
                             <label asp-for="Available" class="form-label"></label>
-                            <input asp-for="Available" type="checkbox" checked />
-                            <span asp-validation-for="Available" class="text-danger"></span>
+                            <input asp-for="Available" type="checkbox" />
                         </div>
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#AddProduct">
-                Добавить продукт
+            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ChangeProduct">
+                Сохранить изменения
             </button>
-            <div class="modal fade" id="AddProduct" tabindex="-1" aria-labelledby="AddProduct" style="display: none;" aria-hidden="true">
+            <button type="button" class="text-end btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteProduct">
+                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
+                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
+                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
+                </svg>
+                <font style="vertical-align: inherit;">
+                    <font style="vertical-align: inherit;">Удалить товар</font>
+                </font>
+            </button>
+            <div class="modal fade" id="ChangeProduct" tabindex="-1" aria-labelledby="ChangeProduct" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
                         <div class="modal-header">
-                            <h5 class="modal-title" id="AddProduct">Добавить продукт</h5>
+                            <h5 class="modal-title" id="ChangeProduct">Сохранить изменения</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>
                         <div class="modal-body">
-                            Перед тем как добавить новый продукт, проверьте правильность заполнения всех ячеек описания продукта
+                            Перед тем как изменить описание товара, проверьте заполнение всех ячеек описания продукта.
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                            <button type="submit" class="btn btn-primary">Добавить</button>
+                            <button type="submit" class="btn btn-primary">Сохранить</button>
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="modal fade" id="DeleteProduct" tabindex="-1" aria-labelledby="DeleteProduct" style="display: none;" aria-hidden="true">
+                <div class="modal-dialog">
+                    <div class="modal-content">
+                        <div class="modal-header">
+                            <h5 class="modal-title" id="DeleteProduct">Удалить товар</h5>
+                            <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
+                        </div>
+                        <div class="modal-body">
+                            Вы точно хотите удалить продукт?
+                            <br>
+                            Продукт будет удалён без возможности восстановления
+                        </div>
+                        <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
+                            <a class="btn btn-danger" asp-controller="Products" asp-action="DeleteProduct" asp-route-id="@Model.Id">Удалить</a>
                         </div>
                     </div>
                 </div>

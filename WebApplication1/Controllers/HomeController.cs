@@ -27,7 +27,7 @@ namespace WebApplication1.Controllers
         {
             IEnumerable<CaruselItem> caruselItems = await _newsRepository.GetFavNewsAsync();
             var userShopCartItems = await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name));
-            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance().WhereNotOnTheList(userShopCartItems.Select(p=>p.Product).ToList()).Take(8));
+            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance().WhereNotOnTheList(userShopCartItems.Select(p => p.Product).ToList()).Take(8));
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
             var news = await _newsRepository.GetNewsAsync(new NewsSpecification().SortById().Take(8));
             var homeProducts = new HomeViewModel
@@ -56,8 +56,8 @@ namespace WebApplication1.Controllers
         {
             if (ModelState.IsValid)
             {
-                await _newsRepository.CreateNews(model);
-                return RedirectToAction(nameof(Index));
+                await _newsRepository.CreateAsync(model);
+                return RedirectToAction(nameof(News));
             }
 
             return View();
@@ -74,29 +74,64 @@ namespace WebApplication1.Controllers
         public async Task<IActionResult> Edit(int id)
         {
             News news = await _newsRepository.GetByIdAsync(id);
-            return View(news);
+            ChangeNewsViewModel model = CreateChangeNewsModel(news);
+            return View(model);
         }
 
         [HttpPost]
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> Edit(News news)
+        public async Task<IActionResult> Edit(ChangeNewsViewModel news)
         {
             try
             {
-                await _newsRepository.UpdateAsync(news);
-                return RedirectToAction(nameof(Index));
+                if (ModelState.IsValid)
+                {
+                    await _newsRepository.UpdateAsync(news);
+
+                    return RedirectToAction(nameof(News));
+                }
             }
             catch
             {
-                return View();
+                return View(news);
             }
+
+            return View(news);
         }
 
         [Authorize(Roles = "admin, moderator")]
         public async Task<RedirectToActionResult> Delete(int id)
         {
             await _newsRepository.DeleteAsync(id);
-            return RedirectToAction(nameof(Index));
+            return RedirectToAction(nameof(News));
+        }
+
+        private ChangeNewsViewModel CreateChangeNewsModel(News news)
+        {
+            ChangeNewsViewModel model = new ChangeNewsViewModel
+            {
+                Id = news.Id,
+                Desc = news.Desc,
+                Img = news.Img,
+                Name = news.Name,
+            };
+
+            if (news.Text != null)
+            {
+                model.Text = news.Text;
+            }
+            else
+            {
+                model.IsProductHref = true;
+                model.ProductHref = news.ProductHref;
+            }
+            if (news.FavImg != null)
+            {
+                model.IsCaruselNews = true;
+                model.FavImg = news.FavImg;
+            }
+
+            return model;
         }
     }
 }

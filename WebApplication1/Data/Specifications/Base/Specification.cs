@@ -6,11 +6,7 @@ namespace WebApplication1.Data.Specifications.Base
 {
     public abstract class Specification<T> : ISpecification<T>
     {
-        protected Specification()
-        {
-
-        }
-
+        protected Specification() { }
         protected Specification(Expression<Func<T, bool>> criteria)
         {
             this.Criteria = criteria;
@@ -19,7 +15,6 @@ namespace WebApplication1.Data.Specifications.Base
         public Expression<Func<T, bool>> Criteria { get; }
         public List<Expression<Func<T, object>>> Includes { get; } = new List<Expression<Func<T, object>>>();
         public List<string> IncludeStrings { get; } = new List<string>();
-
         public List<Expression<Func<T, object>>> OrderByExpressions { get; private set; } = new List<Expression<Func<T, object>>>();
         public List<Expression<Func<T, object>>> OrderByDescendingExpressions { get; private set; } = new List<Expression<Func<T, object>>>();
         public List<Expression<Func<T, bool>>> WhereExpressions { get; private set; } = new List<Expression<Func<T, bool>>>();

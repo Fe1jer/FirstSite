@@ -14,6 +14,7 @@ namespace WebApplication1.Data.Repository
     public class UserRepository : Repository<User>, IUserRepository
     {
 
+
         public UserRepository(AppDBContext appDBContext) : base(appDBContext)
         {
         }

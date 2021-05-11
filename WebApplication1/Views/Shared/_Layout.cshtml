@@ -46,7 +46,7 @@
                             <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
                                 <li><p class="dropdown-item-text text-nowrap my-0">Приветствуем <b>@User.FindFirst("Name").Value.ToString()</b></p></li>
                                 <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile" target="_blank">Профиль</a></li>
+                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Профиль</a></li>
                                 <li><a class="dropdown-item disabled" asp-controller="Account" asp-action="Settings" target="_blank">Настройки</a></li>
                                 <li><hr class="dropdown-divider"></li>
                                 @if (User.IsInRole("moderator") || User.IsInRole("admin") || User.IsInRole("courier"))

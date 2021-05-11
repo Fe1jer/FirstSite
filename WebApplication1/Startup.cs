@@ -60,6 +60,7 @@ namespace WebApplication1
                     await next();
                 }
             });
+            app.UseHttpsRedirection();
             //app.UseStatusCodePages();
             app.UseStaticFiles();
             app.UseSession();

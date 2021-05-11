@@ -1,7 +1,7 @@
 ﻿
 @model ProductsListViewModel
 
-<div class="position-sticky pt-3 bg-light shadow">
+<div class="position-sticky py-2 bg-light shadow">
     <ul class="nav flex-column">
         <li class="nav-item">
             <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">
@@ -11,15 +11,15 @@
         @if (User.IsInRole("admin") || User.IsInRole("moderator"))
         {
             <li class="nav-item">
-                <a class="nav-link" asp-controller="Products" asp-action="AddProduct">
+                <a class="nav-link" asp-controller="Products" asp-action="Create">
                     Добавить товар
                 </a>
             </li>
         }
     </ul>
-    <hr />
     @foreach (var category in Model?.FilterSort)
     {
+        <hr />
         int counter = 1;
         <b class="px-2">@category.Name</b>
         foreach (var selection in category?.Selections)
@@ -39,12 +39,11 @@
             }
             string name = String.Format("{0}-{1}", category.ID, counter++);
             <label class="nav-link" style="padding: 3px 11px">
-                <input class="form-check-input" id="@selection.Name" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
+                <input class="form-check-input" id="@selection.Name.Replace(" ","_")" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
                        @(i == selection.Name ? "checked" : "") />
                 <span>@selection.Name</span>
             </label>
         }
-        <hr />
     }
 
 </div>

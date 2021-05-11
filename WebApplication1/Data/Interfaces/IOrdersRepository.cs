@@ -12,7 +12,7 @@ namespace WebApplication1.Data.Interfaces
         Task<Order> GetByIdAsync(int id);
         Task UpdateCourierOrdersAsync(int idOrder, User courier);
         Task DeleteAsync(Order order);
-        Task AddAsync(User user, Order order);
+        Task AddAsync(string email, Order order);
         Task CompletedOrderAsync(Order order);
     }
 }

@@ -8,6 +8,11 @@
   </PropertyGroup>
 
   <ItemGroup>
+    <Content Remove="appsettings.Development.json" />
+    <Content Remove="appsettings.json" />
+  </ItemGroup>
+
+  <ItemGroup>
     <None Include="wwwroot\slick\config.rb" />
     <None Include="wwwroot\slick\fonts\slick.svg" />
     <None Include="wwwroot\slick\slick-theme.less" />

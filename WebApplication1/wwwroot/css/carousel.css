@@ -147,6 +147,11 @@
 }
 
 @media (max-width: 576px) {
+    .carousel {
+        margin-right: -12px;
+        margin-left: -12px;
+    }
+
     .carousel-item {
         height: 13rem;
     }

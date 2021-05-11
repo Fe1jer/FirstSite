@@ -12,14 +12,17 @@ namespace WebApplication1.Data.Repository
     public class OrdersRepository : Repository<Order>, IOrdersRepository
     {
         private readonly IShopCart shopCart;
+        private readonly IUserRepository _userRepository;
 
-        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart) : base(appDBContext)
+        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart, IUserRepository userRepository) : base(appDBContext)
         {
+            _userRepository = userRepository;
             this.shopCart = shopCart;
         }
 
-        public async Task AddAsync(User user, Order order)
+        public async Task AddAsync(string email, Order order)
         {
+            User user = await _userRepository.GetUserAsync(email);
             List<OrderDetail> orderDetails = new List<OrderDetail>();
             foreach (var el in await shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(user.Email)))
             {

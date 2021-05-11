@@ -62,17 +62,12 @@ namespace WebApplication1.Data.Repository
             await DeleteAsync(news);
         }
 
-        public new async Task UpdateAsync(News news)
-        {
-            await base.UpdateAsync(news);
-        }
-
         public new async Task AddAsync(News news)
         {
             await base.AddAsync(news);
         }
 
-        public async Task CreateNews(CreateNewsViewModel model)
+        public async Task CreateAsync(CreateNewsViewModel model)
         {
             News news = new News()
             {
@@ -98,6 +93,43 @@ namespace WebApplication1.Data.Repository
             await AddAsync(news);
         }
 
+        public async Task UpdateAsync(ChangeNewsViewModel model)
+        {
+            News news = await GetByIdAsync(model.Id);
+
+            news.Name = model.Name;
+            if (model.FileImg != null)
+            {
+                DeleteImg(news.Img);
+                news.Img = await CreateImg(model.FileImg);
+            }
+            news.Desc = model.Desc;
+            if (model.IsCaruselNews == true)
+            {
+                if (model.FileFavImg != null)
+                {
+                    DeleteImg(news.FavImg);
+                    news.FavImg = await CreateImg(model.FileFavImg);
+                }   
+            }
+            else
+            {
+                news.FavImg = null;
+            }
+            if (model.IsProductHref == true)
+            {
+                news.ProductHref = model.ProductHref;
+                news.Text = null;
+            }
+            else
+            {
+                news.ProductHref = null;
+                news.Text = model.Text;
+            }
+
+            await UpdateAsync(news);
+        }
+
         private async Task<string> CreateImg(IFormFile img)
         {
             // путь к папке Files
@@ -109,6 +141,14 @@ namespace WebApplication1.Data.Repository
             }
 
             return path;
+        }
+
+        private void DeleteImg(string path)
+        {
+            if (File.Exists($"wwwroot{path}") && path != null)
+            {
+                File.Delete($"wwwroot{path}");
+            }
         }
     }
 }

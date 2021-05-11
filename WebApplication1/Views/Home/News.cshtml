@@ -16,7 +16,7 @@
         <div class="multiple-items">
             @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
             {
-                @await Html.PartialAsync("ShowProduct", showProduct);
+                @await Html.PartialAsync("ProductCard", showProduct);
             }
         </div>
         <h2 class="text-center text-danger pt-4">Новости</h2>

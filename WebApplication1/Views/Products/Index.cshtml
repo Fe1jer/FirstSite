@@ -24,13 +24,13 @@
                         @await Html.PartialAsync("ProductsFilter", Model)
                     }
                 </nav>
-                <main class="px-md-4 col-lg-10 mt-2" style="position: relative">
+                <main class="ps-lg-4 pe-lg-0 col-lg-10 mt-2" style="position: relative">
                     <div id="content" class="row">
                         @if (Model.AllProducts.Count() != 0)
                         {
                             foreach (ShowProductViewModel showProduct in Model.AllProducts)
                             {
-                                @await Html.PartialAsync("ShowProduct", showProduct)
+                                @await Html.PartialAsync("ProductCard", showProduct)
                             }
                         }
                         else

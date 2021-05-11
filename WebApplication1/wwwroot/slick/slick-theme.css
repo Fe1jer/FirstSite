@@ -68,11 +68,11 @@
     }
 
 .slick-prev {
-    left: 0.3rem;
+    left: 0.2rem;
 }
 
 [dir='rtl'] .slick-prev {
-    right: 0.3rem;
+    right: 0.2rem;
     left: auto;
 }
 
@@ -85,12 +85,12 @@
 }
 
 .slick-next {
-    right: 0.3rem;
+    right: 0.2rem;
 }
 
 [dir='rtl'] .slick-next {
     right: auto;
-    left: 0.3rem;
+    left: 0.2rem;
 }
 
 .slick-next:before {

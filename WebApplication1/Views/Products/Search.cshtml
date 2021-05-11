@@ -18,7 +18,7 @@
         </div>
         <div class="container-fluid">
             <div class="row">
-                <nav id="sidebarMenu" class="col-md-3 col-lg-2 d-md-block sidebar collapse" style="padding:0">
+                <nav id="sidebarMenu" class="col-lg-2 d-lg-block sidebar collapse" style="padding:0">
                     @Html.AntiForgeryToken()
                     @using (Html.BeginForm("Search", "Products", FormMethod.Get))
                     {
@@ -26,13 +26,13 @@
                         @await Html.PartialAsync("ProductsFilter", Model.ProductsListViewModel)
                     }
                 </nav>
-                <main class="px-md-4 col-md-10 mt-2" style="position: relative">
+                <main class="ps-lg-4 pe-lg-0 col-md-10 mt-2" style="position: relative">
                     <div id="content" class="row">
                         @if (Model.ProductsListViewModel.AllProducts.Count() != 0)
                         {
                             foreach (ShowProductViewModel showProduct in Model.ProductsListViewModel.AllProducts)
                             {
-                                @await Html.PartialAsync("ShowProduct", showProduct)
+                                @await Html.PartialAsync("ProductCard", showProduct)
                             }
                         }
                         else

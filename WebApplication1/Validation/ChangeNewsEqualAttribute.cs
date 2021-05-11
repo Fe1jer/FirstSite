@@ -1,20 +1,24 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System;
+using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.IO;
+using System.Linq;
+using System.Threading.Tasks;
 using WebApplication1.ViewModels;
 
 namespace WebApplication1.Validation
 {
-    public class CreateNewsEqualAttribute : ValidationAttribute
+    public class ChangeNewsEqualAttribute : ValidationAttribute
     {
-        public CreateNewsEqualAttribute()
+        public ChangeNewsEqualAttribute()
         {
             ErrorMessage = "Заполните все поля!";
         }
         public override bool IsValid(object value)
         {
-            CreateNewsViewModel model = value as CreateNewsViewModel;
+            ChangeNewsViewModel model = value as ChangeNewsViewModel;
 
-            if (model.IsCaruselNews == true && (model.FavImg == null || ThereImg("/img/news/" + model.FavImg.FileName)))
+            if (model.IsCaruselNews == true && model.FavImg == null && model.FileFavImg == null)
             {
                 return false;
             }
@@ -26,10 +30,7 @@ namespace WebApplication1.Validation
             {
                 return false;
             }
-            if (!ThereImg("/img/news/" + model.Img.FileName))
-            {
-                return false;
-            }
+
             return true;
         }
 
@@ -37,11 +38,11 @@ namespace WebApplication1.Validation
         {
             if (File.Exists($"wwwroot{path}"))
             {
-                return false;
+                return true;
             }
             else
             {
-                return true;
+                return false;
             }
         }
     }

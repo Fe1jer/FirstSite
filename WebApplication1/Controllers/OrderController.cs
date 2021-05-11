@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
+using System.Linq;
 using System.Threading.Tasks;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
@@ -14,11 +15,9 @@ namespace WebApplication1.Controllers
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly IShopCart _shopCart;
-        private readonly IUserRepository _productRepository;
 
-        public OrderController(IShopCart shopCart, IOrdersRepository IOrdersRepository, IUserRepository IProductRepository)
+        public OrderController(IShopCart shopCart, IOrdersRepository IOrdersRepository)
         {
-            _productRepository = IProductRepository;
             _shopCart = shopCart;
             _ordersRepository = IOrdersRepository;
         }
@@ -40,7 +39,7 @@ namespace WebApplication1.Controllers
             {
                 if (countShopCartItems != 0)
                 {
-                    await _ordersRepository.AddAsync(await _productRepository.GetUserAsync(User.Identity.Name), order);
+                    await _ordersRepository.AddAsync(User.Identity.Name, order);
                     return RedirectToAction("Complete");
                 }
                 else
@@ -51,7 +50,7 @@ namespace WebApplication1.Controllers
             OrderViewModel orderR = new OrderViewModel
             {
                 Order = order,
-                ShopCartItems = (List<ShopCartItem>)await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name))
+                ShopCartItems = _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name)).GetAwaiter().GetResult().ToList()
             };
 
             return View(orderR);

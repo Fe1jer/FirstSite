@@ -5,10 +5,7 @@ namespace WebApplication1.Data
 {
     public class AppDBContext : DbContext
     {
-        public AppDBContext(DbContextOptions<AppDBContext> option) : base(option)
-        {
-
-        }
+        public AppDBContext(DbContextOptions<AppDBContext> option) : base(option) { }
 
         public DbSet<Product> Product { get; set; }
         public DbSet<News> News { get; set; }

@@ -11,13 +11,11 @@ namespace WebApplication1.Controllers
     public class ShopCartController : Controller
     {
         private readonly IProductRepository _productRepository;
-        private readonly IUserRepository _userRepository;
         private readonly IShopCart _shopCart;
 
-        public ShopCartController(IShopCart shopCart, IProductRepository IProductRepository, IUserRepository IUserRepository)
+        public ShopCartController(IShopCart shopCart, IProductRepository IProductRepository)
         {
             _shopCart = shopCart;
-            _userRepository = IUserRepository;
             _productRepository = IProductRepository;
         }
 

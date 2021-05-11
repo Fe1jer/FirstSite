@@ -1,8 +1,7 @@
 ﻿function showFilter(item) {
     var list = '';
-    console.log(item);
     list = list + '<a class="schema-tags__item m-1" onclick="setbutton(this, ' + item.attr("id") + '), filterProducts()" title="Категория товара">' +
-        '<p class="navbar-nav schema-tags__text">' + item.attr("id") + '</p>' +
+        '<p class="navbar-nav schema-tags__text">' + item.attr("id").replaceAll(/_/g, ' ') + '</p>' +
         '</a>';
     return list;
 }

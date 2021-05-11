@@ -45,8 +45,8 @@ namespace WebApplication1.Controlles
             return View(model);
         }
 
-        [Route("Products/ChangeProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> ChangeProduct(int id)
+        [Route("Products/Edit"), Authorize(Roles = "admin, moderator")]
+        public async Task<IActionResult> Edit(int id)
         {
 
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
@@ -60,8 +60,8 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("Products/ChangeProduct")]
-        public async Task<IActionResult> ChangeProduct(Product obj)
+        [HttpPost, ValidateAntiForgeryToken, Route("Products/Edit")]
+        public async Task<IActionResult> Edit(Product obj)
         {
             if (ModelState.IsValid)
             {
@@ -81,8 +81,8 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index");
         }
 
-        [Route("Products/AddProduct"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> AddProduct()
+        [Route("Products/Create"), Authorize(Roles = "admin, moderator")]
+        public async Task<IActionResult> Create()
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
@@ -93,8 +93,8 @@ namespace WebApplication1.Controlles
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("Products/AddProduct")]
-        public async Task<IActionResult> AddProduct(Product obj)
+        [HttpPost, ValidateAntiForgeryToken, Route("Products/Create")]
+        public async Task<IActionResult> Create(Product obj)
         {
             if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
