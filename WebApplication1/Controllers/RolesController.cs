@@ -15,10 +15,10 @@ namespace WebApplication1.Controllers
         private readonly IUserRepository _userRepository;
         private readonly IRoleRepository _rolesRepository;
 
-        public RolesController(IUserRepository IUolesRepository, IRoleRepository IRolesRepository)
+        public RolesController(IUserRepository IUserRepository, IRoleRepository IRolesRepository)
         {
             _rolesRepository = IRolesRepository;
-            _userRepository = IUolesRepository;
+            _userRepository = IUserRepository;
         }
 
         public async Task<IActionResult> Index()

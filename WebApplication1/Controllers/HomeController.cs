@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using System.Xml;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Models;
 using WebApplication1.Data.Specifications;
@@ -12,15 +13,19 @@ namespace WebApplication1.Controllers
 {
     public class HomeController : Controller
     {
+        private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
         private readonly INewsRepository _newsRepository;
         private readonly IShopCart _shopCart;
+        private readonly ISiteRatingRepository _siteRatingRepository;
 
-        public HomeController(IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository)
+        public HomeController(IUserRepository IUserRepository, IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository, ISiteRatingRepository ISiteRatingRepository)
         {
+            _userRepository = IUserRepository;
             _shopCart = shopCart;
             _newsRepository = newsRepository;
             _productRepository = IProductRepository;
+            _siteRatingRepository = ISiteRatingRepository;
         }
 
         public async Task<ViewResult> News()
@@ -30,7 +35,7 @@ namespace WebApplication1.Controllers
             var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance().WhereNotOnTheList(userShopCartItems.Select(p => p.Product).ToList()).Take(8));
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
             var news = await _newsRepository.GetNewsAsync(new NewsSpecification().SortById().Take(8));
-            var homeProducts = new HomeViewModel
+            var homeProducts = new NewsViewModel
             {
                 CaruselItems = caruselItems,
                 FavProducts = showProducts,
@@ -39,9 +44,14 @@ namespace WebApplication1.Controllers
 
             return View(homeProducts);
         }
-        public ViewResult Index()
+        public async Task<ViewResult> Index()
         {
-            return View();
+            double rating = await _siteRatingRepository.OverallSiteRating();
+            HomeViewModel model = new HomeViewModel()
+            {
+                Rating = rating
+            };
+            return View(model);
         }
 
         [Authorize(Roles = "admin, moderator")]
@@ -54,6 +64,11 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Create(CreateNewsViewModel model)
         {
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
             if (ModelState.IsValid)
             {
                 await _newsRepository.CreateAsync(model);
@@ -82,6 +97,11 @@ namespace WebApplication1.Controllers
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Edit(ChangeNewsViewModel news)
         {
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
             try
             {
                 if (ModelState.IsValid)
@@ -102,6 +122,11 @@ namespace WebApplication1.Controllers
         [Authorize(Roles = "admin, moderator")]
         public async Task<RedirectToActionResult> Delete(int id)
         {
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
             await _newsRepository.DeleteAsync(id);
             return RedirectToAction(nameof(News));
         }
@@ -132,6 +157,23 @@ namespace WebApplication1.Controllers
             }
 
             return model;
+        }
+        [Route("/sitemap.xml")]
+        public async void SitemapXml()
+        {
+            string host = Request.Scheme + "://" + Request.Host;
+
+            Response.ContentType = "application/xml";
+
+            using var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true });
+            await xml.WriteStartDocumentAsync();
+            xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
+
+            xml.WriteStartElement("url");
+            xml.WriteElementString("loc", host);
+            xml.WriteEndElement();
+
+            xml.WriteEndElement();
         }
     }
 }

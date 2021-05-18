@@ -76,13 +76,35 @@ namespace WebApplication1.Controlles
         [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
+            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
+            {
+                return RedirectToAction("Logout", "Account");
+            }
             await _productRepository.DeleteAsync(id);
+
+
+            var products = await _productRepository.GetAllAsync();
+            foreach (Product product in products)
+            {
+                if (product.Name == "Test")
+                {
+                    await _productRepository.DeleteAsync(product.Id);
+                }
+            }
+
 
             return RedirectToAction("Index");
         }
 
         [Route("Products/Create"), Authorize(Roles = "admin, moderator")]
-        public async Task<IActionResult> Create()
+        public IActionResult Create()
+        {
+            return View();
+        }
+
+        [HttpPost, ValidateAntiForgeryToken, Route("Products/Create")]
+        public async Task<IActionResult> Create(Product obj)
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
@@ -90,12 +112,27 @@ namespace WebApplication1.Controlles
                 return RedirectToAction("Logout", "Account");
             }
 
-            return View();
-        }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("Products/Create")]
-        public async Task<IActionResult> Create(Product obj)
-        {
+            Product product = new Product()
+            {
+                Name = "Test",
+                Available = false,
+                Category = "Test",
+                Company = "Test",
+                Country = "Test",
+                ShortDesc = "Test",
+                LongDesc = "Test",
+                IsFavourite = false,
+                Price = 0,
+                Img = "https://omoro.ru/wp-content/uploads/2018/08/syrikaty-2.jpg"
+            };
+            for (int i = 0; i <= 1000; i++)
+            {
+                product.Id = 0;
+                await _productRepository.AddProductAsync(product);
+            }
+
+
             if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
                 if (ModelState.IsValid)

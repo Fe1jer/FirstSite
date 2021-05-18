@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System;
 using System.Collections.Generic;
@@ -22,11 +23,16 @@ namespace WebApplication1.Controllers
         private readonly IRoleRepository _roles;
         private readonly IWebHostEnvironment _appEnvironment;
 
-        public AccountController(IUserRepository IProductRepository, IRoleRepository roles, IWebHostEnvironment appEnvironment)
+        public AccountController(IUserRepository IUserRepository, IRoleRepository roles, IWebHostEnvironment appEnvironment)
         {
-            _userRepository = IProductRepository;
+            _userRepository = IUserRepository;
             _roles = roles;
             _appEnvironment = appEnvironment;
+        }
+
+        public IActionResult Settings()
+        {
+            return View();
         }
 
         [HttpGet]
@@ -58,7 +64,7 @@ namespace WebApplication1.Controllers
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Reset Password",
+                    await emailService.SendEmailAsync(model.Email, "Регистрация",
                         $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
 
                     return View("RegisterConfirmation");
@@ -154,7 +160,7 @@ namespace WebApplication1.Controllers
                         System.IO.File.Delete($"wwwroot{user.Img}");
                     }
                     // путь к папке Files
-                    string path = "/img/UsersAvatar/" + model.Email + model.Img.FileName;
+                    string path = "/img/UsersAvatar/" + model.Email + "-" + model.Img.FileName;
                     // сохраняем файл в папку Files в каталоге wwwroot
                     using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
                     {
@@ -206,7 +212,7 @@ namespace WebApplication1.Controllers
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
                     EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Reset Password",
+                    await emailService.SendEmailAsync(model.Email, "Сброс пароля",
                         $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
                     return View("ForgotPasswordConfirmation");
                 }
@@ -282,6 +288,18 @@ namespace WebApplication1.Controllers
         {
             await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
             return RedirectToAction("Login", "Account");
+        }
+
+        [HttpPost]
+        public IActionResult SetLanguage(string culture, string returnUrl)
+        {
+            Response.Cookies.Append(
+                CookieRequestCultureProvider.DefaultCookieName,
+                CookieRequestCultureProvider.MakeCookieValue(new RequestCulture(culture)),
+                new CookieOptions { Expires = DateTimeOffset.UtcNow.AddYears(1) }
+            );
+
+            return LocalRedirect(returnUrl);
         }
     }
 }

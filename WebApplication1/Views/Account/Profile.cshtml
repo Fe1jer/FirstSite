@@ -8,17 +8,16 @@
 <body>
     <main class="col-md-12 ">
         <form asp-action="Profile" method="post" class="form-horizontal" enctype="multipart/form-data">
-            <div class="row justify-content-center g-3 bg-white shadow">
+            <div class="row justify-content-center bg-white shadow">
                 <h1 class="text-center">Личные данные</h1>
-
                 <div class="text-center">
                     <label class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
                         <img src="@Model.Avatar" alt="avatar" style="object-fit: cover; width: 180px; height: 180px; border-radius: 50%;" />
                     </label>
-                    <input asp-for="Img" type="file" class="form-control w-auto" style="display: revert">
+                    <input asp-for="Img" type="file" class="form-control" accept=".jpg, .jpeg, .png" multiple style="display: revert; width:290px">
                     <span asp-validation-for="Img" class="text-danger"></span>
                 </div>
-                <div class="col-md-4 row g-3">
+                <div class="col-md-4 mt-0 row g-3">
                     <div class="col-md-12">
                         <label asp-for="Name" class="form-label"></label><sup>*</sup>
                         <input asp-for="Name" class="form-control" />
@@ -39,12 +38,11 @@
                         <div class="slider-radio elegant">
                             <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
                             <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
-                            <div class="sliding-piece" style="position: absolute; transition: width 0.2s ease 0s, height 0.2s ease 0s, top 0.2s ease 0s, left 0.2s ease 0s; opacity: 1; left: 0px; top: 0px; width: 151.125px; height: 43.2px;"></div>
                         </div>
                         <span asp-validation-for="Gender" class="text-danger"></span>
                     </div>
                 </div>
-                <div class="col-md-4 offset-md-1 row g-3">
+                <div class="col-md-4 offset-md-1 row mt-0 g-3">
                     <div class="col-md-12">
                         <label asp-for="Email" class="form-label"></label><sup>*</sup>
                         <input asp-for="Email" class="form-control" />

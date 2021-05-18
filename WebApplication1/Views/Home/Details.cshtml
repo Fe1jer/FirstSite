@@ -9,9 +9,12 @@
         <img style="object-fit: cover; height: 350px; width: 75%; " src="@Html.DisplayFor(model => model.Img)" alt="@Html.DisplayFor(model => model.Name)" />
     </div>
     <p class="mb-3">Дорогие покупатели:</p>
-    <p>
-        @Html.DisplayFor(model => model.Text)
-    </p>
+    @foreach (var line in Model.Text.Split("\r\n"))
+    {
+        <p style="text-indent: 1.5em; text-align: justify;">
+            @line
+        </p>
+    }
     <p class="w-100 text-end">
         @Model.CreateData.ToString("dd.MM.yyyy")
     <p />
