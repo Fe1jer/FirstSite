@@ -14,6 +14,7 @@ namespace WebApplication1.Data.Specifications
         public UserSpecification SortByRole()
         {
             AddDescendingOrdering(user => user.Role);
+            AddDescendingOrdering(user => user.Email);
             return this;
         }
         public UserSpecification IncludeRole()

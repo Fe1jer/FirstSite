@@ -2,10 +2,14 @@
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Localization;
+using Microsoft.AspNetCore.ResponseCompression;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
+using System.Globalization;
+using System.IO.Compression;
 using WebApplication1.Data;
 using WebApplication1.Data.Interfaces;
 using WebApplication1.Data.Repository;
@@ -26,14 +30,40 @@ namespace WebApplication1
             string connection = Configuration.GetConnectionString("DefaultConnection");
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));
 
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("de"),
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
             services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<INewsRepository, NewsRepository>();
+            services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
 
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
+
+            services.AddResponseCompression(options => options.EnableForHttps = true);
+            services.Configure<BrotliCompressionProviderOptions>(options =>
+            {
+                options.Level = CompressionLevel.Fastest;
+            });
             services.AddMvc(options => options.EnableEndpointRouting = false);
             services.AddMemoryCache();
             services.AddSession();
@@ -60,9 +90,17 @@ namespace WebApplication1
                     await next();
                 }
             });
+            app.UseResponseCompression();
+            app.UseStaticFiles(new StaticFileOptions()
+            {
+                OnPrepareResponse = ctx =>
+                {
+                    ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=604800");
+                }
+            });
+
             app.UseHttpsRedirection();
             //app.UseStatusCodePages();
-            app.UseStaticFiles();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();

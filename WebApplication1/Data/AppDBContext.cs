@@ -14,5 +14,6 @@ namespace WebApplication1.Data
         public DbSet<OrderDetail> OrderDetail { get; set; }
         public DbSet<User> Users { get; set; }
         public DbSet<Role> Roles { get; set; }
+        public DbSet<SiteRating> SiteRating { get; set; }
     }
 }

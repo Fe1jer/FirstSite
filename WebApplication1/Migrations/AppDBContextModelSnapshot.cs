@@ -30,15 +30,18 @@ namespace WebApplication1.Migrations
                         .HasColumnType("datetime2");
 
                     b.Property<string>("Desc")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("FavImg")
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Img")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Name")
+                        .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("ProductHref")
@@ -245,6 +248,26 @@ namespace WebApplication1.Migrations
                     b.ToTable("ShopCartItem");
                 });
 
+            modelBuilder.Entity("WebApplication1.Data.Models.SiteRating", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int>("Rating")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("UserId")
+                        .HasColumnType("int");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("UserId");
+
+                    b.ToTable("SiteRating");
+                });
+
             modelBuilder.Entity("WebApplication1.Data.Models.User", b =>
                 {
                     b.Property<int>("Id")
@@ -336,6 +359,15 @@ namespace WebApplication1.Migrations
                         .HasForeignKey("UserId");
 
                     b.Navigation("Product");
+
+                    b.Navigation("User");
+                });
+
+            modelBuilder.Entity("WebApplication1.Data.Models.SiteRating", b =>
+                {
+                    b.HasOne("WebApplication1.Data.Models.User", "User")
+                        .WithMany()
+                        .HasForeignKey("UserId");
 
                     b.Navigation("User");
                 });

@@ -1,12 +1,12 @@
-﻿using System.Collections.Generic;
-using WebApplication1.Data.Models;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace WebApplication1.ViewModels
 {
     public class HomeViewModel
     {
-        public IEnumerable<ShowProductViewModel> FavProducts { get; set; }
-        public IEnumerable<CaruselItem> CaruselItems { get; set; }
-        public IEnumerable<News> NewsList { get; set; }
+        public double Rating { get; set; }
     }
 }

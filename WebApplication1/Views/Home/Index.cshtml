@@ -1,4 +1,5 @@
-﻿@{
+﻿@model HomeViewModel
+@{
     ViewData["Title"] = "Обложка";
 }
 <html class="h-100">
@@ -9,15 +10,30 @@
         #container {
             padding-bottom: 0;
         }
+
         footer {
             display: none;
         }
     </style>
 </head>
 <body class="d-flex h-100 text-white bg-dark">
-    <div class="cover-container text-center d-flex w-100 h-100 p-3 mx-auto flex-column">
-        <main class="mb-auto mt-auto px-3">
+    <div class="cover-container text-center d-flex w-100 h-100 mx-auto flex-column">
+        <main class="mb-auto mt-auto">
             <h1>Интернет магазин</h1>
+            <p class="rating-result">
+                @for (int i = 1; i <= 5; i++)
+                {
+                    if (i <= Model.Rating)
+                    {
+                        <span class="active"></span>
+                    }
+                    else
+                    {
+                        <span></span>
+                    }
+                }
+                @Math.Round(Model.Rating, 1) из 5
+            </p>
             <h5 class="">Лучший сайт по подбору цифровой техники. Крупнейший ассортимент техники среди магазинов. Лучшие цены и выгодные предложения</h5>
             <p class="lead">
                 <a href="/Home/News" class="btn btn-lg btn-secondary fw-bold border-white bg-white"><font size="5" color="black" face="Arial">Узнать больше</font></a>
