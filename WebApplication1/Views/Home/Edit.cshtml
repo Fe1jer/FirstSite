@@ -2,10 +2,12 @@
 @{
     ViewData["Title"] = "Изменение новости";
 }
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+}
 <h4>@ViewData["Title"]</h4>
 <hr />
 <main>
-    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
     <form asp-action="Edit" class="row" enctype="multipart/form-data">
         <div id="form" class="col-lg-8 row mt-0 gy-3">
             <div asp-validation-summary="ModelOnly" class="text-danger mt-0"></div>
@@ -97,4 +99,6 @@
 <div class="">
     <a asp-action="News">Назад</a>
 </div>
-<script type="text/javascript" src="~/js/modules/news.js"></script> 
+@section Scripts{
+    <script type="text/javascript" src="~/js/modules/news.js"></script>
+}

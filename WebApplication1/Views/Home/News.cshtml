@@ -2,34 +2,34 @@
 @{
     ViewData["Title"] = "Главная";
 }
-<head>
-    <title>Carousel</title>
+@section Css{
     <link rel="stylesheet" href="~/css/carousel.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/slick/slick-theme.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/slick/slick.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
-</head>
-<body>
-    <main>
-        @await Html.PartialAsync("PhotoCarusel", Model.CaruselItems)
-        <h2 class="text-center text-danger">Рекомендуем</h2>
-        <div class="multiple-items">
-            @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
-            {
-                @await Html.PartialAsync("ProductCard", showProduct);
-            }
-        </div>
-        <h2 class="text-center text-danger pt-4">Новости</h2>
-        @if (User.IsInRole("moderator") || User.IsInRole("admin"))
+}
+<main>
+    @await Html.PartialAsync("PhotoCaruselPartial", Model.CaruselItems)
+    <h2 class="text-center text-danger">Рекомендуем</h2>
+    <div class="multiple-items">
+        @foreach (ShowProductViewModel showProduct in Model?.FavProducts)
         {
-            <a type="button" class="btn btn-outline-primary" asp-action="Create">Добавить новость</a>
+            @await Html.PartialAsync("ProductCardPartial", showProduct);
         }
-        @foreach (News item in Model.NewsList)
-        {
-            @await Html.PartialAsync("CardNews", item);
-        }
-    </main>
+    </div>
+    <h2 class="text-center text-danger pt-4">Новости</h2>
+    @if (User.IsInRole("moderator") || User.IsInRole("admin"))
+    {
+        <a type="button" class="btn btn-outline-primary" asp-action="Create">Добавить новость</a>
+    }
+    @foreach (News item in Model.NewsList)
+    {
+        @await Html.PartialAsync("CardNewsPartial", item);
+    }
+</main>
+
+@section Scripts{
     <script type="text/javascript" src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <script type="text/javascript" src="~/js/modules/shopCart.js"></script>
     <script type="text/javascript" src="~/slick/slick.min.js"></script>
-</body>
+}

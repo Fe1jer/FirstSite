@@ -1,5 +1,8 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AspNetCore.SEOHelper.Sitemap;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Mvc;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
@@ -18,14 +21,16 @@ namespace WebApplication1.Controllers
         private readonly INewsRepository _newsRepository;
         private readonly IShopCart _shopCart;
         private readonly ISiteRatingRepository _siteRatingRepository;
+        private readonly IWebHostEnvironment _env;
 
-        public HomeController(IUserRepository IUserRepository, IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository, ISiteRatingRepository ISiteRatingRepository)
+        public HomeController(IUserRepository IUserRepository, IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository, ISiteRatingRepository ISiteRatingRepository, IWebHostEnvironment env)
         {
             _userRepository = IUserRepository;
             _shopCart = shopCart;
             _newsRepository = newsRepository;
             _productRepository = IProductRepository;
             _siteRatingRepository = ISiteRatingRepository;
+            _env = env;
         }
 
         public async Task<ViewResult> News()
@@ -46,6 +51,7 @@ namespace WebApplication1.Controllers
         }
         public async Task<ViewResult> Index()
         {
+            await SitemapXml();
             double rating = await _siteRatingRepository.OverallSiteRating();
             HomeViewModel model = new HomeViewModel()
             {
@@ -158,22 +164,45 @@ namespace WebApplication1.Controllers
 
             return model;
         }
-        [Route("/sitemap.xml")]
-        public async void SitemapXml()
+        public async Task SitemapXml()
         {
-            string host = Request.Scheme + "://" + Request.Host;
+            var list = new List<SitemapNode>
+            {
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 1, Url = Url.ActionLink("Index", "Home"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.9, Url = Url.ActionLink("News", "Home"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 1, Url = Url.ActionLink("Index", "Catalog"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0, Url = Url.ActionLink("Search", "Catalog"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.7, Url = Url.ActionLink("Login", "Account"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.2, Url = Url.ActionLink("ForgotPassword", "Account"), Frequency = SitemapFrequency.Weekly   },
+                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.7, Url = Url.ActionLink("Register", "Account"), Frequency = SitemapFrequency.Weekly   },
+            };
+            foreach (var news in await _newsRepository.GetAllAsync())
+            {
+                if (news.ProductHref == null)
+                {
+                    SitemapNode sitemapNode = new SitemapNode
+                    {
+                        LastModified = DateTime.UtcNow,
+                        Priority = 0.6,
+                        Url = Url.ActionLink("Index") + "News/" + news.Name + "?id=" + news.Id,
+                        Frequency = SitemapFrequency.Weekly
+                    };
+                    list.Add(sitemapNode);
+                }
+            }
+            foreach (var product in await _productRepository.GetAllAsync())
+            {
+                SitemapNode sitemapNode = new SitemapNode
+                {
+                    LastModified = DateTime.UtcNow,
+                    Priority = 0.8,
+                    Url = Url.ActionLink("Index") + "Catalog/" + product.Name.Replace(" ", "-") + "?id=" + product.Id,
+                    Frequency = SitemapFrequency.Weekly
+                };
+                list.Add(sitemapNode);
+            }
 
-            Response.ContentType = "application/xml";
-
-            using var xml = XmlWriter.Create(Response.Body, new XmlWriterSettings { Indent = true });
-            await xml.WriteStartDocumentAsync();
-            xml.WriteStartElement("urlset", "http://www.sitemaps.org/schemas/sitemap/0.9");
-
-            xml.WriteStartElement("url");
-            xml.WriteElementString("loc", host);
-            xml.WriteEndElement();
-
-            xml.WriteEndElement();
+            new SitemapDocument().CreateSitemapXML(list, _env.ContentRootPath);
         }
     }
 }

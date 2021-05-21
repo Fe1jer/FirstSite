@@ -48,7 +48,7 @@ function searchProduct(item) {
     var name = JSON.stringify(item.product.name).slice(1, -1);
     var company = JSON.stringify(item.product.company).slice(1, -1);
     var msg = '<li class="my-2 dropdown-item p-0" style="height: 40px; overflow: hidden; cursor:pointer">' +
-        '<a class="d-flex dropdown-item p-0" href="/Products/' + name.replace(/ /g, '-') + '?id=' + JSON.stringify(item.product.id) + '">' +
+        '<a class="d-flex dropdown-item p-0" href="/Catalog/' + name.replace(/ /g, '-') + '?id=' + JSON.stringify(item.product.id) + '">' +
         '<img src=' + JSON.stringify(item.product.img) + ' alt="' + name + '" style="width:40px;height:40px;object-fit: contain;" />' +
         '<p class="my-auto ms-2">' + company + ' ' + name + '</p>' +
         '</a>' +

@@ -16,11 +16,7 @@ namespace WebApplication1.Data.Repository
         public async Task<double> OverallSiteRating()
         {
             var ratings = await base.GetAllAsync();
-            if(ratings.Count != 0)
-            {
-                return ratings.Average(r => r.Rating);
-            }
-            return 0;
+            return ratings.Count != 0 ? ratings.Average(r => r.Rating) : 0;
         }
         public new async Task<IReadOnlyList<SiteRating>> GetAllAsync()
         {

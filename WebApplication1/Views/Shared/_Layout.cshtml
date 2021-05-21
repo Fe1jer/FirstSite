@@ -1,141 +1,19 @@
 ﻿<!DOCTYPE html>
 <html>
 <head>
-    <meta name="google-site-verification" content="WDatC2R0nCo3jhtb2MyBt_Nwvo6J-z-2LT6bBBegQmI" />
-    <meta name="viewport" content="width=device-width" />
-    <title>@ViewBag.Title</title>
-    <link rel=" icon" href="~/img/favicon.png" type="image/x-icon" asp-append-version="true">
-    <link rel="stylesheet" href="~/css/bootstrap.min.css" type="text/css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/StyleSheet.css" type="text/css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/Cookie.css" type="text/css" asp-append-version="true" />
-    <link rel="stylesheet" href="~/css/headers.css" type="text/css" asp-append-version="true" />
-    <meta charset="utf-8">
+    @await Html.PartialAsync("MetatagsPartial")
+    @await Html.PartialAsync("CssPartial")
+    @await RenderSectionAsync("Css", false)
 </head>
 <body>
-    <header id="header">
-        <nav class="navbar navbar-expand-lg navbar-dark fixed-top bg-dark">
-            <div class="container-fluid">
-                <a class="navbar-brand" href="/">Интернет магазин</a>
-                <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarCollapse" aria-controls="navbarCollapse" aria-expanded="false" aria-label="Toggle navigation">
-                    <span class="navbar-toggler-icon"></span>
-                </button>
-                <div class="collapse navbar-collapse" id="navbarCollapse">
-                    <ul class="navbar-nav me-auto mb-2 mb-md-0">
-                        <li class="nav-item active">
-                            <a class="nav-link" aria-current="page" asp-controller="Home" asp-action="News">Главная</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" asp-controller="Products" asp-action="Index">Каталог</a>
-                        </li>
-                        <li class="nav-item">
-                            <a class="nav-link" aria-current="page" asp-controller="ShopCart" asp-action="Index">Корзина</a>
-                        </li>
-                    </ul>
-                    <form asp-controller="Products" asp-action="Search" method="get" class="d-flex nav-item me-3">
-                        <div class="search_box" id="search_box">
-                            <input class="form-control" name="q" id="search" type="search" autocomplete="off" placeholder="Поиск товаров" aria-label="Search">
-                            <div id="search_box-result"></div>
-                        </div>
-                        <button class="ms-2 btn btn-outline-success" type="submit">Поиск</button>
-                    </form>
-                    @if (User.Identity.IsAuthenticated)
-                    {
-                        <div class="dropdown mt-2-dropdown">
-                            <a href="#" class="d-block link-light text-decoration-none dropdown-toggle" id="dropdownUser1" data-bs-toggle="dropdown" aria-expanded="false">
-                                <img src="@User.FindFirst("Avatar").Value.ToString()" alt="avatar" style="object-fit: cover; width: 40px; height: 40px; border-radius: 50%;" />
-                            </a>
-                            <ul class="dropdown-menu text-small" aria-labelledby="dropdownUser1">
-                                <li><p class="dropdown-item-text text-nowrap my-0">Приветствуем <b>@User.FindFirst("Name").Value.ToString()</b></p></li>
-                                <li><hr class="dropdown-divider"></li>
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Profile">Профиль</a></li>
-                                <li><a class="dropdown-item disabled" asp-controller="Account" asp-action="Settings" target="_blank">Настройки</a></li>
-                                <li><hr class="dropdown-divider"></li>
-                                @if (User.IsInRole("moderator") || User.IsInRole("admin") || User.IsInRole("courier"))
-                                {
-                                    @if (User.IsInRole("admin"))
-                                    {
-                                        <li><a class="dropdown-item" asp-controller="Roles" asp-action="Index">Управление ролями</a></li>
-                                    }
-                                    @if (User.IsInRole("moderator"))
-                                    {
-                                        <li><a class="dropdown-item" asp-controller="Courier" asp-action="Index">Все заказы</a></li>
-                                    }
-                                    @if (User.IsInRole("courier"))
-                                    {
-                                        <li><a class="dropdown-item" asp-controller="Courier" asp-action="CourierOrders">Мои заказы</a></li>
-                                    }
-                                    <li><hr class="dropdown-divider"></li>
-                                }
-                                <li><a class="dropdown-item" asp-controller="Account" asp-action="Logout">Выйти</a></li>
-                            </ul>
-                        </div>
-                    }
-                    else
-                    {
-                        <ul class="navbar-nav">
-                            <li class="nav-item active">
-                                <a class="nav-link ps-0" aria-current="page" asp-controller="Account" asp-action="Login">Войти</a>
-                            </li>
-                        </ul>
-                    }
-                </div>
-            </div>
-        </nav>
-    </header>
-    <script src="~/jquery/jquery.min.js"></script>
-    <script>
-        $(document).ready(function () {
-            function moveItem() {
-                $('div:not([id]):not([class])').each(function () {
-                    $(this).remove();
-                });
-
-                var string = '<!--SCRIPT GENERATED BY SERVER! PLEASE REMOVE--><div><span>Some Content</span></div><!-- some other comment -->';
-
-                var reg = /(\<!--SCRIPT GENERATED BY SERVER! PLEASE REMOVE-->.*?\<!--SCRIPT GENERATED BY SERVER! PLEASE REMOVE-->)/g;
-                string = string.replace(reg, "");
-            }
-            moveItem();
-            setTimeout(moveItem, 100);
-        });
-        var loggedIn = '@User.Identity.IsAuthenticated.ToString().ToLower()';
-    </script>
+    @await Html.PartialAsync("HeaderPartial")
     <div class="container" id="container">
         @RenderBody()
     </div>
-    <div id="cookie_notification">
-        <p class="text-dark abs">
-            Для улучшения работы сайта и его взаимодействия с пользователями мы используем файлы cookie.
-            Продолжая работу с сайтом, Вы разрешаете использование cookie-файлов. Вы всегда можете отключить файлы cookie в настройках Вашего браузера.
-        </p>
-        <button class="btn btn-info cookie_accept">Принять</button>
-    </div>
-    <footer id="footer">
-        <hr>
-        <p class="float-end mx-5"><a href="#">Подняться</a></p>
-        <p class="mx-5">© 2021 Company, Inc. · <a href="#">Конфендициальность</a> · <a href="#">Условия</a></p>
-    </footer>
-    <section class="exitblock">
-        <div class="fon"></div>
-        <div class="modaltext">
-            <div class="rating-area">
-                <input type="radio" id="star-5" name="rating" value="5">
-                <label for="star-5" title="Оценка «5»"></label>
-                <input type="radio" id="star-4" name="rating" value="4">
-                <label for="star-4" title="Оценка «4»"></label>
-                <input type="radio" id="star-3" name="rating" value="3">
-                <label for="star-3" title="Оценка «3»"></label>
-                <input type="radio" id="star-2" name="rating" value="2">
-                <label for="star-2" title="Оценка «2»"></label>
-                <input type="radio" id="star-1" name="rating" value="1">
-                <label for="star-1" title="Оценка «1»"></label>
-            </div>
-        </div>
-        <div class="closeblock">+</div>
-    </section>
-    <script src="~/js/modules/rating.js" asp-append-version="true"></script>
-    <script src="~/js/modules/search.js" asp-append-version="true"></script>
-    <script src="~/js/libraries/bootstrap.bundle.min.js" asp-append-version="true"></script>
-    <script src="~/js/modules/cookie.js" asp-append-version="true"></script>
+    @await Html.PartialAsync("CookieNotificationPartial")
+    @await Html.PartialAsync("FooterPartial")
+    @await Html.PartialAsync("RatingAreaPartial")
+    @await Html.PartialAsync("ScriptsPartial")
+    @await RenderSectionAsync("Scripts", false)
 </body>
 </html>

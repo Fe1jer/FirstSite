@@ -7,7 +7,6 @@ namespace WebApplication1.Data.Specifications
 {
     internal static class SpecificationEvaluator
     {
-
         internal static IQueryable<T> ApplySpecification<T>(IQueryable<T> baseQuery, ISpecification<T> specification) where T : Entity
         {
             var query = baseQuery;
@@ -20,11 +19,7 @@ namespace WebApplication1.Data.Specifications
             query = specification.Includes.Aggregate
                 (query, (current, include) => current.Include(include));
 
-            query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
-
-            query = specification.OrderByExpressions.Aggregate(query,
-                (current, expression) => current.OrderBy(expression));
-
+            var a = query.Expression.Type;
             if (specification.OrderByDescendingExpressions != null)
             {
                 var count = specification.OrderByDescendingExpressions.Count;
@@ -41,7 +36,24 @@ namespace WebApplication1.Data.Specifications
                     }
                 }
             }
+            if (specification.OrderByExpressions != null)
+            {
+                var count = specification.OrderByExpressions.Count;
 
+                for (int i = 0; i < count; ++i)
+                {
+                    if (query is IOrderedQueryable<T> orderedQuery)
+                    {
+                        query = orderedQuery.ThenBy(specification.OrderByExpressions[i]);
+                    }
+                    else
+                    {
+                        query = query.OrderBy(specification.OrderByExpressions[i]);
+                    }
+                }
+            }
+
+            query = specification.IncludeStrings.Aggregate(query, (current, include) => current.Include(include));
             query = specification.WhereExpressions.Aggregate(query,
                 (current, expression) => current.Where(expression));
 

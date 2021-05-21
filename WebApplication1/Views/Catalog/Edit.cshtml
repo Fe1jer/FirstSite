@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Изменение товара";
 }
-<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+}
 <section class="product-details mb-4 mt-2">
     <div class="container-fluid">
         <form asp-action="Edit" asp-route-id="@Model.Id" method="post">
@@ -126,7 +128,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                            <a class="btn btn-danger" asp-controller="Products" asp-action="DeleteProduct" asp-route-id="@Model.Id">Удалить</a>
+                            <a class="btn btn-danger" asp-controller="Catalog" asp-action="DeleteProduct" asp-route-id="@Model.Id">Удалить</a>
                         </div>
                     </div>
                 </div>

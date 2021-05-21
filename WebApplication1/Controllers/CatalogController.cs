@@ -11,12 +11,12 @@ using WebApplication1.ViewModels;
 
 namespace WebApplication1.Controlles
 {
-    public class ProductsController : Controller
+    public class CatalogController : Controller
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
 
-        public ProductsController(IProductRepository IProductRepository, IUserRepository IUserRepository)
+        public CatalogController(IProductRepository IProductRepository, IUserRepository IUserRepository)
         {
             _userRepository = IUserRepository;
             _productRepository = IProductRepository;
@@ -45,7 +45,7 @@ namespace WebApplication1.Controlles
             return View(model);
         }
 
-        [Route("Products/Edit"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/Edit"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Edit(int id)
         {
 
@@ -60,7 +60,7 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("Products/Edit")]
+        [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Edit")]
         public async Task<IActionResult> Edit(Product obj)
         {
             if (ModelState.IsValid)
@@ -73,7 +73,7 @@ namespace WebApplication1.Controlles
             return View(obj);
         }
 
-        [Route("Products/DeleteProduct"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/DeleteProduct"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
@@ -97,13 +97,13 @@ namespace WebApplication1.Controlles
             return RedirectToAction("Index");
         }
 
-        [Route("Products/Create"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/Create"), Authorize(Roles = "admin, moderator")]
         public IActionResult Create()
         {
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken, Route("Products/Create")]
+        [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Create")]
         public async Task<IActionResult> Create(Product obj)
         {
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
@@ -152,7 +152,7 @@ namespace WebApplication1.Controlles
             }
         }
 
-        [Route("Products/{name}")]
+        [Route("Catalog/{name}")]
         public async Task<IActionResult> Product(int id)
         {
             Product obj = await _productRepository.GetByIdAsync(id);
@@ -187,25 +187,13 @@ namespace WebApplication1.Controlles
         }
 
         [HttpPost]
-        [Route("Catalog/IndexAjax")]
-        public async Task<IActionResult> IndexAjax(List<string> filters)
-        {
-            var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance());
-            products = _productRepository.SortProducts(products.ToList(), filters);
-            List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
-
-            Thread.Sleep(1000);
-
-            return Json(showProducts);
-        }
-
-        [HttpPost]
         [Route("Catalog/SearchAjax")]
         public async Task<IActionResult> SearchAjax(string q, List<string> filters)
         {
             var products = await _productRepository.SearchProductsAsync(q);
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
+            Thread.Sleep(100);
 
             return Json(showProducts);
         }

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using AspNetCore.SEOHelper;
+using Microsoft.AspNetCore.Authentication.Cookies;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
@@ -28,37 +29,11 @@ namespace WebApplication1
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
+
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));
-
-            services.AddLocalization(options => options.ResourcesPath = "Resources");
-            services.AddControllersWithViews()
-                .AddDataAnnotationsLocalization()
-                .AddViewLocalization();
-
-            services.Configure<RequestLocalizationOptions>(options =>
-            {
-                var supportedCultures = new[]
-                {
-                    new CultureInfo("en"),
-                    new CultureInfo("de"),
-                    new CultureInfo("ru")
-                };
-
-                options.DefaultRequestCulture = new RequestCulture("ru");
-                options.SupportedCultures = supportedCultures;
-                options.SupportedUICultures = supportedCultures;
-            });
-
-            services.AddTransient<IProductRepository, ProductRepository>();
-            services.AddTransient<IOrdersRepository, OrdersRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
-            services.AddTransient<IShopCart, ShopCartRepository>();
-            services.AddTransient<IRoleRepository, RoleRepository>();
-            services.AddTransient<INewsRepository, NewsRepository>();
-            services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
-
+            AddLocalization(services);
+            AddTransients(services);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
-
             services.AddResponseCompression(options => options.EnableForHttps = true);
             services.Configure<BrotliCompressionProviderOptions>(options =>
             {
@@ -98,19 +73,50 @@ namespace WebApplication1
                     ctx.Context.Response.Headers.Add("Cache-Control", "public,max-age=604800");
                 }
             });
-
+            app.UseXMLSitemap(env.ContentRootPath);
             app.UseHttpsRedirection();
             //app.UseStatusCodePages();
             app.UseSession();
             app.UseAuthentication();
             app.UseAuthorization();
-
             //app.UseMvcWithDefaultRoute();
             app.UseMvc(routes =>
             {
                 routes.MapRoute(name: "admin", template: "{area:exists}/{controller=Home}/{action=Index}/{id?}");
                 routes.MapRoute(name: "default", template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        private static void AddLocalization(IServiceCollection services)
+        {
+            services.AddLocalization(options => options.ResourcesPath = "Resources");
+            services.AddControllersWithViews()
+                .AddDataAnnotationsLocalization()
+                .AddViewLocalization();
+
+            services.Configure<RequestLocalizationOptions>(options =>
+            {
+                var supportedCultures = new[]
+                {
+                    new CultureInfo("en"),
+                    new CultureInfo("de"),
+                    new CultureInfo("ru")
+                };
+
+                options.DefaultRequestCulture = new RequestCulture("ru");
+                options.SupportedCultures = supportedCultures;
+                options.SupportedUICultures = supportedCultures;
+            });
+        }
+        private static void AddTransients(IServiceCollection services)
+        {
+            services.AddTransient<IProductRepository, ProductRepository>();
+            services.AddTransient<IOrdersRepository, OrdersRepository>();
+            services.AddTransient<IUserRepository, UserRepository>();
+            services.AddTransient<IShopCart, ShopCartRepository>();
+            services.AddTransient<IRoleRepository, RoleRepository>();
+            services.AddTransient<INewsRepository, NewsRepository>();
+            services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
         }
     }
 }

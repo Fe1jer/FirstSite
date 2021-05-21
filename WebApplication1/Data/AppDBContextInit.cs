@@ -10,8 +10,8 @@ namespace WebApplication1.Data
         {
             //context.Database.EnsureDeleted();
             //context.Database.EnsureCreated();
-            /*            context.Order.RemoveRange(context.Order);
-                        context.OrderDetail.RemoveRange(context.OrderDetail);*/
+            /*context.Order.RemoveRange(context.Order);
+            context.OrderDetail.RemoveRange(context.OrderDetail);*/
             //context.SaveChanges();
 
             if (!await context.Roles.AnyAsync())

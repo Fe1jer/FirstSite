@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = Model.Product.Company + " " + Model.Product.Name;
 }
-<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+}
 <section class="product-details mt-2">
     <div class="container-fluid">
         <div class="row">
@@ -21,7 +23,7 @@
                 <ul class="long-desc">
                     @foreach (string item in Model.Product.LongDesc.Split("\n"))
                     {
-                    <li>@item</li>
+                        <li>@item</li>
                     }
                 </ul>
                 <form action="#">
@@ -84,4 +86,6 @@
         </div>
     </div>
 </section>
-<script src="~/js/modules/shopCart.js"></script>
+@section Scripts{
+    <script src="~/js/modules/shopCart.js"></script>
+}

@@ -85,6 +85,6 @@ function ShowProduct(item) {
 }
 
 function setProduct(id, name, company) {
-    $('#ProductHref').val('/Products/' + name.replace(/ /g, '-') + '?id=' + id);
+    $('#ProductHref').val('/Catalog/' + name.replace(/ /g, '-') + '?id=' + id);
     $('#selectedProduct').html  (company + ' ' + name);
 }

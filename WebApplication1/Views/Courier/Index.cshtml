@@ -6,17 +6,6 @@
 <main>
     @foreach (var order in Model)
     {
-        string style;
-        if (order.Courier != null)
-        {
-            style = "background-color: #E8E8E8";
-        }
-        else
-        {
-            style = "";
-        }
-        <div class="mt-2 mb-2 card px-3 py-2" style="@style">
-            @await Html.PartialAsync("CardOrder", order)
-        </div>
+        @await Html.PartialAsync("CardOrderPartial", order)
     }
 </main>

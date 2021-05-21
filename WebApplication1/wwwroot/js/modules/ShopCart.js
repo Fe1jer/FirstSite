@@ -75,6 +75,7 @@ function removeItemToCart(item, id, idParent) {
         url: '/ShopCart/RemoveToCart',
         data: { IdProduct: id },
         success: function (count) {
+            console.log($(item).parent(idParent))
             $(item).parent(idParent).remove();
             if (JSON.stringify(count) === '0') {
                 $('#shopCart').append(resultShopCartEmpty());

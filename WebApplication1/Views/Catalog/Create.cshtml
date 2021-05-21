@@ -2,7 +2,9 @@
 @{
     ViewData["Title"] = "Добавление товара";
 }
-<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+}
 <section class="product-details mb-4 mt-2">
     <div class="container-fluid">
         <form asp-action="Create" method="post">

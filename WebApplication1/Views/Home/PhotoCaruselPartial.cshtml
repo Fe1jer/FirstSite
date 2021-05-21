@@ -7,14 +7,7 @@
             string active;
             foreach (CaruselItem car in Model)
             {
-                if (i == 0)
-                {
-                    active = "active";
-                }
-                else
-                {
-                    active = "";
-                }
+                active = i == 0 ? "active" : "";
                 <li data-bs-target="#myCarousel" data-bs-slide-to=@i class="@active"></li>
                 i++;
             }
@@ -25,23 +18,8 @@
             i = 0;
             foreach (CaruselItem productImage in Model)
             {
-                if (i == 0)
-                {
-                    active = "active";
-                }
-                else
-                {
-                    active = "";
-                }
-                string href = "";
-                if (productImage.Href != null)
-                {
-                    href = productImage.Href;
-                }
-                else
-                {
-                    href = Url.Action("Details", "Home", new { id = productImage.Id, name = productImage.Name }, null);
-                }
+                active = i == 0 ? "active" : "";
+                string href = productImage.Href != null ? productImage.Href : href = Url.Action("Details", "Home", new { id = productImage.Id, name = productImage.Name }, null);
                 <div class="carousel-item @active">
                     <img src="@productImage.Img" alt="@productImage.Img" />
                     <div class="container">

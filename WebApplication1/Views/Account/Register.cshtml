@@ -2,53 +2,52 @@
 @{
     ViewData["Title"] = "Регистрация";
 }
-<html>
-<head>
+@section Css{
     <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
-</head>
-<body>
-    <main class="bg-white shadow">
-        <form asp-action="Register" method="post" class="justify-content-center form-horizontal row g-3">
-                <h1 class="text-center">Регистрация пользователя</h1>
-                <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
-                <div class="col-md-4 row g-3">
-                    <div class="col-md-12">
-                        <label asp-for="Email" class="form-label"></label><sup>*</sup>
-                        <input asp-for="Email" class="form-control" />
-                        <span asp-validation-for="Email" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-12">
-                        <label asp-for="Password" class="form-label"></label><sup>*</sup>
-                        <input asp-for="Password" class="form-control" />
-                        <span asp-validation-for="Password" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-12">
-                        <label asp-for="ConfirmPassword" class="form-label"></label><sup>*</sup>
-                        <input asp-for="ConfirmPassword" class="form-control" />
-                        <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
-                    </div>
+}
+<main class="bg-white shadow">
+    <form asp-action="Register" method="post" class="justify-content-center form-horizontal row g-3">
+        <h1 class="text-center">Регистрация пользователя</h1>
+        <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="col-md-4 row g-3">
+            <div class="col-md-12">
+                <label asp-for="Email" class="form-label"></label><sup>*</sup>
+                <input asp-for="Email" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="Password" class="form-label"></label><sup>*</sup>
+                <input asp-for="Password" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="ConfirmPassword" class="form-label"></label><sup>*</sup>
+                <input asp-for="ConfirmPassword" class="form-control" />
+                <span asp-validation-for="ConfirmPassword" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="col-md-4 offset-md-1 row g-3">
+            <div class="col-md-12">
+                <label asp-for="Name" class="form-label"></label><sup>*</sup>
+                <input asp-for="Name" class="form-control" />
+                <span asp-validation-for="Name" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="Gender" class="form-label"></label><sup>*</sup>
+                <div class="slider-radio elegant">
+                    <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
+                    <input asp-for="Gender" type="radio" id="None" checked value="None"><label for="None">None</label>
+                    <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
                 </div>
-                <div class="col-md-4 offset-md-1 row g-3">
-                    <div class="col-md-12">
-                        <label asp-for="Name" class="form-label"></label><sup>*</sup>
-                        <input asp-for="Name" class="form-control" />
-                        <span asp-validation-for="Name" class="text-danger"></span>
-                    </div>
-                    <div class="col-md-12">
-                        <label asp-for="Gender" class="form-label"></label><sup>*</sup>
-                        <div class="slider-radio elegant">
-                            <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
-                            <input asp-for="Gender" type="radio" id="None" checked value="None"><label for="None">None</label>
-                            <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
-                        </div>
-                        <span asp-validation-for="Gender" class="text-danger"></span>
-                    </div>
-                </div>
-                <div class="text-center">
-                    <button class="btn btn-primary btn-lg mb-4" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Зарегистрироваться</font></font></button>
-                </div>
-            <script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
-        </form>
-    </main>
-</body>
-</html>
+                <span asp-validation-for="Gender" class="text-danger"></span>
+            </div>
+        </div>
+        <div class="text-center">
+            <button class="btn btn-primary btn-lg mb-4" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Зарегистрироваться</font></font></button>
+        </div>
+    </form>
+</main>
+@section Scripts{
+    <script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
+}
+
