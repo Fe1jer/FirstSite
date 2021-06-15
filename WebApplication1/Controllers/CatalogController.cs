@@ -193,7 +193,6 @@ namespace WebApplication1.Controlles
             var products = await _productRepository.SearchProductsAsync(q);
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
-            Thread.Sleep(100);
 
             return Json(showProducts);
         }

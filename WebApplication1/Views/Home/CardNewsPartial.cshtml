@@ -14,7 +14,7 @@
     }
     <div class="card-img__news">
         <a class="img" href="@href">
-            <img src="@Model.Img" alt="@Model.Img" sizes=""/>
+            <img src="@Model.Img" alt="@Model.Img" height="170" width="480" sizes=""/>
         </a>
         @if (User.IsInRole("admin") || User.IsInRole("moderator"))
         {

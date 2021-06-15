@@ -119,7 +119,6 @@ function searchAjax(list) {
         xhr.abort();
     }
     searchName == undefined ? "" : searchName;
-    console.log(searchName)
     xhr = $.ajax({
         type: 'POST',
         url: '/Catalog/SearchAjax',
@@ -131,17 +130,7 @@ function searchAjax(list) {
             filters: list
         },
         success: function (result) {
-            $("#loaderDiv").hide();
-            $('#content').empty();
-            if (JSON.stringify(result) != '[]') {
-                $.each(result,
-                    function (num, item) {
-                        $('#content').append(ShowProduct(item, isAdminOrModer));
-                    });
-            }
-            else {
-                $('#content').append(resultProductsEmpty());
-            }
+            setTimeout(showContent, 100, result)
         },
         error: function (err) {
             if (err.statusText != 'abort') {
@@ -151,4 +140,18 @@ function searchAjax(list) {
             }
         }
     });
+}
+
+function showContent(result) {
+    $("#loaderDiv").hide();
+    $('#content').empty();
+    if (JSON.stringify(result) != '[]') {
+        $.each(result,
+            function (num, item) {
+                $('#content').append(ShowProduct(item, isAdminOrModer));
+            });
+    }
+    else {
+        $('#content').append(resultProductsEmpty());
+    }
 }
