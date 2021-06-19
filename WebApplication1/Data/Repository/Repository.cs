@@ -56,7 +56,7 @@ namespace WebApplication1.Data.Repository
 
         public async Task UpdateAsync(T entity)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            Context.Update(entity);
             await Context.SaveChangesAsync();
         }
 

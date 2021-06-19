@@ -7,7 +7,8 @@
         int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
         int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
         string name = Model.FilterSort[categoryId].Selections[filterId].Name;
-        <a class="schema-tags__item m-1" onclick="setbutton(this, @name.Replace(" ","_")), filterProducts()" title="Категория товара">
+        string id = "'" + item + "'";
+        <a class="schema-tags__item m-1" onclick="setbutton(this, @id), filterProducts()" title="Категория товара">
             <p class="navbar-nav schema-tags__text">@name</p>
         </a>
         counter++;

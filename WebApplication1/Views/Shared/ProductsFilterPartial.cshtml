@@ -38,7 +38,7 @@
             }
             string name = String.Format("{0}-{1}", category.ID, counter++);
             <label class="nav-link" style="padding: 3px 11px">
-                <input class="form-check-input" id="@selection.Name.Replace(" ","_")" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
+                <input class="form-check-input" id="@name" onclick="filterProducts()" type="checkbox" name="filters" value="@selection.Name"
                        @(i == selection.Name ? "checked" : "") />
                 <span>@selection.Name</span>
             </label>

@@ -1,0 +1,62 @@
+﻿@model ShowProductViewModel
+@{
+    ViewData["Title"] = Model.Product.Company + " " + Model.Product.Name;
+}
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/product.css" type="text/css" asp-append-version="true" />
+}
+<section class="product-details mt-2">
+    <div class="container-fluid">
+        <h1 class="product__title">@Model.Product.Category @Model.Product.Company @Model.Product.Name</h1>
+        <div class="row">
+            <div class="col-lg-6 product__slider">
+                <div class="slider-for">
+                    <img src="@Model.Product.Img" />
+                </div>
+                <div class="slider-nav slick-vertical">
+                    <div class="product__slider-item">
+                        <img src="@Model.Product.Img" />
+                    </div>
+                </div>
+            </div>
+            <div class="col-lg-6 product__desc">
+                <div class="title">Краткое описание</div>
+                <div class="desc">
+                    @Model.Product.ShortDesc
+                </div>
+                <div class="prices">
+                    <span>Цена</span>
+                    <p>
+                        @Model.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))
+                    </p>
+                </div>
+                <form action="#">
+                    @await Html.PartialAsync("ShopCartButtons", Model)
+                </form>
+            </div>
+        </div>
+        <section class="bg-light py-2 ">
+            <div class="main-options__title">
+                Основные характеристики
+            </div>
+            <div class="main-options__content row">
+                <div class="col-lg-8">
+                    @foreach (var att in Model.Product.ProductAttributes)
+                    {
+                        <div class="row m-0 py-2 attribute">
+                            <p class="col-sm-5">@att.AttributeCategory.Name</p>
+                            <p class="col-sm-5">@att.Value</p>
+                        </div>
+                    }
+                </div>
+                <div class="col-lg-4">
+                    sadAS
+                </div>
+            </div>
+        </section>
+    </div>
+</section>
+@section Scripts{
+    <script src="~/js/modules/shopCart.js"></script>
+}

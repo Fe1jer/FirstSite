@@ -89,29 +89,6 @@ var xhr;
     searchAjax();
 };*/
 
-function filterProducts() {
-    var ArrFiltersHref = [];
-    var list = [];
-    $('#filterHeader').empty();
-    $('.form-check-input:checked').each(function () {
-        ArrFiltersHref.push('&filters=' + $(this).val());
-        list.push($(this).val());
-        $('#filterHeader').append(showFilter($(this)));
-    });
-    if (window.location.pathname == '/Catalog') {
-        var filtersHref = '?' + ArrFiltersHref.join('').slice(1);
-        var winLocHref = window.location.href.split("?");
-        history.pushState(null, null, winLocHref[0] + ((filtersHref == "?") ? "" : filtersHref));
-    }
-    else {
-        var winLocHref = window.location.href.split("&");
-        history.pushState(null, null, winLocHref[0] + ArrFiltersHref.join(''));
-    }
-
-
-    searchAjax(list);
-};
-
 var searchName;
 
 function searchAjax(list) {
@@ -119,7 +96,6 @@ function searchAjax(list) {
         xhr.abort();
     }
     searchName == undefined ? "" : searchName;
-    console.log(searchName)
     xhr = $.ajax({
         type: 'POST',
         url: '/Catalog/SearchAjax',
@@ -150,5 +126,37 @@ function searchAjax(list) {
                 $('#content').append(productsErrorResult());
             }
         }
+    });
+}
+
+function addAttribute() {
+    var msg = '<div class="attribute">' +
+        '<p>' + $("#name_attribute").val() + '</p>' +
+        '<input type="text" class="attributesValue"  name="ProductAttributes[' + $('.attribute').length + '].Value" />' +
+        '<input type="hidden" class="categoryName" name="ProductAttributes[' + $('.attribute').length + '].AttributeCategory.Name" value="' + $("#name_attribute").val() + '" />' +
+        '<input type="button" id="delete_button_attribute" value="Удалить" />' +
+        '</div>';
+    return msg;
+}
+
+$(document).ready(function () {
+    $(document).on('click', '#delete_button_attribute', function () {
+        $(this).parent(".attribute").remove();
+        changingIndices();
+    });
+
+    $("#add_button_attribute").click(function () {
+        if ($("#name_attribute").val() != '') {
+            $('.div_product_attributes').append(addAttribute());
+        }
+        $("#name_attribute").val('');
+    });
+})
+
+function changingIndices() {
+    $('.attribute').each(function (i) {
+        $(this).children(".attributesValue").attr("name", "ProductAttributes[" + i + "].Value");
+        $(this).children(".categoryName").attr("name", "ProductAttributes[" + i + "].AttributeCategory.Name");
+        $(this).children(".attributesId").attr("name", "ProductAttributes[" + i + "].Id");
     });
 }

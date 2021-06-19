@@ -8,8 +8,7 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
-    <Content Remove="appsettings.json" />
+    <Content Remove="launchSettings.json" />
   </ItemGroup>
 
   <ItemGroup>

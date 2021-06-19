@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using WebApplication1.Data.AbstractClasses;
 
 namespace WebApplication1.Data.Models
@@ -45,5 +46,7 @@ namespace WebApplication1.Data.Models
         [Display(Name = "Наличие")]
         public bool Available { set; get; }
 
+        [Display(Name = "Характеристики")]
+        public List<ProductAttribute> ProductAttributes { set; get; }
     }
 }

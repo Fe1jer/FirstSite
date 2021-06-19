@@ -83,16 +83,14 @@ namespace WebApplication1.Controlles
             }
             await _productRepository.DeleteAsync(id);
 
-
-            var products = await _productRepository.GetAllAsync();
-            foreach (Product product in products)
-            {
-                if (product.Name == "Test")
-                {
-                    await _productRepository.DeleteAsync(product.Id);
-                }
-            }
-
+            /*            var products = await _productRepository.GetAllAsync();
+                        foreach (Product product in products)
+                        {
+                            if (product.Name == "Test")
+                            {
+                                await _productRepository.DeleteAsync(product.Id);
+                            }
+                        }*/
 
             return RedirectToAction("Index");
         }
@@ -112,26 +110,24 @@ namespace WebApplication1.Controlles
                 return RedirectToAction("Logout", "Account");
             }
 
-
-            Product product = new Product()
-            {
-                Name = "Test",
-                Available = false,
-                Category = "Test",
-                Company = "Test",
-                Country = "Test",
-                ShortDesc = "Test",
-                LongDesc = "Test",
-                IsFavourite = false,
-                Price = 0,
-                Img = "https://omoro.ru/wp-content/uploads/2018/08/syrikaty-2.jpg"
-            };
-            for (int i = 0; i <= 1000; i++)
-            {
-                product.Id = 0;
-                await _productRepository.AddProductAsync(product);
-            }
-
+            /*          Product product = new Product()
+                        {
+                            Name = "Test",
+                            Available = false,
+                            Category = "Test",
+                            Company = "Test",
+                            Country = "Test",
+                            ShortDesc = "Test",
+                            LongDesc = "Test",
+                            IsFavourite = false,
+                            Price = 0,
+                            Img = "https://omoro.ru/wp-content/uploads/2018/08/syrikaty-2.jpg"
+                        };
+                        for (int i = 0; i <= 1000; i++)
+                        {
+                            product.Id = 0;
+                            await _productRepository.AddProductAsync(product);
+                        }*/
 
             if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
@@ -153,7 +149,7 @@ namespace WebApplication1.Controlles
         }
 
         [Route("Catalog/{name}")]
-        public async Task<IActionResult> Product(int id)
+        public async Task<IActionResult> Product(int id, string name)
         {
             Product obj = await _productRepository.GetByIdAsync(id);
 
@@ -161,7 +157,7 @@ namespace WebApplication1.Controlles
             {
                 ShowProductViewModel showProducts = await _productRepository.FindProductInTheCart(obj, User.Identity.Name);
 
-                return View(showProducts);
+                return View("Test", showProducts);
             }
             else
             {

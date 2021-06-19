@@ -75,6 +75,15 @@
                             <span asp-validation-for="LongDesc" class="text-danger"></span>
                         </div>
                     </div>
+
+                    <div class="">
+                        <input type="text" id="name_attribute" />
+                        <input type="button" id="add_button_attribute" value="Добавить" />
+                    </div>
+                    <div class="div_product_attributes">
+
+                    </div>
+
                     <div class="row">
                         <div class="container">
                             <label asp-for="IsFavourite" class="form-label"></label>
@@ -112,3 +121,6 @@
         </form>
     </div>
 </section>
+@section Scripts{
+    <script src="~/js/modules/products.js"></script>
+}

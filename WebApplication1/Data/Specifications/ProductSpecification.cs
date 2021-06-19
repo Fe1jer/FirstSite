@@ -57,6 +57,11 @@ namespace WebApplication1.Data.Specifications
             return this;
         }
 
+        public ProductSpecification IncludeAttribute()
+        {
+            AddInclude("ProductAttributes.AttributeCategory");
+            return this;
+        }
         public ProductSpecification IncludeCategory()
         {
             AddInclude(product => product.Category);

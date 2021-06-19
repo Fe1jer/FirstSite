@@ -117,6 +117,8 @@ namespace WebApplication1
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
+            services.AddTransient<IAttributeCategoryRepository, AttributeCategoryRepository>();
+            services.AddTransient<IProductAttributeRepository, ProductAttributeRepository>();
         }
     }
 }
