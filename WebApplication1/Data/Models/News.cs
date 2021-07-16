@@ -1,7 +1,6 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
 using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Validation;
 
 namespace WebApplication1.Data.Models
 {

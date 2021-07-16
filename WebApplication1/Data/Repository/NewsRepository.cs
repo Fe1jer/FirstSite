@@ -89,7 +89,6 @@ namespace WebApplication1.Data.Repository
             {
                 news.Text = model.Text;
             }
-
             await AddAsync(news);
         }
 
@@ -110,7 +109,7 @@ namespace WebApplication1.Data.Repository
                 {
                     DeleteImg(news.FavImg);
                     news.FavImg = await CreateImg(model.FileFavImg);
-                }   
+                }
             }
             else
             {

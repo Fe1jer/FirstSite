@@ -85,10 +85,9 @@
                             {
                                 <div class="attribute">
                                     <p>@att.AttributeCategory.Name</p>
-                                    <input type="text" class="attributesValue" name="ProductAttributes[@i].Value" value="@(att.Value)"/>
-                                    <input type="hidden" class="categoryName" name="ProductAttributes[@i].AttributeCategory.Name" value="@(att.AttributeCategory.Name)" />
-                                    <input type="hidden" class="attributesId" name="ProductAttributes[@i].Id" value="@(att.Id)" />
-                                    <input type="hidden" class="attributesId" name="ProductAttributes[@i].ProductId" value="@(Model.Id)" />
+                                    <input type="text" class="attributesValue" asp-for="ProductAttributes[i].Value" />
+                                    <input type="hidden" class="categoryName" asp-for="ProductAttributes[i].AttributeCategory.Name" />
+                                    <input type="hidden" class="attributesId" asp-for="ProductAttributes[i].Id" />
                                     <input type="button" id="delete_button_attribute" value="Удалить" />
                                 </div>
                                 i++;

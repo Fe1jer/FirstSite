@@ -48,7 +48,6 @@ namespace WebApplication1.Controlles
         [Route("Catalog/Edit"), Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Edit(int id)
         {
-
             User user = await _userRepository.GetUserAsync(User.Identity.Name);
             if (user.Role.Name != "admin" && user.Role.Name != "moderator")
             {

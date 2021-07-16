@@ -7,10 +7,12 @@ namespace WebApplication1.Data.Specifications
 {
     public class ShopCartSpecification : Specification<ShopCartItem>
     {
-        public ShopCartSpecification() : base() {
+        public ShopCartSpecification() : base()
+        {
             AddInclude(shopCart => shopCart.Product);
         }
-        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression) {
+        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression)
+        {
             AddInclude(shopCart => shopCart.Product);
         }
 

@@ -114,7 +114,7 @@ namespace WebApplication1.Controllers
                 }
                 else if (user != null && HashingService.VerifyHashedPassword(user.Password, model.Password))
                 {
-                    await Authenticate(user); // аутентификация
+                    await Authenticate(user, model.RememberMe); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -167,8 +167,7 @@ namespace WebApplication1.Controllers
                         await model.Img.CopyToAsync(fileStream);
                     }
                     user.Img = path;
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    await Authenticate(user);
+                    await Authenticate(user, true);
                 }
                 user.Role = await _roles.GetByIdAsync(user.RoleId);
                 await _userRepository.UpdateAsync(user, model);
@@ -263,12 +262,12 @@ namespace WebApplication1.Controllers
             user.EmailConfirmed = true;
             user.LockoutEnd = null;
             await _userRepository.UpdateAsync(user);
-            await Authenticate(user);
+            await Authenticate(user, true);
             return RedirectToAction("Index", "Home");
         }
 
         [ValidateAntiForgeryToken]
-        private async Task Authenticate(User user)
+        private async Task Authenticate(User user, bool isRemember = false)
         {
             // создаем один claim
             var claims = new List<Claim>
@@ -278,10 +277,16 @@ namespace WebApplication1.Controllers
                 new Claim("Avatar", user.Img),
                 new Claim("Name", user.Name)
             };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "Cookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+            ClaimsIdentity id = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
             // установка аутентификационных куки
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(id),
+                new AuthenticationProperties
+                {
+                    IsPersistent = isRemember
+                });
         }
 
         public async Task<IActionResult> Logout()

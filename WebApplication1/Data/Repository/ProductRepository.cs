@@ -56,11 +56,12 @@ namespace WebApplication1.Data.Repository
 
                 for (int i = 0; i < product.ProductAttributes.Count; i++)
                 {
-                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.ProductAttributes[i].Id);
+                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.ProductAttributes[i]?.Id);
                     var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == product.ProductAttributes[i].AttributeCategory.Name);
 
-                    if(productAttribute != null)
+                    if (productAttribute != null)
                     {
+                        productAttribute.Value = product.ProductAttributes[i].Value;
                         product.ProductAttributes[i] = productAttribute;
                     }
                     if (attributeCategory != null)
