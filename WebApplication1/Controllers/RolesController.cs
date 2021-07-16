@@ -66,5 +66,17 @@ namespace WebApplication1.Controllers
 
             return NotFound();
         }
+
+        public async Task<IActionResult> Delete(int userId)
+        {
+            User user = await _userRepository.GetUserAsync(userId);
+            if (user != null)
+            {
+                await _userRepository.DeleteAsync(user);
+                return RedirectToAction("UserList");
+            }
+
+            return NotFound();
+        }
     }
 }

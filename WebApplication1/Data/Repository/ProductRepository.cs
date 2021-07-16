@@ -132,7 +132,7 @@ namespace WebApplication1.Data.Repository
                     { "Компания", Companies },
                     { "Страна производитель", Countries }
                 };
-            int categoryId = 1;
+            int categoryId = 0;
 
             foreach (KeyValuePair<string, IEnumerable<string>> item in filterCategory)
             {
@@ -142,8 +142,7 @@ namespace WebApplication1.Data.Repository
                     Name = item.Key,
                     Selections = new List<FilterSelectionVM>()
                 };
-
-                int selectionId = 1;
+                int selectionId = 0;
 
                 foreach (string i in item.Value)
                 {
@@ -172,8 +171,8 @@ namespace WebApplication1.Data.Repository
             {
                 if (item != null)
                 {
-                    categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
-                    filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
+                    categoryId = Convert.ToInt32(item.Split('-')[0]);
+                    filterId = Convert.ToInt32(item.Split('-')[1]);
                     string i = filterCategories[categoryId].Selections[filterId].Name;
                     if (categoryId == 0)
                     {

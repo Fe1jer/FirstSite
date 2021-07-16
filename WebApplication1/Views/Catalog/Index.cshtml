@@ -44,9 +44,9 @@
 </div>
 @section Scripts{
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" async></script>
-    <script src="~/js/modules/checkboxFilter.js"></script>
-    <script src="~/js/modules/products.js"></script>
-    <script src="~/js/modules/shopCart.js"></script>
+    <script src="~/js/modules/checkboxFilter.js" asp-append-version="true"></script>
+    <script src="~/js/modules/products.js" asp-append-version="true"></script>
+    <script src="~/js/modules/shopCart.js" asp-append-version="true"></script>
     <script>
             var isAdminOrModer = '@(User.IsInRole("admin") || User.IsInRole("moderator"))';
     </script>

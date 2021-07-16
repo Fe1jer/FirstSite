@@ -14,5 +14,10 @@ namespace WebApplication1.Controllers
             }
             return View();
         }
+        [Route("/Error/535")]
+        public IActionResult SenderMailError()
+        {
+            return View();
+        }
     }
 }

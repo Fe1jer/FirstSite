@@ -30,6 +30,24 @@ function filterProducts() {
         var winLocHref = window.location.href.split("&");
         history.pushState(null, null, winLocHref[0] + ArrFiltersHref.join(''));
     }
-
     searchAjax(list);
 };
+
+window.onpopstate = history.onpushstate = function (e) {
+    var list = getFilterFromUrl();
+    searchAjax(list);
+}
+
+function getFilterFromUrl() {
+    var list = window.location.search.replace(/\?/g, '').replace(/filters=/g, '').split("&").filter(Boolean);
+    $('#filterHeader').empty();
+    $('.form-check-input:checked').each(function () {
+        console.log(this);
+        this.checked = false;
+    });
+    $(list).each(function () {
+        $('#filterHeader').append(showFilter($(document.getElementById(this))));
+        document.getElementById(this).checked = true;
+    });
+    return list;
+}

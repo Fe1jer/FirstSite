@@ -64,6 +64,11 @@ namespace WebApplication1
                     context.Request.Path = "/Error/404";
                     await next();
                 }
+                if (context.Response.StatusCode == 535)
+                {
+                    context.Request.Path = "/Error/535";
+                    await next();
+                }
             });
             app.UseResponseCompression();
             app.UseStaticFiles(new StaticFileOptions()

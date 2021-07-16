@@ -63,9 +63,16 @@ namespace WebApplication1.Controllers
                     await _userRepository.AddAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Регистрация",
-                        $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    try
+                    {
+                        EmailService emailService = new EmailService();
+                        await emailService.SendEmailAsync(model.Email, "Регистрация",
+                            $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    }
+                    catch
+                    {
+                        return RedirectToAction("SenderMailError", "Error");
+                    }
 
                     return View("RegisterConfirmation");
                 }
@@ -210,9 +217,17 @@ namespace WebApplication1.Controllers
                     await _userRepository.UpdateAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Сброс пароля",
-                        $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    try
+                    {
+                        EmailService emailService = new EmailService();
+                        await emailService.SendEmailAsync(model.Email, "Сброс пароля",
+                            $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    }
+                    catch
+                    {
+                        return RedirectToAction("SenderMailError", "Error");
+                    }
+
                     return View("ForgotPasswordConfirmation");
                 }
             }
