@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq.Expressions;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Specifications
+namespace InternetShop.Data.Specifications
 {
     public class ProductSpecification : Specification<Product>
     {

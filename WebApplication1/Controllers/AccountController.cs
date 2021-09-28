@@ -10,12 +10,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Services;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Services;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     public class AccountController : Controller
     {
@@ -47,7 +47,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 User user = await _userRepository.GetUserAsync(model.Email);
-
+                
                 if (user == null)
                 {
                     // добавляем пользователя в бд

@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.IO;
-using WebApplication1.ViewModels;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Validation
+namespace InternetShop.Validation
 {
     public class ChangeNewsEqualAttribute : ValidationAttribute
     {
@@ -32,14 +32,7 @@ namespace WebApplication1.Validation
 
         public bool ThereImg(string path)
         {
-            if (File.Exists($"wwwroot{path}"))
-            {
-                return true;
-            }
-            else
-            {
-                return false;
-            }
+            return File.Exists($"wwwroot{path}");
         }
     }
 }

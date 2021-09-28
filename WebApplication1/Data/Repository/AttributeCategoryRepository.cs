@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
 
-namespace WebApplication1.Data.Repository
+namespace InternetShop.Data.Repository
 {
     public class AttributeCategoryRepository : Repository<AttributeCategory>, IAttributeCategoryRepository
     {

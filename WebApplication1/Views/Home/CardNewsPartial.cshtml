@@ -14,7 +14,11 @@
     }
     <div class="card-img__news">
         <a class="img" href="@href">
-            <img src="@Model.Img" alt="@Model.Img" sizes=""/>
+            @{
+                string[] pathname = Model.Img.Split('.');
+                Model.Img = pathname[0] + "_320x170." + pathname[1];
+            }
+            <img src="@Model.Img" loading="lazy" alt="@Model.Img" sizes="" />
         </a>
         @if (User.IsInRole("admin") || User.IsInRole("moderator"))
         {

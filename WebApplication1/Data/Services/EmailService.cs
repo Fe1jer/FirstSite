@@ -2,7 +2,7 @@
 using MimeKit;
 using System.Threading.Tasks;
 
-namespace WebApplication1.Data.Services
+namespace InternetShop.Data.Services
 {
     public class EmailService
     {

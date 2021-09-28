@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace WebApplication1.Data.Specifications.Base
+namespace InternetShop.Data.Specifications.Base
 {
     public abstract class Specification<T> : ISpecification<T>
     {

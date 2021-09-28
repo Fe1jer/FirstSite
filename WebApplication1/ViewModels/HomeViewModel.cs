@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.ViewModels
+﻿namespace InternetShop.ViewModels
 {
     public class HomeViewModel
     {

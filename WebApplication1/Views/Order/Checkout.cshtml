@@ -2,6 +2,9 @@
 @{
     ViewData["Title"] = "Оформление заказа";
 }
+@section Css{
+    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+    }
 <main>
     <div class="row g-3 mt-0">
         <div class="col-md-5 col-lg-4 order-md-last">
@@ -115,41 +118,42 @@
                         <label class="form-check-label" for="paypal"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">PayPal</font></font></label>
                     </div>
                 </div>
+                <div style="position: relative">
+                    <div class="row gy-3 ">
+                        <div class="col-md-6">
+                            <label asp-for="Order.CCName" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Order.CCName" class="form-control" />
+                                <span asp-validation-for="Order.CCName" class="text-danger"></span>
+                            </div>
+                        </div>
 
-                <div class="row gy-3">
-                    <div class="col-md-6">
-                        <label asp-for="Order.CCName" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Order.CCName" class="form-control" />
-                            <span asp-validation-for="Order.CCName" class="text-danger"></span>
+                        <div class="col-md-6">
+                            <label asp-for="Order.CCNumber" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Order.CCNumber" class="form-control" />
+                                <span asp-validation-for="Order.CCNumber" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="Order.CCExpiration" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Order.CCExpiration" class="form-control" />
+                                <span asp-validation-for="Order.CCExpiration" class="text-danger"></span>
+                            </div>
+                        </div>
+
+                        <div class="col-md-3">
+                            <label asp-for="Order.CCCVV" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Order.CCCVV" class="form-control" />
+                                <span asp-validation-for="Order.CCCVV" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-
-                    <div class="col-md-6">
-                        <label asp-for="Order.CCNumber" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Order.CCNumber" class="form-control" />
-                            <span asp-validation-for="Order.CCNumber" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="Order.CCExpiration" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Order.CCExpiration" class="form-control" />
-                            <span asp-validation-for="Order.CCExpiration" class="text-danger"></span>
-                        </div>
-                    </div>
-
-                    <div class="col-md-3">
-                        <label asp-for="Order.CCCVV" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Order.CCCVV" class="form-control" />
-                            <span asp-validation-for="Order.CCCVV" class="text-danger"></span>
-                        </div>
-                    </div>
+                    <div class="loading"></div>
                 </div>
-
                 <hr class="my-4">
 
                 <button class="w-100 btn btn-primary btn-lg" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Продолжить оформление заказа</font></font></button>

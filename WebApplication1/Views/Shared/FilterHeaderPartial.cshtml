@@ -4,8 +4,8 @@
     int counter = 1;
     foreach (string item in Model?.Filter)
     {
-        int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
-        int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
+        int categoryId = Convert.ToInt32(item.Split('-')[0]);
+        int filterId = Convert.ToInt32(item.Split('-')[1]);
         string name = Model.FilterSort[categoryId].Selections[filterId].Name;
         string id = "'" + item + "'";
         <a class="schema-tags__item m-1" onclick="setbutton(this, @id), filterProducts()" title="Категория товара">

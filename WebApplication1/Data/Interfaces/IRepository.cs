@@ -2,10 +2,10 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.AbstractClasses;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Interfaces
+namespace InternetShop.Data.Interfaces
 {
     public interface IRepository<T> where T : Entity
     {

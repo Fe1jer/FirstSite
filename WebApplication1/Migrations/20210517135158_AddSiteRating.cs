@@ -1,6 +1,6 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 
-namespace WebApplication1.Migrations
+namespace InternetShop.Migrations
 {
     public partial class AddSiteRating : Migration
     {

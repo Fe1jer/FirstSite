@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore;
-using WebApplication1.Data.Models;
+using InternetShop.Data.Models;
 
-namespace WebApplication1.Data
+namespace InternetShop.Data
 {
     public class AppDBContext : DbContext
     {

@@ -21,7 +21,7 @@
                 active = i == 0 ? "active" : "";
                 string href = productImage.Href != null ? productImage.Href : href = Url.Action("Details", "Home", new { id = productImage.Id, name = productImage.Name }, null);
                 <div class="carousel-item @active">
-                    <img src="@productImage.Img" alt="@productImage.Img" />
+                    <img src="@productImage.Img" loading="lazy" alt="@productImage.Img" />
                     <div class="container">
                         <div class="carousel-caption">
                             <h1>@productImage.Name</h1>

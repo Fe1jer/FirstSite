@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     [Authorize(Roles = "admin")]
     public class RolesController : Controller

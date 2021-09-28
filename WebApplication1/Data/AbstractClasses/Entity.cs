@@ -1,4 +1,4 @@
-﻿namespace WebApplication1.Data.AbstractClasses
+﻿namespace InternetShop.Data.AbstractClasses
 {
     public abstract class Entity
     {

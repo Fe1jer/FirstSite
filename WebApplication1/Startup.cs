@@ -11,11 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.IO.Compression;
-using WebApplication1.Data;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Repository;
+using InternetShop.Data;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Repository;
 
-namespace WebApplication1
+namespace InternetShop
 {
     public class Startup
     {

@@ -1,7 +1,7 @@
 ﻿using System.Collections.Generic;
-using WebApplication1.Data.Models;
+using InternetShop.Data.Models;
 
-namespace WebApplication1.ViewModels
+namespace InternetShop.ViewModels
 {
     public class OrderViewModel
     {

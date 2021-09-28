@@ -1,23 +1,24 @@
 ﻿using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using System.Collections.Generic;
-using System.IO;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.Data.Specifications.Base;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Services;
+using InternetShop.Data.Specifications;
+using InternetShop.Data.Specifications.Base;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Data.Repository
+namespace InternetShop.Data.Repository
 {
     public class NewsRepository : Repository<News>, INewsRepository
     {
-        private readonly IWebHostEnvironment _appEnvironment;
+        private readonly string Path;
+        readonly FileService FileService;
 
-        public NewsRepository(AppDBContext appDBContext, IWebHostEnvironment appEnvironment) : base(appDBContext)
+        public NewsRepository(AppDBContext appDBContext) : base(appDBContext)
         {
-            _appEnvironment = appEnvironment;
+            Path = "\\img\\news\\";
+            FileService = new FileService();
         }
 
         public new async Task<IReadOnlyList<News>> GetAllAsync()
@@ -59,7 +60,16 @@ namespace WebApplication1.Data.Repository
         public async Task DeleteAsync(int id)
         {
             News news = await GetByIdAsync(id);
+
             await DeleteAsync(news);
+            if (news.Img != null)
+            {
+                FileService.DeleteFile(news.Img);
+            }
+            if (news.FavImg != null)
+            {
+                FileService.DeleteFile(news.FavImg);
+            }
         }
 
         public new async Task AddAsync(News news)
@@ -69,17 +79,18 @@ namespace WebApplication1.Data.Repository
 
         public async Task CreateAsync(CreateNewsViewModel model)
         {
+            string path = Path + model.Name.Replace(" ", "_") + "\\";
             News news = new News()
             {
                 Name = model.Name,
                 CreateData = model.CreateData,
-                Img = await CreateImg(model.Img),
+                Img = FileService.UploadFile(model.Img, path + model.Img.FileName),
                 Desc = model.Desc
             };
-
+            FileService.ResizeAndCrop(news.Img, 320, 170);
             if (model.IsCaruselNews == true)
             {
-                news.FavImg = await CreateImg(model.FavImg);
+                news.FavImg = FileService.UploadFile(model.FavImg, path + model.FavImg.FileName);
             }
             if (model.IsProductHref == true)
             {
@@ -95,20 +106,22 @@ namespace WebApplication1.Data.Repository
         public async Task UpdateAsync(ChangeNewsViewModel model)
         {
             News news = await GetByIdAsync(model.Id);
+            string path = Path + model.Name.Replace(" ","_") + "\\";
 
             news.Name = model.Name;
             if (model.FileImg != null)
             {
-                DeleteImg(news.Img);
-                news.Img = await CreateImg(model.FileImg);
+                FileService.DeleteFile(news.Img);
+                news.Img = FileService.UploadFile(model.FileImg, path + model.FileImg.FileName);
+                FileService.ResizeAndCrop(news.Img, 320, 170);
             }
             news.Desc = model.Desc;
             if (model.IsCaruselNews == true)
             {
                 if (model.FileFavImg != null)
                 {
-                    DeleteImg(news.FavImg);
-                    news.FavImg = await CreateImg(model.FileFavImg);
+                    FileService.DeleteFile(news.FavImg);
+                    news.FavImg = FileService.UploadFile(model.FileFavImg, path + model.FileFavImg.FileName);
                 }
             }
             else
@@ -127,27 +140,6 @@ namespace WebApplication1.Data.Repository
             }
 
             await UpdateAsync(news);
-        }
-
-        private async Task<string> CreateImg(IFormFile img)
-        {
-            // путь к папке Files
-            string path = "/img/news/" + img.FileName;
-            // сохраняем файл в папку Files в каталоге wwwroot
-            using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
-            {
-                await img.CopyToAsync(fileStream);
-            }
-
-            return path;
-        }
-
-        private void DeleteImg(string path)
-        {
-            if (File.Exists($"wwwroot{path}") && path != null)
-            {
-                File.Delete($"wwwroot{path}");
-            }
         }
     }
 }

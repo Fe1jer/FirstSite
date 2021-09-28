@@ -1,5 +1,5 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebApplication1.ViewModels;
+using InternetShop.ViewModels;
 
 public class NamePasswordEqualAttribute : ValidationAttribute
 {

@@ -3,7 +3,7 @@ using System;
 using System.ComponentModel.DataAnnotations;
 using System.Linq;
 
-namespace WebApplication1.Validation
+namespace InternetShop.Validation
 {
     public class ValidateImg : ValidationAttribute
     {

@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Security.Cryptography;
 
-namespace WebApplication1.Data.Services
+namespace InternetShop.Data.Services
 {
     public class HashingService
     {
