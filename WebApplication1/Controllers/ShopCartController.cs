@@ -1,11 +1,11 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     [Authorize]
     public class ShopCartController : Controller

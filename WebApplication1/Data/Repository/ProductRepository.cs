@@ -2,26 +2,30 @@
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.Data.Specifications.Base;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
+using InternetShop.Data.Specifications.Base;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Data.Repository
+namespace InternetShop.Data.Repository
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
         private readonly IShopCart _shopCart;
+        private readonly IAttributeCategoryRepository _attributeCategory;
+        private readonly IProductAttributeRepository _productAttribute;
 
-        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart) : base(appDBContext)
+        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IAttributeCategoryRepository attributeCategory, IProductAttributeRepository productAttribute) : base(appDBContext)
         {
+            _productAttribute = productAttribute;
+            _attributeCategory = attributeCategory;
             _shopCart = shopCart;
         }
 
         public new async Task<IReadOnlyList<Product>> GetAllAsync()
         {
-            return await base.GetAllAsync();
+            return await base.GetAllAsync(new ProductSpecification().IncludeAttribute());
         }
 
         public new async Task<IReadOnlyList<Product>> GetAllAsync(ISpecification<Product> specification)
@@ -31,7 +35,8 @@ namespace WebApplication1.Data.Repository
 
         public new async Task<Product> GetByIdAsync(int productId)
         {
-            return await base.GetByIdAsync(productId);
+            var products = await GetAllAsync();
+            return products.FirstOrDefault(u => u.Id == productId);
         }
 
         public async Task DeleteAsync(int id)
@@ -42,19 +47,48 @@ namespace WebApplication1.Data.Repository
 
         public new async Task UpdateAsync(Product product)
         {
+            var productAttributes = await _productAttribute.GetAllAsync(new ProductAttributeSpecification().WhereProductId(product.Id));
+            List<ProductAttribute> notProductAttributes;
+
+            if (product.ProductAttributes != null)
+            {
+                var attributeCategories = await _attributeCategory.GetAllAsync();
+
+                for (int i = 0; i < product.ProductAttributes.Count; i++)
+                {
+                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.ProductAttributes[i]?.Id);
+                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == product.ProductAttributes[i].AttributeCategory.Name);
+
+                    if (productAttribute != null)
+                    {
+                        productAttribute.Value = product.ProductAttributes[i].Value;
+                        product.ProductAttributes[i] = productAttribute;
+                    }
+                    if (attributeCategory != null)
+                    {
+                        product.ProductAttributes[i].AttributeCategory = attributeCategory;
+                    }
+                }
+                notProductAttributes = productAttributes.Where(p => !product.ProductAttributes.Select(p => p?.Id).Contains(p?.Id)).ToList();
+            }
+            else
+            {
+                notProductAttributes = productAttributes.ToList();
+            }
+            await _productAttribute.DeleteListAsync(notProductAttributes);
             await base.UpdateAsync(product);
         }
 
         public async Task<Product> GetByNameAsync(string name)
         {
-            var collection = await base.GetAllAsync();
+            var collection = await GetAllAsync();
 
             return collection.FirstOrDefault(n => n.Name.Equals(name));
         }
 
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
         {
-            var products = await base.GetAllAsync(new ProductSpecification().SortByRelevance());
+            var products = await GetAllAsync(new ProductSpecification().SortByRelevance());
             if (searchText != null)
             {
                 List<string> searchWords = searchText.Split(" ").ToList();
@@ -70,6 +104,18 @@ namespace WebApplication1.Data.Repository
 
         public async Task AddProductAsync(Product product)
         {
+            if (product.ProductAttributes != null)
+            {
+                var attributeCategories = await _attributeCategory.GetAllAsync();
+                foreach (var attribute in product.ProductAttributes)
+                {
+                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == attribute.AttributeCategory.Name);
+                    if (attributeCategory != null)
+                    {
+                        attribute.AttributeCategory = attributeCategory;
+                    }
+                }
+            }
             await AddAsync(product);
         }
 
@@ -86,7 +132,7 @@ namespace WebApplication1.Data.Repository
                     { "Компания", Companies },
                     { "Страна производитель", Countries }
                 };
-            int categoryId = 1;
+            int categoryId = 0;
 
             foreach (KeyValuePair<string, IEnumerable<string>> item in filterCategory)
             {
@@ -96,8 +142,7 @@ namespace WebApplication1.Data.Repository
                     Name = item.Key,
                     Selections = new List<FilterSelectionVM>()
                 };
-
-                int selectionId = 1;
+                int selectionId = 0;
 
                 foreach (string i in item.Value)
                 {
@@ -126,8 +171,8 @@ namespace WebApplication1.Data.Repository
             {
                 if (item != null)
                 {
-                    categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
-                    filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
+                    categoryId = Convert.ToInt32(item.Split('-')[0]);
+                    filterId = Convert.ToInt32(item.Split('-')[1]);
                     string i = filterCategories[categoryId].Selections[filterId].Name;
                     if (categoryId == 0)
                     {

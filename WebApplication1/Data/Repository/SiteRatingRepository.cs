@@ -1,13 +1,11 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Repository
+namespace InternetShop.Data.Repository
 {
     public class SiteRatingRepository : Repository<SiteRating>, ISiteRatingRepository
     {

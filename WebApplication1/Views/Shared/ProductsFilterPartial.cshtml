@@ -19,30 +19,22 @@
     @foreach (var category in Model?.FilterSort)
     {
         <hr />
-        int counter = 1;
         <b class="px-2">@category.Name</b>
         foreach (var selection in category?.Selections)
         {
-            string i = null;
+            string filterId = null;
+            string inputId = String.Format("{0}-{1}", category.ID, selection.ID);
 
-            foreach (string item in Model?.Filter)
+            filterId = Model.Filter.FirstOrDefault();
+            if (filterId == inputId)
             {
-                int categoryId = Convert.ToInt32(item.Split('-')[0]) - 1;
-                int filterId = Convert.ToInt32(item.Split('-')[1]) - 1;
-                i = Model.FilterSort[categoryId].Selections[filterId].Name;
-                Model.Filter.Remove(i);
-                if (selection.Name == i)
-                {
-                    break;
-                }
+                Model.Filter.Remove(filterId);
             }
-            string name = String.Format("{0}-{1}", category.ID, counter++);
             <label class="nav-link" style="padding: 3px 11px">
-                <input class="form-check-input" id="@selection.Name.Replace(" ","_")" onclick="filterProducts()" type="checkbox" name="filters" value="@name"
-                       @(i == selection.Name ? "checked" : "") />
+                <input class="form-check-input" id="@inputId" onclick="filterProducts()" type="checkbox" name="filters" value="@selection.Name"
+                       @(filterId == inputId ? "checked" : "") />
                 <span>@selection.Name</span>
             </label>
         }
     }
-
 </div>

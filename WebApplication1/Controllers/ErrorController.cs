@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Mvc;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     public class ErrorController : Controller
     {
@@ -12,6 +12,11 @@ namespace WebApplication1.Controllers
             {
                 originalPath = HttpContext.Items["originalPath"] as string;
             }
+            return View();
+        }
+        [Route("/Error/535")]
+        public IActionResult SenderMailError()
+        {
             return View();
         }
     }

@@ -4,9 +4,9 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
-using WebApplication1.Data;
+using InternetShop.Data;
 
-namespace WebApplication1.Migrations
+namespace InternetShop.Migrations
 {
     [DbContext(typeof(AppDBContext))]
     partial class AppDBContextModelSnapshot : ModelSnapshot
@@ -18,6 +18,21 @@ namespace WebApplication1.Migrations
                 .HasAnnotation("Relational:MaxIdentifierLength", 128)
                 .HasAnnotation("ProductVersion", "5.0.4")
                 .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+            modelBuilder.Entity("WebApplication1.Data.Models.AttributeCategory", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<string>("Name")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.ToTable("AttributeCategory");
+                });
 
             modelBuilder.Entity("WebApplication1.Data.Models.News", b =>
                 {
@@ -205,6 +220,31 @@ namespace WebApplication1.Migrations
                     b.ToTable("Product");
                 });
 
+            modelBuilder.Entity("WebApplication1.Data.Models.ProductAttribute", b =>
+                {
+                    b.Property<int>("Id")
+                        .ValueGeneratedOnAdd()
+                        .HasColumnType("int")
+                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
+
+                    b.Property<int?>("AttributeCategoryId")
+                        .HasColumnType("int");
+
+                    b.Property<int?>("ProductId")
+                        .HasColumnType("int");
+
+                    b.Property<string>("Value")
+                        .HasColumnType("nvarchar(max)");
+
+                    b.HasKey("Id");
+
+                    b.HasIndex("AttributeCategoryId");
+
+                    b.HasIndex("ProductId");
+
+                    b.ToTable("ProductAttribute");
+                });
+
             modelBuilder.Entity("WebApplication1.Data.Models.Role", b =>
                 {
                     b.Property<int>("Id")
@@ -348,6 +388,19 @@ namespace WebApplication1.Migrations
                     b.Navigation("Product");
                 });
 
+            modelBuilder.Entity("WebApplication1.Data.Models.ProductAttribute", b =>
+                {
+                    b.HasOne("WebApplication1.Data.Models.AttributeCategory", "AttributeCategory")
+                        .WithMany()
+                        .HasForeignKey("AttributeCategoryId");
+
+                    b.HasOne("WebApplication1.Data.Models.Product", null)
+                        .WithMany("ProductAttributes")
+                        .HasForeignKey("ProductId");
+
+                    b.Navigation("AttributeCategory");
+                });
+
             modelBuilder.Entity("WebApplication1.Data.Models.ShopCartItem", b =>
                 {
                     b.HasOne("WebApplication1.Data.Models.Product", "Product")
@@ -386,6 +439,11 @@ namespace WebApplication1.Migrations
             modelBuilder.Entity("WebApplication1.Data.Models.Order", b =>
                 {
                     b.Navigation("OrderDetails");
+                });
+
+            modelBuilder.Entity("WebApplication1.Data.Models.Product", b =>
+                {
+                    b.Navigation("ProductAttributes");
                 });
 #pragma warning restore 612, 618
         }

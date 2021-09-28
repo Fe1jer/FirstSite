@@ -4,12 +4,12 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Linq.Expressions;
 using System.Threading.Tasks;
-using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Specifications;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.AbstractClasses;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Specifications;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Repository
+namespace InternetShop.Data.Repository
 {
     public class Repository<T> : IRepository<T> where T : Entity
     {
@@ -56,7 +56,7 @@ namespace WebApplication1.Data.Repository
 
         public async Task UpdateAsync(T entity)
         {
-            Context.Entry(entity).State = EntityState.Modified;
+            EntitySet.Update(entity);
             await Context.SaveChangesAsync();
         }
 

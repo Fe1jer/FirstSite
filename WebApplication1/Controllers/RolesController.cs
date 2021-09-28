@@ -2,12 +2,12 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
@@ -61,6 +61,18 @@ namespace WebApplication1.Controllers
                 user.Role = role;
                 await _userRepository.UpdateAsync(user);
 
+                return RedirectToAction("UserList");
+            }
+
+            return NotFound();
+        }
+
+        public async Task<IActionResult> Delete(int userId)
+        {
+            User user = await _userRepository.GetUserAsync(userId);
+            if (user != null)
+            {
+                await _userRepository.DeleteAsync(user);
                 return RedirectToAction("UserList");
             }
 

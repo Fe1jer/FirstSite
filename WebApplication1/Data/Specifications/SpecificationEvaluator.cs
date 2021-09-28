@@ -1,9 +1,9 @@
 ﻿using Microsoft.EntityFrameworkCore;
 using System.Linq;
-using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.AbstractClasses;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Specifications
+namespace InternetShop.Data.Specifications
 {
     internal static class SpecificationEvaluator
     {

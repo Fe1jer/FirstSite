@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq.Expressions;
 
-namespace WebApplication1.Data.Specifications.Base
+namespace InternetShop.Data.Specifications.Base
 {
     public interface ISpecification<T>
     {

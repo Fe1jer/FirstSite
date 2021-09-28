@@ -1,0 +1,256 @@
+﻿.loading {
+    position: absolute;
+    top: 0;
+    bottom: 0;
+    right: 0;
+    left: 0;
+    background: rgba(244,244,244,.6);
+    display: flex;
+    justify-content: center;
+    align-items: center;
+}
+
+.isDisabled {
+    cursor: not-allowed;
+    opacity: 0.5;
+    display: inline-block; /* For IE11/ MS Edge bug */
+    pointer-events: none;
+    text-decoration: none;
+}
+
+li.toc-entry a {
+    display: block;
+    padding: .300rem .5rem;
+    color: #77757a;
+}
+
+.card-image {
+    width: 318px;
+    height: 220px;
+    object-fit: contain;
+}
+
+.img_wrap {
+    width: 177%;
+    height: 100%;
+    overflow: hidden;
+    border-style: solid;
+}
+
+textarea {
+    padding: 10px; /* Поля */
+    width: 100%; /* Ширина */
+    height: 200px; /* Высота */
+    box-sizing: border-box; /* Алгоритм расчёта ширины */
+    font-size: 14px; /* Размер шрифта */
+}
+
+h6 {
+    word-wrap: break-word; /* old name */
+    overflow-wrap: break-word;
+    white-space: pre-wrap;
+}
+
+.multiple-items .row {
+    --bs-gutter-x: 0.6rem;
+}
+
+button.position-right {
+    float: right
+}
+
+.i {
+    width: 29px;
+    height: 29px;
+    color: #007bff;
+    display: inline-block;
+    vertical-align: bottom;
+}
+
+#l0_b1 {
+    display: block;
+    float: left;
+}
+
+a {
+    color: #007bff;
+    text-decoration: none;
+    background-color: transparent;
+    padding-left: 0
+}
+
+#myInput:focus {
+    outline: 3px solid #ddd;
+}
+
+.dropdown {
+    position: relative;
+    display: inline-block;
+}
+
+.dropdown-content {
+    display: none;
+    position: absolute;
+    background-color: #f6f6f6;
+    min-width: 230px;
+    overflow: auto;
+    border: 1px solid #ddd;
+    z-index: 1;
+}
+
+    .dropdown-content a {
+        color: black;
+        padding: 12px 16px;
+        text-decoration: none;
+        display: block;
+    }
+
+.show {
+    display: block;
+}
+
+.schema-tags__item:after {
+    content: '×';
+    opacity: .5;
+    position: absolute;
+    top: 3px;
+    right: 5px;
+    speak: none;
+}
+
+.schema-tags__item {
+    --bs-gutter-x: 1.5rem;
+    max-width: 100%;
+    display: inline-block;
+    white-space: nowrap;
+    position: relative;
+    overflow: hidden;
+    vertical-align: top;
+    cursor: pointer;
+    border-radius: 2px;
+    -o-transition: background-color .1s ease-in-out;
+    transition: background-color .1s ease-in-out;
+}
+
+.schema-tags__text {
+    background: #eee;
+    padding: 4px 20px 4px 10px;
+    position: relative;
+    display: block;
+    overflow: hidden;
+    text-overflow: ellipsis;
+}
+
+.box-news {
+    overflow: hidden;
+}
+
+    .box-news:before {
+        content: "";
+        float: left;
+        width: 5px;
+        height: 120px;
+    }
+
+    .box-news > *:first-child {
+        float: right;
+        width: 100%;
+        margin-left: -5px;
+    }
+
+    .box-news:after {
+        content: "\02026";
+        box-sizing: content-box;
+        float: right;
+        position: relative;
+        top: -29px;
+        left: 100%;
+        width: 3em;
+        margin-left: -3em;
+        padding-right: 5px;
+        text-align: right;
+        background-size: 100% 100%;
+        background: linear-gradient(to right, rgba(255, 255, 255, 0), white 50%, white);
+    }
+
+.card-img__news {
+    float: left;
+    width: 320px;
+    position: relative;
+    text-align: center;
+    display: flex;
+}
+
+.card-body__news {
+    margin: 15px 15px 15px 340px;
+    position: relative;
+    padding-bottom: 30px;
+}
+
+.card__news {
+    padding-bottom: 30px;
+    height: 172px;
+    background-color: #fff;
+    background-clip: border-box;
+    border: 1px solid rgba(0,0,0,.125);
+    border-radius: .25rem;
+}
+
+.card-footer__news {
+    position: absolute;
+    bottom: 0;
+    width: 100%;
+}
+
+.text-header__news {
+    font-size: 17px;
+}
+
+.card-footer__news p {
+    color: #999;
+    font-size: 14px;
+    font-weight: 600;
+}
+
+.card-footer__news a {
+    color: #698493;
+    text-transform: uppercase;
+    font-weight: 700;
+    font-size: 15px;
+}
+
+.card-img__news img {
+    height: 170px;
+    width: 100%;
+    object-fit: cover;
+    border-radius: .25rem 0 0 .25rem;
+}
+
+.card-img__news .img {
+    width: 100%;
+}
+
+.card-header__news {
+    line-height: 20px;
+    height: 113px;
+}
+
+@media (max-width: 528px) {
+    .card-img__news {
+        margin-bottom: 1rem;
+        width: 100%;
+        float: none;
+    }
+
+    .card-body__news {
+        margin-left: 1rem;
+    }
+
+    .card__news {
+        height: 342px;
+    }
+
+    .card-img__news img {
+        border-radius: .25rem .25rem 0 0;
+    }
+}

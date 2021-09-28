@@ -1,9 +1,9 @@
 ﻿using Microsoft.AspNetCore.Http;
 using System;
 using System.ComponentModel.DataAnnotations;
-using WebApplication1.Validation;
+using InternetShop.Validation;
 
-namespace WebApplication1.ViewModels
+namespace InternetShop.ViewModels
 {
     public class ProfileViewModel
     {

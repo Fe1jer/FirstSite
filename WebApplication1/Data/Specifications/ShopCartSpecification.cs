@@ -1,16 +1,18 @@
 ﻿using System;
 using System.Linq.Expressions;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications.Base;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications.Base;
 
-namespace WebApplication1.Data.Specifications
+namespace InternetShop.Data.Specifications
 {
     public class ShopCartSpecification : Specification<ShopCartItem>
     {
-        public ShopCartSpecification() : base() {
+        public ShopCartSpecification() : base()
+        {
             AddInclude(shopCart => shopCart.Product);
         }
-        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression) {
+        public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression)
+        {
             AddInclude(shopCart => shopCart.Product);
         }
 

@@ -1,0 +1,14 @@
+﻿body {
+    background-position: center;
+    background-image: url(/img/HomeImg.jpg); /* Путь к фоновому изображению */
+    background-repeat: no-repeat;
+}
+
+body {
+    background-size: 120%;
+    transition: 1s;
+}
+
+    body:hover {
+        background-size: 100%;
+    }

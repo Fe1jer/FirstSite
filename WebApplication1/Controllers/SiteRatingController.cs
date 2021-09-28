@@ -1,14 +1,11 @@
-﻿using Microsoft.AspNetCore.Http;
-using Microsoft.AspNetCore.Mvc;
-using System;
-using System.Collections.Generic;
+﻿using Microsoft.AspNetCore.Mvc;
 using System.Linq;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     public class SiteRatingController : Controller
     {

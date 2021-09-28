@@ -1,8 +1,8 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using System.IO;
-using WebApplication1.ViewModels;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Validation
+namespace InternetShop.Validation
 {
     public class CreateNewsEqualAttribute : ValidationAttribute
     {

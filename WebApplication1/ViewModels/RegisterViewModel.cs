@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
-using WebApplication1.Validation;
+using InternetShop.Validation;
 
-namespace WebApplication1.ViewModels
+namespace InternetShop.ViewModels
 {
     [NamePasswordEqual]
     public class RegisterViewModel

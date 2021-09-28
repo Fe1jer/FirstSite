@@ -6,13 +6,12 @@ using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Xml;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     public class HomeController : Controller
     {
@@ -117,7 +116,7 @@ namespace WebApplication1.Controllers
                     return RedirectToAction(nameof(News));
                 }
             }
-            catch
+            catch(Exception ex)
             {
                 return View(news);
             }

@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.Validation
+namespace InternetShop.Validation
 {
     public class ValidateGender : ValidationAttribute
     {

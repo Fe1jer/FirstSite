@@ -1,9 +1,9 @@
 ﻿using System;
 using System.ComponentModel.DataAnnotations;
-using WebApplication1.Data.AbstractClasses;
-using WebApplication1.Validation;
+using InternetShop.Data.AbstractClasses;
+using InternetShop.Validation;
 
-namespace WebApplication1.Data.Models
+namespace InternetShop.Data.Models
 {
     public class User : Entity
     {

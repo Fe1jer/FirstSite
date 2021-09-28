@@ -1,7 +1,7 @@
 ﻿using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace WebApplication1.Migrations
+namespace InternetShop.Migrations
 {
     public partial class CreateNews : Migration
     {

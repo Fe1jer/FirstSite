@@ -1,10 +1,10 @@
 ﻿using System.Collections.Generic;
 using System.Threading.Tasks;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Specifications.Base;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Models;
+using InternetShop.Data.Specifications.Base;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Data.Interfaces
+namespace InternetShop.Data.Interfaces
 {
     public interface INewsRepository
     {

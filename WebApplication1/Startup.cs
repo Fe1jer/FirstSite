@@ -11,11 +11,11 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Globalization;
 using System.IO.Compression;
-using WebApplication1.Data;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Repository;
+using InternetShop.Data;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Repository;
 
-namespace WebApplication1
+namespace InternetShop
 {
     public class Startup
     {
@@ -62,6 +62,11 @@ namespace WebApplication1
                 if (context.Response.StatusCode == 404)
                 {
                     context.Request.Path = "/Error/404";
+                    await next();
+                }
+                if (context.Response.StatusCode == 535)
+                {
+                    context.Request.Path = "/Error/535";
                     await next();
                 }
             });
@@ -117,6 +122,8 @@ namespace WebApplication1
             services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
+            services.AddTransient<IAttributeCategoryRepository, AttributeCategoryRepository>();
+            services.AddTransient<IProductAttributeRepository, ProductAttributeRepository>();
         }
     }
 }

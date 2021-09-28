@@ -50,10 +50,6 @@ h6 {
     white-space: pre-wrap;
 }
 
-.long-desc {
-    padding-left: 1em;
-}
-
 .multiple-items .row {
     --bs-gutter-x: 0.6rem;
 }

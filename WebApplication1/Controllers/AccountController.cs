@@ -10,12 +10,12 @@ using System.Collections.Generic;
 using System.IO;
 using System.Security.Claims;
 using System.Threading.Tasks;
-using WebApplication1.Data.Interfaces;
-using WebApplication1.Data.Models;
-using WebApplication1.Data.Services;
-using WebApplication1.ViewModels;
+using InternetShop.Data.Interfaces;
+using InternetShop.Data.Models;
+using InternetShop.Data.Services;
+using InternetShop.ViewModels;
 
-namespace WebApplication1.Controllers
+namespace InternetShop.Controllers
 {
     public class AccountController : Controller
     {
@@ -47,7 +47,7 @@ namespace WebApplication1.Controllers
             if (ModelState.IsValid)
             {
                 User user = await _userRepository.GetUserAsync(model.Email);
-
+                
                 if (user == null)
                 {
                     // добавляем пользователя в бд
@@ -63,9 +63,16 @@ namespace WebApplication1.Controllers
                     await _userRepository.AddAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Регистрация",
-                        $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    try
+                    {
+                        EmailService emailService = new EmailService();
+                        await emailService.SendEmailAsync(model.Email, "Регистрация",
+                            $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    }
+                    catch
+                    {
+                        return RedirectToAction("SenderMailError", "Error");
+                    }
 
                     return View("RegisterConfirmation");
                 }
@@ -114,7 +121,7 @@ namespace WebApplication1.Controllers
                 }
                 else if (user != null && HashingService.VerifyHashedPassword(user.Password, model.Password))
                 {
-                    await Authenticate(user); // аутентификация
+                    await Authenticate(user, model.RememberMe); // аутентификация
 
                     return RedirectToAction("Index", "Home");
                 }
@@ -167,8 +174,7 @@ namespace WebApplication1.Controllers
                         await model.Img.CopyToAsync(fileStream);
                     }
                     user.Img = path;
-                    await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-                    await Authenticate(user);
+                    await Authenticate(user, true);
                 }
                 user.Role = await _roles.GetByIdAsync(user.RoleId);
                 await _userRepository.UpdateAsync(user, model);
@@ -211,9 +217,17 @@ namespace WebApplication1.Controllers
                     await _userRepository.UpdateAsync(user);
                     var code = HmacService.CreatePasswordResetHmacCode(user.Id);
                     var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    EmailService emailService = new EmailService();
-                    await emailService.SendEmailAsync(model.Email, "Сброс пароля",
-                        $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    try
+                    {
+                        EmailService emailService = new EmailService();
+                        await emailService.SendEmailAsync(model.Email, "Сброс пароля",
+                            $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
+                    }
+                    catch
+                    {
+                        return RedirectToAction("SenderMailError", "Error");
+                    }
+
                     return View("ForgotPasswordConfirmation");
                 }
             }
@@ -263,12 +277,12 @@ namespace WebApplication1.Controllers
             user.EmailConfirmed = true;
             user.LockoutEnd = null;
             await _userRepository.UpdateAsync(user);
-            await Authenticate(user);
+            await Authenticate(user, true);
             return RedirectToAction("Index", "Home");
         }
 
         [ValidateAntiForgeryToken]
-        private async Task Authenticate(User user)
+        private async Task Authenticate(User user, bool isRemember = false)
         {
             // создаем один claim
             var claims = new List<Claim>
@@ -278,10 +292,16 @@ namespace WebApplication1.Controllers
                 new Claim("Avatar", user.Img),
                 new Claim("Name", user.Name)
             };
-            ClaimsIdentity id = new ClaimsIdentity(claims, "Cookie", ClaimsIdentity.DefaultNameClaimType,
-                ClaimsIdentity.DefaultRoleClaimType);
+            ClaimsIdentity id = new ClaimsIdentity(
+                claims, CookieAuthenticationDefaults.AuthenticationScheme);
             // установка аутентификационных куки
-            await HttpContext.SignInAsync(CookieAuthenticationDefaults.AuthenticationScheme, new ClaimsPrincipal(id));
+            await HttpContext.SignInAsync(
+                CookieAuthenticationDefaults.AuthenticationScheme,
+                new ClaimsPrincipal(id),
+                new AuthenticationProperties
+                {
+                    IsPersistent = isRemember
+                });
         }
 
         public async Task<IActionResult> Logout()

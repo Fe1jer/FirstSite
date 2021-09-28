@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace WebApplication1.ViewModels
+namespace InternetShop.ViewModels
 {
     public class LoginViewModel
     {
@@ -14,5 +14,8 @@ namespace WebApplication1.ViewModels
         [DataType(DataType.Password)]
         [StringLength(25, MinimumLength = 6)]
         public string Password { get; set; }
+
+        [Display(Name = "Запомнить?")]
+        public bool RememberMe { get; set; }
     }
 }

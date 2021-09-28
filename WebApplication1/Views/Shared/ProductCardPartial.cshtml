@@ -4,7 +4,7 @@
     <div class="card shadow-sm">
         <div class="scale">
             <a asp-controller="Catalog" asp-action="Product" asp-route-name="@Model.Product.Name.Replace(" ", "-")" asp-route-id="@Model.Product.Id">
-                <img class="scale card-image" height="220" width="391" src="@Model.Product.Img" alt="@Model.Product.Name" />
+                <img class="scale card-image w-100" loading="lazy" src="@Model.Product.Img" alt="@Model.Product.Name" />
             </a>
         </div>
         <div class="card-body">
