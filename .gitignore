@@ -44,6 +44,7 @@ Generated\ Files/
 # NUNIT
 *.VisualState.xml
 TestResult.xml
+sitemap.xml
 
 # Build Results of an ATL Project
 [Dd]ebugPS/
