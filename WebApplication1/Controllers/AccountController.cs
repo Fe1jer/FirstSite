@@ -44,6 +44,7 @@ namespace InternetShop.Controllers
         [HttpPost, ValidateAntiForgeryToken]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
+            
             if (ModelState.IsValid)
             {
                 User user = await _userRepository.GetUserAsync(model.Email);

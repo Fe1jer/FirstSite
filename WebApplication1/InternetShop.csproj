@@ -1,54 +1,59 @@
 ﻿<Project Sdk="Microsoft.NET.Sdk.Web">
 
-  <PropertyGroup>
-    <TargetFramework>netcoreapp3.1</TargetFramework>
-    <UserSecretsId>12210bc9-59b0-41b5-87a0-999cc86bd4a4</UserSecretsId>
-    <StartupObject></StartupObject>
-    <OutputType>Exe</OutputType>
-  </PropertyGroup>
+	<PropertyGroup>
+		<TargetFramework>netcoreapp3.1</TargetFramework>
+		<UserSecretsId>12210bc9-59b0-41b5-87a0-999cc86bd4a4</UserSecretsId>
+		<StartupObject></StartupObject>
+		<OutputType>Exe</OutputType>
+		<SatelliteResourceLanguages>ru</SatelliteResourceLanguages>
+	</PropertyGroup>
 
-  <ItemGroup>
-    <Content Remove="appsettings.Development.json" />
-    <Content Remove="appsettings.json" />
-    <Content Remove="launchSettings.json" />
-  </ItemGroup>
+	<ItemGroup>
+		<Content Remove="launchSettings.json" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <None Include="wwwroot\slick\config.rb" />
-    <None Include="wwwroot\slick\fonts\slick.svg" />
-    <None Include="wwwroot\slick\slick-theme.less" />
-    <None Include="wwwroot\slick\slick-theme.scss" />
-    <None Include="wwwroot\slick\slick.less" />
-    <None Include="wwwroot\slick\slick.scss" />
-  </ItemGroup>
+	<ItemGroup>
+		<None Include="wwwroot\slick\config.rb" />
+		<None Include="wwwroot\slick\fonts\slick.svg" />
+		<None Include="wwwroot\slick\slick-theme.less" />
+		<None Include="wwwroot\slick\slick-theme.scss" />
+		<None Include="wwwroot\slick\slick.less" />
+		<None Include="wwwroot\slick\slick.scss" />
+	</ItemGroup>
 
-  <ItemGroup>
-    <PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
-    <PackageReference Include="EntityFramework" Version="6.4.4" />
-    <PackageReference Include="MailKit" Version="2.15.0" />
-    <PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
-    <PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
-    <PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
-      <PrivateAssets>all</PrivateAssets>
-      <IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
-    </PackageReference>
-    <PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
-    <PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" ExcludeAssets="All" />
-    <PackageReference Include="System.Drawing.Common" Version="5.0.2" />
-  </ItemGroup>
+	<ItemGroup>
+		<PackageReference Include="AspNetCore.SEOHelper" Version="1.0.1" />
+		<PackageReference Include="EntityFramework" Version="6.4.4" />
+		<PackageReference Include="MailKit" Version="3.1.0" />
+		<PackageReference Include="Microsoft.AspNetCore" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Http.Extensions" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.ResponseCompression" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.Session" Version="2.2.0" />
+		<PackageReference Include="Microsoft.AspNetCore.StaticFiles" Version="2.2.0" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore" Version="5.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.SqlServer" Version="5.0.4" />
+		<PackageReference Include="Microsoft.EntityFrameworkCore.Tools" Version="5.0.4">
+			<PrivateAssets>all</PrivateAssets>
+			<IncludeAssets>runtime; build; native; contentfiles; analyzers; buildtransitive</IncludeAssets>
+		</PackageReference>
+		<PackageReference Include="Microsoft.Extensions.Caching.Memory" Version="5.0.0" />
+		<PackageReference Include="Microsoft.VisualStudio.Web.CodeGeneration.Design" Version="5.0.2" ExcludeAssets="All" />
+		<PackageReference Include="ReflectionIT.Mvc.Paging" Version="4.0.0" />
+		<PackageReference Include="System.Drawing.Common" Version="5.0.2" />
 
-  <ItemGroup>
-    <Folder Include="Resources\Views\Home\" />
-    <Folder Include="wwwroot\img\news\" />
-    <Folder Include="wwwroot\jquery\" />
-    <Folder Include="wwwroot\lib\jquery-ajax-unobtrusive\" />
-  </ItemGroup>
+	</ItemGroup>
 
-  <ProjectExtensions><VisualStudio><UserProperties libman_1json__JsonSchema="" /></VisualStudio></ProjectExtensions>
+	<ItemGroup>
+		<Folder Include="Resources\Views\Home\" />
+		<Folder Include="wwwroot\img\news\" />
+		<Folder Include="wwwroot\jquery\" />
+		<Folder Include="wwwroot\lib\jquery-ajax-unobtrusive\" />
+	</ItemGroup>
+
+	<ProjectExtensions>
+		<VisualStudio>
+			<UserProperties libman_1json__JsonSchema="" />
+		</VisualStudio>
+	</ProjectExtensions>
 
 </Project>

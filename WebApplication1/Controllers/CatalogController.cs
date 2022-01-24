@@ -2,12 +2,14 @@
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.ViewModels;
+using ReflectionIT.Mvc.Paging;
+using Microsoft.AspNetCore.Routing;
+using System;
 
 namespace InternetShop.Controlles
 {
@@ -15,24 +17,37 @@ namespace InternetShop.Controlles
     {
         private readonly IProductRepository _productRepository;
         private readonly IUserRepository _userRepository;
+        private readonly int _numProductsPerPage;
 
         public CatalogController(IProductRepository IProductRepository, IUserRepository IUserRepository)
         {
             _userRepository = IUserRepository;
             _productRepository = IProductRepository;
+            _numProductsPerPage = 12;
         }
 
         [HttpGet, Route("Catalog/Search")]
-        public async Task<IActionResult> Search(string q, List<string> filters)
+        public async Task<IActionResult> Search(string q, List<string> filters, int? page)
         {
             var products = await _productRepository.SearchProductsAsync(q);
             List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
 
+            var productsPagingList = PagingList.Create(showProducts, _numProductsPerPage, page ?? 1);
+            productsPagingList.Action = "Search";
+            productsPagingList.RouteValue = new RouteValueDictionary {
+                { "q", q},
+            };
+            int i = 0;
+            foreach (string filter in filters)
+            {
+                productsPagingList.RouteValue.Add($"filters[{i}]", filter);
+                i++;
+            }
             var productObj = new ProductsListViewModel
             {
-                AllProducts = showProducts,
+                AllProducts = productsPagingList,
                 FilterSort = filterCategories,
                 Filter = filters
             };
@@ -82,15 +97,6 @@ namespace InternetShop.Controlles
             }
             await _productRepository.DeleteAsync(id);
 
-            /*            var products = await _productRepository.GetAllAsync();
-                        foreach (Product product in products)
-                        {
-                            if (product.Name == "Test")
-                            {
-                                await _productRepository.DeleteAsync(product.Id);
-                            }
-                        }*/
-
             return RedirectToAction("Index");
         }
 
@@ -108,25 +114,6 @@ namespace InternetShop.Controlles
             {
                 return RedirectToAction("Logout", "Account");
             }
-
-            /*          Product product = new Product()
-                        {
-                            Name = "Test",
-                            Available = false,
-                            Category = "Test",
-                            Company = "Test",
-                            Country = "Test",
-                            ShortDesc = "Test",
-                            LongDesc = "Test",
-                            IsFavourite = false,
-                            Price = 0,
-                            Img = "https://omoro.ru/wp-content/uploads/2018/08/syrikaty-2.jpg"
-                        };
-                        for (int i = 0; i <= 1000; i++)
-                        {
-                            product.Id = 0;
-                            await _productRepository.AddProductAsync(product);
-                        }*/
 
             if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
@@ -148,7 +135,7 @@ namespace InternetShop.Controlles
         }
 
         [Route("Catalog/{name}")]
-        public async Task<IActionResult> Product(int id, string name)
+        public async Task<IActionResult> Product(int id)
         {
             Product obj = await _productRepository.GetByIdAsync(id);
 
@@ -165,15 +152,28 @@ namespace InternetShop.Controlles
         }
 
         [Route("Catalog")]
-        public async Task<IActionResult> Index(List<string> filters)
+        public async Task<IActionResult> Index(List<string> filters, int? page)
         {
             var products = await _productRepository.GetAllAsync(new ProductSpecification().SortByRelevance());
             List<FilterCategoryVM> filterCategories = _productRepository.GetFilterCategoriesByProducts(products.ToList());
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
+
+            var productsPagingList = PagingList.Create(showProducts, _numProductsPerPage, page ?? 1);
+            if (filters != null)
+            {
+                int i = 0;
+
+                productsPagingList.RouteValue = new RouteValueDictionary();
+                foreach (string filter in filters)
+                {
+                    productsPagingList.RouteValue.Add($"filters[{i}]", filter);
+                    i++;
+                }
+            }
             var productObj = new ProductsListViewModel
             {
-                AllProducts = showProducts,
+                AllProducts = productsPagingList,
                 FilterSort = filterCategories,
                 Filter = filters
             };
@@ -183,13 +183,28 @@ namespace InternetShop.Controlles
 
         [HttpPost]
         [Route("Catalog/SearchAjax")]
-        public async Task<IActionResult> SearchAjax(string q, List<string> filters)
+        public async Task<IActionResult> SearchAjax(string q, List<string> filters, int? page)
         {
             var products = await _productRepository.SearchProductsAsync(q);
             products = _productRepository.SortProducts(products.ToList(), filters);
             List<ShowProductViewModel> showProducts = await _productRepository.FindProductsInTheCart(products.ToList(), User.Identity.Name);
-
-            return Json(showProducts);
+            var productsPagingList = PagingList.Create(showProducts, _numProductsPerPage, page ?? 1);
+            if (q != null)
+            {
+                productsPagingList.Action = "Search";
+                productsPagingList.RouteValue = new RouteValueDictionary { { "q", q } };
+            }
+            else if (filters != null)
+            {
+                productsPagingList.RouteValue = new RouteValueDictionary();
+            }
+            int i = 0;
+            foreach (string filter in filters)
+            {
+                productsPagingList.RouteValue.Add($"filters[{i}]", filter);
+                i++;
+            }
+            return PartialView("ProductsListPartial", productsPagingList);
         }
     }
 }

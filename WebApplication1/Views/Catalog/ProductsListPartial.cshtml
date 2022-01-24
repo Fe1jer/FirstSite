@@ -1,0 +1,23 @@
+﻿@model PagingList<ShowProductViewModel>
+
+<div class="row">
+    @if (Model.Count() != 0)
+    {
+        foreach (ShowProductViewModel showProduct in Model)
+        {
+            @await Html.PartialAsync("ProductCardPartial", showProduct)
+        }
+    }
+    else
+    {
+            <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
+    }
+</div>
+<nav class="d-flex justify-content-center">
+    <vc:pager paging-list="Model"/>
+</nav>
+<div id="loaderDiv" class="loading" style="display: none"></div>
+
+<script>
+    url = "@Url.Action(Model.Action, Model.GetRouteValueForPage(this.Model.PageIndex))".replaceAll("&amp;", "&").replace("&page=1", "").replace("?page=1", "");
+</script>

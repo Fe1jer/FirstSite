@@ -3,7 +3,7 @@
     ViewData["Title"] = "Все товары";
 }
 @section Css{
-    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 }
 <div class="row">
     <div class="navbar navbar-expand-lg navbar-light bg-light p-2 shadow">
@@ -23,31 +23,18 @@
                     @await Html.PartialAsync("ProductsFilterPartial", Model)
                 }
             </nav>
-            <main class="ps-lg-4 pe-lg-0 col-lg-10 mt-2" style="position: relative">
-                <div id="content" class="row">
-                    @if (Model.AllProducts.Count() != 0)
-                    {
-                        foreach (ShowProductViewModel showProduct in Model.AllProducts)
-                        {
-                            @await Html.PartialAsync("ProductCardPartial", showProduct)
-                        }
-                    }
-                    else
-                    {
-                        <h2 class="text-center mt-3" style="white-space: normal;">Результат поиска"нет товаров"</h2>
-                    }
-                </div>
-                <div id="loaderDiv" class="loading" style="display: none"></div>
+            <main id="content" class="ps-lg-4 pe-lg-0 col-lg-10 mt-2" style="position: relative">
+                @await Html.PartialAsync("ProductsListPartial", Model.AllProducts)
             </main>
         </div>
     </div>
 </div>
 @section Scripts{
-    <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" async></script>
-    <script src="~/js/modules/checkboxFilter.js" asp-append-version="true"></script>
-    <script src="~/js/modules/products.js" asp-append-version="true"></script>
-    <script src="~/js/modules/shopCart.js" asp-append-version="true"></script>
-    <script>
-            var isAdminOrModer = '@(User.IsInRole("admin") || User.IsInRole("moderator"))';
-    </script>
+<script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js" async></script>
+<script src="~/js/modules/checkboxFilter.js" asp-append-version="true"></script>
+<script src="~/js/modules/products.js" asp-append-version="true"></script>
+<script src="~/js/modules/shopCart.js" asp-append-version="true"></script>
+<script>
+    var url;
+</script>
 }

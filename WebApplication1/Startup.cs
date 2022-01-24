@@ -14,6 +14,7 @@ using System.IO.Compression;
 using InternetShop.Data;
 using InternetShop.Data.Interfaces;
 using InternetShop.Data.Repository;
+using ReflectionIT.Mvc.Paging;
 
 namespace InternetShop
 {
@@ -48,6 +49,11 @@ namespace InternetShop
                     options.LoginPath = new PathString("/Account/Login");
                     options.AccessDeniedPath = new PathString("/Account/Login");
                 });
+            services.AddPaging(options => {
+                options.ViewName = "Bootstrap5";
+                options.HtmlIndicatorDown = " <span>&darr;</span>";
+                options.HtmlIndicatorUp = " <span>&uarr;</span>";
+            });
         }
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)

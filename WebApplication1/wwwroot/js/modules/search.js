@@ -14,7 +14,6 @@
                 success: function (msg) {
                     $result.html('<ul class="search_result" id="search_result"></ul>')
                     if (JSON.stringify(msg) != '[]') {
-
                         $.each(msg.slice(0, 8),
                             function (num, item) {
                                 $result.children('#search_result').append(searchProduct(item));

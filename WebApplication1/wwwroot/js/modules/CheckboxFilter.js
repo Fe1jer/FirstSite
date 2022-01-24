@@ -13,34 +13,72 @@ function setbutton(me, checkbox) {
 }
 
 function filterProducts() {
-    var ArrFiltersHref = [];
     var list = [];
     $('#filterHeader').empty();
-    $('.form-check-input:checked').each(function () {
-        ArrFiltersHref.push('&filters=' + $(this).attr("id"));
+    $('.form-check-input:checked').each(function (id) {
         list.push($(this).attr("id"));
         $('#filterHeader').append(showFilter($(this)));
     });
-    if (window.location.pathname == '/Catalog') {
-        var filtersHref = '?' + ArrFiltersHref.join('').slice(1);
-        var winLocHref = window.location.href.split("?");
-        history.pushState(null, null, winLocHref[0] + ((filtersHref == "?") ? "" : filtersHref));
-    }
-    else {
-        var winLocHref = window.location.href.split("&");
-        history.pushState(null, null, winLocHref[0] + ArrFiltersHref.join(''));
-    }
-    searchAjax(list);
+    searchAjax(list, null).then(() => {
+        history.pushState(null, null, url);
+    });
 };
 
-window.onpopstate = history.onpushstate = function (e) {
-    var list = getFilterFromUrl();
+window.onpopstate = history.onpushstate = function () {
+    var list = URLToArray('filters');
+    getFilterFromUrl(list);
     searchAjax(list);
 }
 
-function getFilterFromUrl() {
-    var list = window.location.search.replace(/\&/g, '').split("filters=");
-    list.shift();
+function getUrlParameter(sParam) {
+    var sPageURL = decodeURIComponent(window.location.search.substring(1));
+    var array = []
+    var sURLVariables = sPageURL.split('&');
+    for (var i = 0; i < sURLVariables.length; i++) {
+        var sParameterName = sURLVariables[i].split('=');
+        if (sParameterName[0] == sParam) {
+            array.push(sParameterName[1]);
+        }
+    }
+    return array;
+}
+
+function URLToArray(sParam) {
+    url = window.location.search;
+    var request = {};
+    var arr = [];
+    var pairs = url.substring(url.indexOf('?') + 1).split('&');
+    for (var i = 0; i < pairs.length; i++) {
+        var pair = pairs[i].split('=');
+        if (pair[0].includes(sParam)) {
+            //check we have an array here - add array numeric indexes so the key elem[] is not identical.
+            if (endsWith(decodeURIComponent(pair[0]), '[' + i + ']')) {
+                var arrName = decodeURIComponent(pair[0]).substring(0, decodeURIComponent(pair[0]).length - ('[' + i + ']').length);
+                if (!(arrName in arr)) {
+                    arr.push(arrName);
+                    arr[arrName] = [];
+                }
+
+                arr[arrName].push(decodeURIComponent(pair[1]));
+                request[arrName] = arr[arrName];
+            } else {
+                request[decodeURIComponent(pair[0])] = decodeURIComponent(pair[1]);
+            }
+        }
+        else {
+            pairs.splice(i, 1);
+            i--;
+        }
+    }
+    return request[sParam];
+}
+
+function endsWith(str, suffix) {
+    return str.indexOf(suffix, str.length - suffix.length) !== -1;
+}
+
+function getFilterFromUrl(list) {
+    console.log(list);
     $('#filterHeader').empty();
     $('.form-check-input:checked').each(function () {
         this.checked = false;
@@ -50,4 +88,15 @@ function getFilterFromUrl() {
         document.getElementById(this).checked = true;
     });
     return list;
+}
+
+function changePage(page) {
+    var list = [];
+    $('.form-check-input:checked').each(function () {
+        list.push($(this).attr("id"));
+    });
+    searchAjax(list, page).then(() => {
+        history.pushState(null, null, url);
+        window.scrollTo(0, 0);
+    });
 }
