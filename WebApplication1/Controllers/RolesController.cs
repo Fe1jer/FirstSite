@@ -1,65 +1,79 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using InternetShop.Data.Models;
+using InternetShop.ViewModels;
+using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using System.Collections.Generic;
 using System.Threading.Tasks;
-using InternetShop.Data.Interfaces;
-using InternetShop.Data.Models;
-using InternetShop.Data.Specifications;
-using InternetShop.ViewModels;
+using System.Linq;
+using System;
 
 namespace InternetShop.Controllers
 {
     [Authorize(Roles = "admin")]
     public class RolesController : Controller
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _rolesRepository;
-
-        public RolesController(IUserRepository IUserRepository, IRoleRepository IRolesRepository)
+        private readonly UserManager<User> _userManager;
+        private readonly RoleManager<IdentityRole<int>> _roleManager;
+        public RolesController(UserManager<User> userManager, RoleManager<IdentityRole<int>> roleManager)
         {
-            _rolesRepository = IRolesRepository;
-            _userRepository = IUserRepository;
+            _userManager = userManager;
+            _roleManager = roleManager;
+        }
+        public IActionResult Index() => View(_roleManager.Roles.ToList());
+
+        public IActionResult UserList()
+        {
+            var usersWithRoles = _userManager.Users.ToList().Select(p => new UsersInRoleViewModel()
+            {
+                UserId = p.Id,
+                Username = p.Name,
+                Email = p.Email,
+                Role = string.Join(", ", _userManager.GetRolesAsync(p).Result),
+                Img = p.Img,
+                IsValid = p.EmailConfirmed != false || p.LockoutEnd > DateTime.Now
+            }).ToList();
+            usersWithRoles.OrderBy(p => p.Role);
+            return View(usersWithRoles);
         }
 
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Edit(string userId)
         {
-            return View(await _rolesRepository.GetAllAsync(new RoleSpecification().SortByName()));
-        }
-
-        public async Task<IActionResult> UserList(string search)
-        {
-            return View(await _userRepository.GetAllAsync(new UserSpecification().IncludeRole().WhereEmail(search).SortByRole()));
-        }
-
-        public async Task<IActionResult> Edit(int userId)
-        {
-            User user = await _userRepository.GetUserAsync(userId);
+            // получаем пользователя
+            User user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
                 // получем список ролей пользователя
-                var userRole = user.Role;
-                IEnumerable<Role> allRoles = await _rolesRepository.GetAllAsync(new RoleSpecification().SortByName());
+                var userRoles = await _userManager.GetRolesAsync(user);
+                var allRoles = _roleManager.Roles;
                 ChangeRoleViewModel model = new ChangeRoleViewModel
                 {
                     UserId = user.Id,
                     UserEmail = user.Email,
-                    UserRole = userRole,
-                    AllRoles = allRoles
+                    UserRoles = userRoles,
+                    AllRoles = allRoles.ToList()
                 };
                 return View(model);
             }
+
             return NotFound();
         }
 
         [ValidateAntiForgeryToken, HttpPost]
-        public async Task<IActionResult> Edit(int userId, string nameRole)
+        public async Task<IActionResult> Edit(string userId, List<string> roles)
         {
-            User user = await _userRepository.GetUserAsync(userId);
+            // получаем пользователя
+            User user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                Role role = await _rolesRepository.GetByNameAsync(nameRole);
-                user.Role = role;
-                await _userRepository.UpdateAsync(user);
+                // получем список ролей пользователя
+                var userRoles = await _userManager.GetRolesAsync(user);
+                // получаем список ролей, которые были добавлены
+                var addedRoles = roles.Except(userRoles);
+                // получаем роли, которые были удалены
+                var removedRoles = userRoles.Except(roles);
+                await _userManager.AddToRolesAsync(user, addedRoles);
+                await _userManager.RemoveFromRolesAsync(user, removedRoles);
 
                 return RedirectToAction("UserList");
             }
@@ -67,12 +81,12 @@ namespace InternetShop.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> Delete(int userId)
+        public async Task<IActionResult> Delete(string userId)
         {
-            User user = await _userRepository.GetUserAsync(userId);
+            User user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
-                await _userRepository.DeleteAsync(user);
+                await _userManager.DeleteAsync(user);
                 return RedirectToAction("UserList");
             }
 

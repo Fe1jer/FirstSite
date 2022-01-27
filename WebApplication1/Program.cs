@@ -4,6 +4,8 @@ using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Hosting;
 using System.Threading.Tasks;
 using InternetShop.Data;
+using Microsoft.AspNetCore.Identity;
+using InternetShop.Data.Models;
 
 namespace InternetShop
 {
@@ -26,10 +28,12 @@ namespace InternetShop
         private async static Task InitContext(IHost host)
         {
             using var scope = host.Services.CreateScope();
-            var dbContext = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
+            var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
+            var rolesManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
             var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
-            await AppDBContextInit.InitDbContextAsync(dbContext);
+            await AppDBContextInit.InitDbContextAsync(userManager, rolesManager, context);
         }
     }
 }

@@ -4,16 +4,17 @@ using System.Threading.Tasks;
 using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
+using Microsoft.AspNetCore.Identity;
 
 namespace InternetShop.Controllers
 {
     public class SiteRatingController : Controller
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
         private readonly ISiteRatingRepository _siteRatingRepository;
-        public SiteRatingController(IUserRepository IUserRepository, ISiteRatingRepository ISiteRatingRepository)
+        public SiteRatingController(UserManager<User> userManager, ISiteRatingRepository ISiteRatingRepository)
         {
-            _userRepository = IUserRepository;
+            _userManager = userManager;
             _siteRatingRepository = ISiteRatingRepository;
         }
 
@@ -25,7 +26,7 @@ namespace InternetShop.Controllers
         [HttpPost]
         public async Task<IActionResult> AddRating(int rating)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            User user = await _userManager.GetUserAsync(HttpContext.User);
             var siteRatings = await _siteRatingRepository.GetAllAsync(new SiteRatingSpecification().IncludeUser());
             SiteRating checkSiteRating = siteRatings.FirstOrDefault(p => p.User.Email == user.Email);
             if (checkSiteRating == null)

@@ -5,21 +5,22 @@ using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
+using Microsoft.AspNetCore.Identity;
 
 namespace InternetShop.Data.Repository
 {
     public class ShopCartRepository : Repository<ShopCartItem>, IShopCart
     {
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
 
-        public ShopCartRepository(AppDBContext appDBContext, IUserRepository userRepository) : base(appDBContext)
+        public ShopCartRepository(AppDBContext appDBContext, UserManager<User> userManager) : base(appDBContext)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
         }
 
         public async Task AddAsync(string email, Product product)
         {
-            User user = await _userRepository.GetUserAsync(email);
+            User user = await _userManager.FindByEmailAsync(email);
             ShopCartItem shopCartItem = new ShopCartItem
             {
                 User = user,
@@ -43,7 +44,7 @@ namespace InternetShop.Data.Repository
 
         public async Task EmptyTheCart(string email)
         {
-            User user = await _userRepository.GetUserAsync(email);
+            User user = await _userManager.FindByEmailAsync(email);
             IEnumerable<ShopCartItem> items = await GetAllAsync(new ShopCartSpecification().WhereUserEmail(user.Email));
             foreach (ShopCartItem item in items)
             {

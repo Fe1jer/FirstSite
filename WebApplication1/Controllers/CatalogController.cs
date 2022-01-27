@@ -16,12 +16,10 @@ namespace InternetShop.Controlles
     public class CatalogController : Controller
     {
         private readonly IProductRepository _productRepository;
-        private readonly IUserRepository _userRepository;
         private readonly int _numProductsPerPage;
 
-        public CatalogController(IProductRepository IProductRepository, IUserRepository IUserRepository)
+        public CatalogController(IProductRepository IProductRepository)
         {
-            _userRepository = IUserRepository;
             _productRepository = IProductRepository;
             _numProductsPerPage = 12;
         }
@@ -60,15 +58,9 @@ namespace InternetShop.Controlles
             return View(model);
         }
 
-        [Route("Catalog/Edit"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/Edit"), Authorize(Roles = "moderator")]
         public async Task<IActionResult> Edit(int id)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
-
             Product obj = await _productRepository.GetByIdAsync(id);
 
             return View(obj);
@@ -87,20 +79,15 @@ namespace InternetShop.Controlles
             return View(obj);
         }
 
-        [Route("Catalog/DeleteProduct"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/DeleteProduct"), Authorize(Roles = "moderator")]
         public async Task<IActionResult> DeleteProduct(int id)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
             await _productRepository.DeleteAsync(id);
 
             return RedirectToAction("Index");
         }
 
-        [Route("Catalog/Create"), Authorize(Roles = "admin, moderator")]
+        [Route("Catalog/Create"), Authorize(Roles = "moderator")]
         public IActionResult Create()
         {
             return View();
@@ -109,12 +96,6 @@ namespace InternetShop.Controlles
         [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Create")]
         public async Task<IActionResult> Create(Product obj)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
-
             if (await _productRepository.GetByNameAsync(obj.Name) == null)
             {
                 if (ModelState.IsValid)

@@ -21,7 +21,7 @@ namespace InternetShop.ViewModels
         [Display(Name = "Повторите пароль", Prompt = "Повторите пароль")]
         [DataType(DataType.Password)]
         [Compare("Password", ErrorMessage = "Пароли не совпадают")]
-        public string ConfirmPassword { get; set; }
+        public string PasswordConfirm { get; set; }
 
         [Display(Name = "Имя")]
         [DataType(DataType.Text)]

@@ -6,19 +6,20 @@ using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.ViewModels;
+using Microsoft.AspNetCore.Identity;
 
 namespace InternetShop.Controllers
 {
     [Authorize(Roles = "courier, moderator")]
     public class CourierController : Controller
     {
+        private readonly UserManager<User> _userManager;
         private readonly IOrdersRepository _ordersRepository;
-        private readonly IUserRepository _userRepository;
 
-        public CourierController(IOrdersRepository IOrdersRepository, IUserRepository IUserRepository)
+        public CourierController(IOrdersRepository IOrdersRepository, UserManager<User> userManager)
         {
             _ordersRepository = IOrdersRepository;
-            _userRepository = IUserRepository;
+            _userManager = userManager;
         }
 
         [Authorize(Roles = "moderator")]
@@ -55,7 +56,7 @@ namespace InternetShop.Controllers
             ChangeCourierViewModels model = new ChangeCourierViewModels
             {
                 Order = await _ordersRepository.GetByIdAsync(idOrder),
-                AllCouriers = await _userRepository.GetAllAsync(new UserSpecification().IncludeRole().WhereRole("courier"))
+                AllCouriers = await _userManager.GetUsersInRoleAsync("courier")
             };
 
             return View(model);
@@ -63,9 +64,9 @@ namespace InternetShop.Controllers
 
         [Authorize(Roles = "moderator")]
         [ValidateAntiForgeryToken, HttpPost]
-        public async Task<ActionResult> Edit(int idOrder, int idCourier)
+        public async Task<ActionResult> Edit(int idOrder, string idCourier)
         {
-            User courier = await _userRepository.GetUserAsync(idCourier);
+            User courier = await _userManager.FindByIdAsync(idCourier);
             await _ordersRepository.UpdateCourierOrdersAsync(idOrder, courier);
             return RedirectToAction("Index");
         }

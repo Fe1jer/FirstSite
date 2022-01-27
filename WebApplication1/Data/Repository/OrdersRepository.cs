@@ -6,23 +6,24 @@ using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
+using Microsoft.AspNetCore.Identity;
 
 namespace InternetShop.Data.Repository
 {
     public class OrdersRepository : Repository<Order>, IOrdersRepository
     {
         private readonly IShopCart shopCart;
-        private readonly IUserRepository _userRepository;
+        private readonly UserManager<User> _userManager;
 
-        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart, IUserRepository userRepository) : base(appDBContext)
+        public OrdersRepository(AppDBContext appDBContext, IShopCart shopCart, UserManager<User> userManager) : base(appDBContext)
         {
-            _userRepository = userRepository;
+            _userManager = userManager;
             this.shopCart = shopCart;
         }
 
         public async Task AddAsync(string email, Order order)
         {
-            User user = await _userRepository.GetUserAsync(email);
+            User user = await _userManager.FindByEmailAsync(email);
             List<OrderDetail> orderDetails = new List<OrderDetail>();
             foreach (var el in await shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(user.Email)))
             {

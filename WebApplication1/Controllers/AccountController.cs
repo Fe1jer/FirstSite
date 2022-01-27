@@ -1,33 +1,29 @@
-﻿using Microsoft.AspNetCore.Authentication;
-using Microsoft.AspNetCore.Authentication.Cookies;
+﻿using InternetShop.Data.Models;
+using InternetShop.Data.Services;
+using InternetShop.ViewModels;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Hosting;
 using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Localization;
 using Microsoft.AspNetCore.Mvc;
 using System;
-using System.Collections.Generic;
 using System.IO;
-using System.Security.Claims;
 using System.Threading.Tasks;
-using InternetShop.Data.Interfaces;
-using InternetShop.Data.Models;
-using InternetShop.Data.Services;
-using InternetShop.ViewModels;
 
 namespace InternetShop.Controllers
 {
     public class AccountController : Controller
     {
-        private readonly IUserRepository _userRepository;
-        private readonly IRoleRepository _roles;
         private readonly IWebHostEnvironment _appEnvironment;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
 
-        public AccountController(IUserRepository IUserRepository, IRoleRepository roles, IWebHostEnvironment appEnvironment)
+        public AccountController(UserManager<User> userManager, SignInManager<User> signInManager, IWebHostEnvironment appEnvironment)
         {
-            _userRepository = IUserRepository;
-            _roles = roles;
             _appEnvironment = appEnvironment;
+            _userManager = userManager;
+            _signInManager = signInManager;
         }
 
         public IActionResult Settings()
@@ -41,94 +37,79 @@ namespace InternetShop.Controllers
             return View();
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
         public async Task<IActionResult> Register(RegisterViewModel model)
         {
-            
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserAsync(model.Email);
-                
-                if (user == null)
+                User user = new User { Email = model.Email, UserName = model.Email, Name = model.Name, Gender = model.Gender, Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScY-9qDVs2yQiXkeEHGQfvxEPLWHh-o53ZuQ&usqp=CAU" };
+                // добавляем пользователя
+                var result = await _userManager.CreateAsync(user, model.Password);
+                await _userManager.AddToRoleAsync(user, "user");
+                if (result.Succeeded)
                 {
-                    // добавляем пользователя в бд
-                    user = _userRepository.CreateUser(model);
+                    // генерация токена для пользователя
+                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                    var callbackUrl = Url.Action(
+                        "ConfirmEmail",
+                        "Account",
+                        new { userId = user.Id, code },
+                        protocol: HttpContext.Request.Scheme);
+                    EmailService emailService = new EmailService();
+                    await emailService.SendEmailAsync(model.Email, "Confirm your account",
+                        $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
 
-                    Role userRole = await _roles.GetByNameAsync("user");
-
-                    if (userRole != null)
-                    {
-                        user.Role = userRole;
-                    }
-
-                    await _userRepository.AddAsync(user);
-                    var code = HmacService.CreatePasswordResetHmacCode(user.Id);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    try
-                    {
-                        EmailService emailService = new EmailService();
-                        await emailService.SendEmailAsync(model.Email, "Регистрация",
-                            $"Для подтверждения почты пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
-                    }
-                    catch
-                    {
-                        return RedirectToAction("SenderMailError", "Error");
-                    }
-
-                    return View("RegisterConfirmation");
-                }
-                else if (user.EmailConfirmed == false)
-                {
-                    if (user.LockoutEnd >= DateTime.Now)
-                    {
-                        ModelState.AddModelError("", "Подтвердите регистрацию на почте.");
-                    }
-                    else
-                    {
-                        user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                        await _userRepository.UpdateAsync(user);
-
-                        return View("RegisterConfirmation");
-                    }
+                    return View("ForgotPasswordConfirmation");
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Пользователь с данной почтой уже существует");
+                    foreach (var error in result.Errors)
+                    {
+                        ModelState.AddModelError(string.Empty, error.Description);
+                    }
                 }
             }
             return View(model);
         }
 
         [HttpGet]
-        public IActionResult Login()
+        public IActionResult Login(string returnUrl = null)
         {
-            return View();
+            return View(new LoginViewModel { ReturnUrl = returnUrl });
         }
 
-        [HttpPost, ValidateAntiForgeryToken]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
         public async Task<IActionResult> Login(LoginViewModel model)
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserAsync(model.Email);
-                if (user != null && user.EmailConfirmed == false && user.LockoutEnd < DateTime.Now)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user != null)
                 {
-                    await _userRepository.DeleteAsync(user);
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    // проверяем, подтвержден ли email
+                    if (!await _userManager.IsEmailConfirmedAsync(user))
+                    {
+                        ModelState.AddModelError(string.Empty, "Вы не подтвердили свой email");
+                        return View(model);
+                    }
                 }
-                else if (user != null && user.EmailConfirmed == false)
-                {
-                    ModelState.AddModelError("", "Подтвердите регистрацию на почте.");
-                }
-                else if (user != null && HashingService.VerifyHashedPassword(user.Password, model.Password))
-                {
-                    await Authenticate(user, model.RememberMe); // аутентификация
 
-                    return RedirectToAction("Index", "Home");
+                var result = await _signInManager.PasswordSignInAsync(model.Email, model.Password, model.RememberMe, false);
+                if (result.Succeeded)
+                {
+                    if (!string.IsNullOrEmpty(model.ReturnUrl) && Url.IsLocalUrl(model.ReturnUrl))
+                    {
+                        return Redirect(model.ReturnUrl);
+                    }
+                    else
+                    {
+                        return RedirectToAction("Index", "Home");
+                    }
                 }
                 else
                 {
-                    ModelState.AddModelError("", "Некорректные логин и(или) пароль");
+                    ModelState.AddModelError("", "Неправильный логин и (или) пароль");
                 }
             }
             return View(model);
@@ -137,7 +118,7 @@ namespace InternetShop.Controllers
         [Authorize]
         public async Task<IActionResult> Profile()
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
+            User user = await _userManager.GetUserAsync(HttpContext.User);
             ProfileViewModel model = new ProfileViewModel
             {
                 Email = user.Email,
@@ -159,7 +140,7 @@ namespace InternetShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                User user = await _userRepository.GetUserAsync(User.Identity.Name);
+                User user = await _userManager.GetUserAsync(HttpContext.User);
                 if (model.Img != null)
                 {
                     // удаляем старый файл из папки Files в каталоге 
@@ -175,10 +156,18 @@ namespace InternetShop.Controllers
                         await model.Img.CopyToAsync(fileStream);
                     }
                     user.Img = path;
-                    await Authenticate(user, true);
+
                 }
-                user.Role = await _roles.GetByIdAsync(user.RoleId);
-                await _userRepository.UpdateAsync(user, model);
+                user.Email = model.Email;
+                user.UserName = model.Email;
+                user.Name = model.Name;
+                user.Surname = model.Surname;
+                user.Patronymic = model.Patronymic;
+                user.Gender = model.Gender;
+                user.PhoneNumber = model.PhoneNumber;
+                user.DateOfBirth = model.DateOfBirth;
+                await _userManager.UpdateAsync(user);
+                await _signInManager.RefreshSignInAsync(user);
 
                 return RedirectToAction("Profile");
             }
@@ -200,46 +189,31 @@ namespace InternetShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = await _userRepository.GetUserAsync(model.Email);
-                if (user == null)
+                var user = await _userManager.FindByEmailAsync(model.Email);
+                if (user == null || !(await _userManager.IsEmailConfirmedAsync(user)))
                 {
                     // пользователь с данным email может отсутствовать в бд
                     // тем не менее мы выводим стандартное сообщение, чтобы скрыть 
-                    // наличие или отсутствие пользователя в бд 
+                    // наличие или отсутствие пользователя в бд
                     return View("ForgotPasswordConfirmation");
                 }
-                if (user.LockoutEnd >= DateTime.Now)
-                {
-                    ModelState.AddModelError(string.Empty, "Повторное сообщение на почту можно будет отправить позже.");
-                }
-                else
-                {
-                    user.LockoutEnd = DateTime.Now.AddMinutes(5);
-                    await _userRepository.UpdateAsync(user);
-                    var code = HmacService.CreatePasswordResetHmacCode(user.Id);
-                    var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
-                    try
-                    {
-                        EmailService emailService = new EmailService();
-                        await emailService.SendEmailAsync(model.Email, "Сброс пароля",
-                            $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
-                    }
-                    catch
-                    {
-                        return RedirectToAction("SenderMailError", "Error");
-                    }
+                var code = await _userManager.GeneratePasswordResetTokenAsync(user);
+                var callbackUrl = Url.Action("ResetPassword", "Account", new { userId = user.Id, code }, protocol: HttpContext.Request.Scheme);
+                EmailService emailService = new EmailService();
+                await emailService.SendEmailAsync(model.Email, "Reset Password",
+                    $"Для сброса пароля пройдите по ссылке: <a href='{callbackUrl}'>link</a>");
 
-                    return View("ForgotPasswordConfirmation");
-                }
+                return View("ForgotPasswordConfirmation");
             }
+
             return View(model);
         }
 
         [HttpGet]
         [AllowAnonymous]
-        public IActionResult ResetPassword(string userId = null, string code = null)
+        public IActionResult ResetPassword(string code = null)
         {
-            return code == null || userId == null ? View("Error") : View();
+            return code == null ? View("Error") : View();
         }
 
         [HttpPost]
@@ -247,19 +221,24 @@ namespace InternetShop.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ResetPassword(ResetPasswordViewModel model)
         {
-            if (ModelState.IsValid)
+            if (!ModelState.IsValid)
             {
-                var user = await _userRepository.GetUserAsync(model.Email);
-                if (!HmacService.VerifyPasswordResetHmacCode(model.Code, model.userId))
-                {
-                    ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
-                }
-                else
-                {
-                    user.Password = HashingService.HashPassword(model.Password);
-                    await _userRepository.UpdateAsync(user);
-                    return View("ResetPasswordConfirmation");
-                }
+                return View(model);
+            }
+            var user = await _userManager.FindByEmailAsync(model.Email);
+            if (user == null)
+            {
+                return View("ResetPasswordConfirmation");
+            }
+            var result = await _userManager.ResetPasswordAsync(user, model.Code, model.Password);
+            if (result.Succeeded)
+            {
+                await _userManager.SetLockoutEndDateAsync(user, null);
+                return View("ResetPasswordConfirmation");
+            }
+            foreach (var error in result.Errors)
+            {
+                ModelState.AddModelError(string.Empty, error.Description);
             }
             return View(model);
         }
@@ -268,47 +247,29 @@ namespace InternetShop.Controllers
         [AllowAnonymous]
         public async Task<IActionResult> ConfirmEmail(string userId, string code)
         {
-            if (!HmacService.VerifyPasswordResetHmacCode(code, userId))
+            if (userId == null || code == null)
             {
                 ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
                 return View("Error");
             }
-            var user = await _userRepository.GetUserAsync(int.Parse(userId));
-
-            user.EmailConfirmed = true;
-            user.LockoutEnd = null;
-            await _userRepository.UpdateAsync(user);
-            await Authenticate(user, true);
-            return RedirectToAction("Index", "Home");
-        }
-
-        [ValidateAntiForgeryToken]
-        private async Task Authenticate(User user, bool isRemember = false)
-        {
-            // создаем один claim
-            var claims = new List<Claim>
+            var user = await _userManager.FindByIdAsync(userId);
+            if (user == null)
             {
-                new Claim(ClaimsIdentity.DefaultNameClaimType, user.Email),
-                new Claim(ClaimsIdentity.DefaultRoleClaimType, user.Role?.Name),
-                new Claim("Avatar", user.Img),
-                new Claim("Name", user.Name)
-            };
-            ClaimsIdentity id = new ClaimsIdentity(
-                claims, CookieAuthenticationDefaults.AuthenticationScheme);
-            // установка аутентификационных куки
-            await HttpContext.SignInAsync(
-                CookieAuthenticationDefaults.AuthenticationScheme,
-                new ClaimsPrincipal(id),
-                new AuthenticationProperties
-                {
-                    IsPersistent = isRemember
-                });
+                ModelState.AddModelError(string.Empty, "Использован недействительный, подделанный или просроченный код.");
+                return View("Error");
+            }
+            var result = await _userManager.ConfirmEmailAsync(user, code);
+            if (result.Succeeded)
+                return RedirectToAction("Index", "Home");
+            else
+                return View("Error");
         }
 
         public async Task<IActionResult> Logout()
         {
-            await HttpContext.SignOutAsync(CookieAuthenticationDefaults.AuthenticationScheme);
-            return RedirectToAction("Login", "Account");
+            // удаляем аутентификационные куки
+            await _signInManager.SignOutAsync();
+            return RedirectToAction("Index", "Home");
         }
 
         [HttpPost]

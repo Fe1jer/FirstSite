@@ -15,16 +15,14 @@ namespace InternetShop.Controllers
 {
     public class HomeController : Controller
     {
-        private readonly IUserRepository _userRepository;
         private readonly IProductRepository _productRepository;
         private readonly INewsRepository _newsRepository;
         private readonly IShopCart _shopCart;
         private readonly ISiteRatingRepository _siteRatingRepository;
         private readonly IWebHostEnvironment _env;
 
-        public HomeController(IUserRepository IUserRepository, IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository, ISiteRatingRepository ISiteRatingRepository, IWebHostEnvironment env)
+        public HomeController(IProductRepository IProductRepository, IShopCart shopCart, INewsRepository newsRepository, ISiteRatingRepository ISiteRatingRepository, IWebHostEnvironment env)
         {
-            _userRepository = IUserRepository;
             _shopCart = shopCart;
             _newsRepository = newsRepository;
             _productRepository = IProductRepository;
@@ -69,11 +67,6 @@ namespace InternetShop.Controllers
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Create(CreateNewsViewModel model)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
             if (ModelState.IsValid)
             {
                 await _newsRepository.CreateAsync(model);
@@ -102,11 +95,6 @@ namespace InternetShop.Controllers
         [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
         public async Task<IActionResult> Edit(ChangeNewsViewModel news)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
             try
             {
                 if (ModelState.IsValid)
@@ -127,12 +115,8 @@ namespace InternetShop.Controllers
         [Authorize(Roles = "admin, moderator")]
         public async Task<RedirectToActionResult> Delete(int id)
         {
-            User user = await _userRepository.GetUserAsync(User.Identity.Name);
-            if (user.Role.Name != "admin" && user.Role.Name != "moderator")
-            {
-                return RedirectToAction("Logout", "Account");
-            }
             await _newsRepository.DeleteAsync(id);
+
             return RedirectToAction(nameof(News));
         }
 

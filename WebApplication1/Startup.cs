@@ -15,6 +15,10 @@ using InternetShop.Data;
 using InternetShop.Data.Interfaces;
 using InternetShop.Data.Repository;
 using ReflectionIT.Mvc.Paging;
+using Microsoft.AspNetCore.Identity;
+using InternetShop.Data.Models;
+using InternetShop.Data.Factories;
+using System;
 
 namespace InternetShop
 {
@@ -30,8 +34,9 @@ namespace InternetShop
         public void ConfigureServices(IServiceCollection services)
         {
             string connection = Configuration.GetConnectionString("DefaultConnection");
-
             services.AddDbContext<AppDBContext>(options => options.UseSqlServer(connection));
+            services.AddIdentity<User, IdentityRole<int>>(opt => opt.Lockout.AllowedForNewUsers = false)
+                .AddEntityFrameworkStores<AppDBContext>().AddDefaultTokenProviders(); ;
             AddLocalization(services);
             AddTransients(services);
             services.AddSingleton<IHttpContextAccessor, HttpContextAccessor>();
@@ -49,7 +54,15 @@ namespace InternetShop
                     options.LoginPath = new PathString("/Account/Login");
                     options.AccessDeniedPath = new PathString("/Account/Login");
                 });
-            services.AddPaging(options => {
+            services.Configure<DataProtectionTokenProviderOptions>(opt => opt.TokenLifespan = TimeSpan.FromMinutes(10));
+            services.ConfigureApplicationCookie(o =>
+            {
+                o.ExpireTimeSpan = TimeSpan.FromDays(1);
+                o.SlidingExpiration = true;
+            });
+            services.AddScoped<IUserClaimsPrincipalFactory<User>, CustomClaimsFactory>();
+            services.AddPaging(options =>
+            {
                 options.ViewName = "Bootstrap5";
                 options.HtmlIndicatorDown = " <span>&darr;</span>";
                 options.HtmlIndicatorUp = " <span>&uarr;</span>";
@@ -123,9 +136,7 @@ namespace InternetShop
         {
             services.AddTransient<IProductRepository, ProductRepository>();
             services.AddTransient<IOrdersRepository, OrdersRepository>();
-            services.AddTransient<IUserRepository, UserRepository>();
             services.AddTransient<IShopCart, ShopCartRepository>();
-            services.AddTransient<IRoleRepository, RoleRepository>();
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
             services.AddTransient<IAttributeCategoryRepository, AttributeCategoryRepository>();

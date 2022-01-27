@@ -6,7 +6,7 @@
     <link href="/css/signin.css" rel="stylesheet" asp-append-version="true">
 }
 <main class="form-signin text-center">
-    <form asp-action="Login" method="post">
+    <form asp-action="Login" method="post" asp-route-returnUrl="@Model.ReturnUrl">
         <h1 class="mb-4" width="72" height="57">
             Fe1jer
         </h1>
