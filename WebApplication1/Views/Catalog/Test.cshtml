@@ -1,6 +1,6 @@
 ﻿@model ShowProductViewModel
 @{
-    ViewData["Title"] = Model.Product.Company + " " + Model.Product.Name;
+    ViewData["Title"] = Model.Product.ProductType.Company + " " + Model.Product.ProductType.Name;
 }
 @section Css{
     <link rel="stylesheet" href="~/css/product.css" type="text/css" asp-append-version="true" />
@@ -9,7 +9,7 @@
 }
 <section class="product-details mt-2">
     <div class="container-fluid">
-        <h1 class="product__title">@Model.Product.Category @Model.Product.Company @Model.Product.Name</h1>
+        <h1 class="product__title">@Model.Product.ProductType.Category @Model.Product.ProductType.Company @Model.Product.ProductType.Name</h1>
         <div class="row">
             <div class="col-lg-6 product__slider">
                 <div class="slider-for">
@@ -51,10 +51,10 @@
             </div>
             <div class="main-options__content row">
                 <div class="col-lg-8">
-                    @foreach (var att in Model.Product.ProductAttributes)
+                    @foreach (var att in Model.Product.AttributeValues)
                     {
                         <div class="row m-0 py-2 attribute">
-                            <p class="col-sm-5" style="align-self: center;">@att.AttributeCategory.Name</p>
+                            <p class="col-sm-5" style="align-self: center;">@att.Attribute.Name</p>
                             <p class="col-sm-5">@att.Value</p>
                         </div>
                     }

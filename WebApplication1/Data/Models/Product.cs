@@ -6,31 +6,16 @@ namespace InternetShop.Data.Models
 {
     public class Product : Entity
     {
-
-        [Display(Name = "Название")]
-        [Required(ErrorMessage = "Введите дествительное название")]
-        public string Name { set; get; }
+        public ProductType ProductType { get; set; }
 
         [Display(Name = "Краткое описание")]
         [Required(ErrorMessage = "Введите дествительное описание")]
         public string ShortDesc { set; get; }
 
-        [Display(Name = "Полное описание")]
-        [Required(ErrorMessage = "Введите дествительное описание")]
-        public string LongDesc { set; get; }
-
         [Display(Name = "Картинка (url или /img/...) 16x9")]
         [DataType(DataType.ImageUrl)]
         [Required(ErrorMessage = "Введите дествительную картинку")]
         public string Img { set; get; }
-
-        [Display(Name = "Категория")]
-        [Required(ErrorMessage = "Введите дествительную категорию")]
-        public string Category { set; get; }
-
-        [Display(Name = "Компания")]
-        [Required(ErrorMessage = "Введите дествительную компанию")]
-        public string Company { set; get; }
 
         [Display(Name = "Страна производитель")]
         [Required(ErrorMessage = "Введите действительную страну")]
@@ -40,13 +25,10 @@ namespace InternetShop.Data.Models
         [Required(ErrorMessage = "Введите дествительную цену")]
         public ushort Price { set; get; }
 
-        [Display(Name = "Рекомендовать")]
-        public bool IsFavourite { set; get; }
-
-        [Display(Name = "Наличие")]
-        public bool Available { set; get; }
+        [Display(Name = "Количество")]
+        public int Count { set; get; }
 
         [Display(Name = "Характеристики")]
-        public List<ProductAttribute> ProductAttributes { set; get; }
+        public List<AttributeValue> AttributeValues { set; get; }
     }
 }

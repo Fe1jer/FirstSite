@@ -3,24 +3,24 @@ using InternetShop.Data.Specifications.Base;
 
 namespace InternetShop.Data.Specifications
 {
-    public class ProductAttributeSpecification : Specification<ProductAttribute>
+    public class AttributeValuesSpecification : Specification<AttributeValue>
     {
-        public ProductAttributeSpecification() : base() { }
+        public AttributeValuesSpecification() : base() { }
 
-        public ProductAttributeSpecification WhereProductId(int productId)
+        public AttributeValuesSpecification WhereProductId(int productId)
         {
             AddWhere(p => p.ProductId == productId);
-            AddInclude(p => p.AttributeCategory);
+            AddInclude(p => p.Attribute);
             return this;
         }
 
-        public ProductAttributeSpecification WithoutTracking()
+        public AttributeValuesSpecification WithoutTracking()
         {
             IsNoTracking = true;
             return this;
         }
 
-        public ProductAttributeSpecification WithTracking()
+        public AttributeValuesSpecification WithTracking()
         {
             IsNoTracking = false;
             return this;

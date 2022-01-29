@@ -7,25 +7,28 @@ using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
 using InternetShop.ViewModels;
+using InternetShop.Data.Repository.Base;
 
 namespace InternetShop.Data.Repository
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
         private readonly IShopCart _shopCart;
-        private readonly IAttributeCategoryRepository _attributeCategory;
-        private readonly IProductAttributeRepository _productAttribute;
+        private readonly IAttributeRepository _attributeCategory;
+        private readonly IAttributeValueRepository _productAttribute;
+        private readonly IProductTypesRepository _productTypes;
 
-        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IAttributeCategoryRepository attributeCategory, IProductAttributeRepository productAttribute) : base(appDBContext)
+        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IAttributeRepository attributeCategory, IAttributeValueRepository productAttribute, IProductTypesRepository productTypes) : base(appDBContext)
         {
             _productAttribute = productAttribute;
             _attributeCategory = attributeCategory;
             _shopCart = shopCart;
+            _productTypes = productTypes;
         }
 
         public new async Task<IReadOnlyList<Product>> GetAllAsync()
         {
-            return await base.GetAllAsync(new ProductSpecification().IncludeAttribute());
+            return await base.GetAllAsync(new ProductSpecification());
         }
 
         public new async Task<IReadOnlyList<Product>> GetAllAsync(ISpecification<Product> specification)
@@ -47,29 +50,34 @@ namespace InternetShop.Data.Repository
 
         public new async Task UpdateAsync(Product product)
         {
-            var productAttributes = await _productAttribute.GetAllAsync(new ProductAttributeSpecification().WhereProductId(product.Id));
-            List<ProductAttribute> notProductAttributes;
+            var type = await _productTypes.FindByType(product.ProductType);
+            if (type != null)
+            {
+                product.ProductType = type;
+            }
+            var productAttributes = await _productAttribute.GetAllAsync(new AttributeValuesSpecification().WhereProductId(product.Id));
+            List<AttributeValue> notProductAttributes;
 
-            if (product.ProductAttributes != null)
+            if (product.AttributeValues != null)
             {
                 var attributeCategories = await _attributeCategory.GetAllAsync();
 
-                for (int i = 0; i < product.ProductAttributes.Count; i++)
+                for (int i = 0; i < product.AttributeValues.Count; i++)
                 {
-                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.ProductAttributes[i]?.Id);
-                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == product.ProductAttributes[i].AttributeCategory.Name);
+                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.AttributeValues[i]?.Id);
+                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == product.AttributeValues[i].Attribute.Name);
 
                     if (productAttribute != null)
                     {
-                        productAttribute.Value = product.ProductAttributes[i].Value;
-                        product.ProductAttributes[i] = productAttribute;
+                        productAttribute.Value = product.AttributeValues[i].Value;
+                        product.AttributeValues[i] = productAttribute;
                     }
                     if (attributeCategory != null)
                     {
-                        product.ProductAttributes[i].AttributeCategory = attributeCategory;
+                        product.AttributeValues[i].Attribute = attributeCategory;
                     }
                 }
-                notProductAttributes = productAttributes.Where(p => !product.ProductAttributes.Select(p => p?.Id).Contains(p?.Id)).ToList();
+                notProductAttributes = productAttributes.Where(p => !product.AttributeValues.Select(p => p?.Id).Contains(p?.Id)).ToList();
             }
             else
             {
@@ -83,7 +91,7 @@ namespace InternetShop.Data.Repository
         {
             var collection = await GetAllAsync();
 
-            return collection.FirstOrDefault(n => n.Name.Equals(name));
+            return collection.FirstOrDefault(n => n.ProductType.Name.Equals(name));
         }
 
         public async Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText)
@@ -94,8 +102,8 @@ namespace InternetShop.Data.Repository
                 List<string> searchWords = searchText.Split(" ").ToList();
                 foreach (string word in searchWords)
                 {
-                    products = products.Where(i => i.Name.ToLower().Contains(word.ToLower())).ToList()
-                        .Union(products.Where(i => i.Company.ToLower().Contains(word.ToLower()))).Distinct().ToList();
+                    products = products.Where(i => i.ProductType.Name.ToLower().Contains(word.ToLower())).ToList()
+                        .Union(products.Where(i => i.ProductType.Company.ToLower().Contains(word.ToLower()))).Distinct().ToList();
                 }
             }
 
@@ -104,15 +112,20 @@ namespace InternetShop.Data.Repository
 
         public async Task AddProductAsync(Product product)
         {
-            if (product.ProductAttributes != null)
+            var type = await _productTypes.FindByType(product.ProductType);
+            if (type != null)
+            {
+                product.ProductType = type;
+            }
+            if (product.AttributeValues != null)
             {
                 var attributeCategories = await _attributeCategory.GetAllAsync();
-                foreach (var attribute in product.ProductAttributes)
+                foreach (var attribute in product.AttributeValues)
                 {
-                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == attribute.AttributeCategory.Name);
+                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == attribute.Attribute.Name);
                     if (attributeCategory != null)
                     {
-                        attribute.AttributeCategory = attributeCategory;
+                        attribute.Attribute = attributeCategory;
                     }
                 }
             }
@@ -122,9 +135,9 @@ namespace InternetShop.Data.Repository
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products)
         {
             List<FilterCategoryVM> filter = new List<FilterCategoryVM>();
-            IEnumerable<string> Categories = products.Select(i => i.Category).Distinct().ToList();
+            IEnumerable<string> Categories = products.Select(i => i.ProductType.Category).Distinct().ToList();
             IEnumerable<string> Countries = products.Select(i => i.Country).Distinct().ToList();
-            IEnumerable<string> Companies = products.Select(i => i.Company).Distinct().ToList();
+            IEnumerable<string> Companies = products.Select(i => i.ProductType.Company).Distinct().ToList();
             Dictionary<string, IEnumerable<string>> filterCategory =
                 new Dictionary<string, IEnumerable<string>>()
                 {
@@ -200,11 +213,11 @@ namespace InternetShop.Data.Repository
                 {
                     if (categoryId == 0)
                     {
-                        products = products.Where(i => item.Contains(i.Category)).ToList();
+                        products = products.Where(i => item.Contains(i.ProductType.Category)).ToList();
                     }
                     else if (categoryId == 1)
                     {
-                        products = products.Where(i => item.Contains(i.Company)).ToList();
+                        products = products.Where(i => item.Contains(i.ProductType.Company)).ToList();
                     }
                     else
                     {

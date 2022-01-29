@@ -96,23 +96,14 @@ namespace InternetShop.Controlles
         [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Create")]
         public async Task<IActionResult> Create(Product obj)
         {
-            if (await _productRepository.GetByNameAsync(obj.Name) == null)
+            if (ModelState.IsValid)
             {
-                if (ModelState.IsValid)
-                {
-                    await _productRepository.AddProductAsync(obj);
+                await _productRepository.AddProductAsync(obj);
 
-                    return RedirectToAction("Index");
-                }
-
-                return View(obj);
+                return RedirectToAction("Index");
             }
-            else
-            {
-                ModelState.AddModelError("", "Товар имеется в базе данных");
 
-                return View(obj);
-            }
+            return View(obj);
         }
 
         [Route("Catalog/{name}")]
@@ -163,7 +154,7 @@ namespace InternetShop.Controlles
         }
 
         [HttpPost]
-        [Route("Catalog/SearchAjax")]
+        [Route("Catalog/GetPartialSearchProduct")]
         public async Task<IActionResult> GetPartialSearchProduct(string q, List<string> filters, int? page)
         {
             var products = await _productRepository.SearchProductsAsync(q);
@@ -189,7 +180,7 @@ namespace InternetShop.Controlles
         }
 
         [HttpPost]
-        [Route("Catalog/SearchAjax1")]
+        [Route("Catalog/GetSearchProduct")]
         public async Task<IActionResult> GetSearchProduct(string q)
         {
             var products = await _productRepository.SearchProductsAsync(q);

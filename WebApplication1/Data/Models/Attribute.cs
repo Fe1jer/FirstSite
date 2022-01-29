@@ -2,7 +2,7 @@
 
 namespace InternetShop.Data.Models
 {
-    public class AttributeCategory : Entity
+    public class Attribute : Entity
     {
         public string Name { set; get; }
     }

@@ -6,6 +6,7 @@ using InternetShop.Data.Models;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
 using Microsoft.AspNetCore.Identity;
+using InternetShop.Data.Repository.Base;
 
 namespace InternetShop.Data.Repository
 {
@@ -26,7 +27,7 @@ namespace InternetShop.Data.Repository
                 User = user,
                 Product = product,
                 Price = product.Price,
-                Category = product.Category
+                Category = product.ProductType.Category
             };
             await AddAsync(shopCartItem);
         }

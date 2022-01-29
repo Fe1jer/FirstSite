@@ -4,6 +4,7 @@ using System.Threading.Tasks;
 using InternetShop.Data.Interfaces;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications.Base;
+using InternetShop.Data.Repository.Base;
 
 namespace InternetShop.Data.Repository
 {

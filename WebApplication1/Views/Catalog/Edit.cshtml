@@ -3,7 +3,7 @@
     ViewData["Title"] = "Изменение товара";
 }
 @section Css{
-    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
 }
 <section class="product-details mb-4 mt-2">
     <div class="container-fluid">
@@ -22,24 +22,24 @@
                 <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
                     <div class="row">
                         <div class="col-sm-4">
-                            <label asp-for="Category" class="form-label"></label>
+                            <label asp-for="ProductType.Category" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="Category" class="form-control" />
-                                <span asp-validation-for="Category" class="text-danger"></span>
+                                <input asp-for="ProductType.Category" class="form-control" />
+                                <span asp-validation-for="ProductType.Category" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label asp-for="Company" class="form-label"></label>
+                            <label asp-for="ProductType.Company" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="Company" class="form-control" />
-                                <span asp-validation-for="Company" class="text-danger"></span>
+                                <input asp-for="ProductType.Company" class="form-control" />
+                                <span asp-validation-for="ProductType.Company" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label asp-for="Name" class="form-label"></label>
+                            <label asp-for="ProductType.Name" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="Name" class="form-control" />
-                                <span asp-validation-for="Name" class="text-danger"></span>
+                                <input asp-for="ProductType.Name" class="form-control" />
+                                <span asp-validation-for="ProductType.Name" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -66,13 +66,6 @@
                             </div>
                         </div>
                     </div>
-                    <div class="input-group">
-                        <label asp-for="LongDesc" class="form-label"></label>
-                        <div class="input-group">
-                            <textarea asp-for="LongDesc"></textarea>
-                            <span asp-validation-for="LongDesc" class="text-danger"></span>
-                        </div>
-                    </div>
 
                     <div class="">
                         <input type="text" id="name_attribute" />
@@ -81,29 +74,27 @@
                     <div class="div_product_attributes">
                         @{
                             int i = 0;
-                            foreach (var att in Model.ProductAttributes)
+                            foreach (var att in Model.AttributeValues)
                             {
                                 <div class="attribute">
-                                    <p>@att.AttributeCategory.Name</p>
-                                    <input type="text" class="attributesValue" asp-for="ProductAttributes[i].Value" />
-                                    <input type="hidden" class="categoryName" asp-for="ProductAttributes[i].AttributeCategory.Name" />
-                                    <input type="hidden" class="attributesId" asp-for="ProductAttributes[i].Id" />
+                                    <p>@att.Attribute.Name</p>
+                                    <input type="text" class="attributesValue" asp-for="AttributeValues[i].Value" />
+                                    <input type="hidden" class="categoryName" asp-for="AttributeValues[i].Attribute.Name" />
+                                    <input type="hidden" class="attributesId" asp-for="AttributeValues[i].Id" />
                                     <input type="button" id="delete_button_attribute" value="Удалить" />
                                 </div>
                                 i++;
                             }
                         }
                     </div>
-
+                    <div class="col-sm-6">
+                        <label asp-for="Count" class="form-label"></label>
+                        <div class="input-group">
+                            <input asp-for="Count" class="form-control" />
+                            <span asp-validation-for="Count" class="text-danger"></span>
+                        </div>
+                    </div>
                     <div class="row">
-                        <div class="container">
-                            <label asp-for="IsFavourite" class="form-label"></label>
-                            <input asp-for="IsFavourite" type="checkbox" />
-                        </div>
-                        <div class="container">
-                            <label asp-for="Available" class="form-label"></label>
-                            <input asp-for="Available" type="checkbox" />
-                        </div>
                     </div>
                 </div>
             </div>
@@ -159,5 +150,5 @@
     </div>
 </section>
 @section Scripts{
-    <script src="~/js/modules/products.js"></script>
+<script src="~/js/modules/products.js"></script>
 }

@@ -1,6 +1,6 @@
 ﻿@model ShowProductViewModel
 @{
-    ViewData["Title"] = Model.Product.Company + " " + Model.Product.Name;
+    ViewData["Title"] = Model.Product.ProductType.Company + " " + Model.Product.ProductType.Name;
 }
 @section Css{
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
@@ -12,19 +12,13 @@
                 <img class="w-100" src="@Model.Product.Img" />
             </div>
             <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
-                <h1 class="mb-4">@Model.Product.Category @Model.Product.Company @Model.Product.Name</h1>
+                <h1 class="mb-4">@Model.Product.ProductType.Category @Model.Product.ProductType.Company @Model.Product.ProductType.Name</h1>
                 <h5 class="mb-4 text-muted">@Model.Product.ShortDesc</h5>
                 <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
                     <ul class="list-inline mb-2 mb-sm-0">
                         <li class="list-inline-item h4 font-weight-light mb-0">@Model.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</li>
                     </ul>
                 </div>
-                <ul class="long-desc">
-                    @foreach (string item in Model.Product.LongDesc.Split("\n"))
-                    {
-                        <li>@item</li>
-                    }
-                </ul>
                 <form action="#">
                     @*<div class="row">
                             <div class="col-sm-6 col-lg-12 detail-option mb-3">

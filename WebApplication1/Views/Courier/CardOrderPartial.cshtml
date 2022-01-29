@@ -28,8 +28,8 @@
             <div class="col-lg-4">
                 @foreach (OrderDetail orderDetail in Model?.OrderDetails)
                 {
-                    <a asp-controller="Catalog" asp-action="Product" asp-route-name="@orderDetail.Product.Name.Replace(" ", "-")" asp-route-id="@orderDetail.Product.Id" class="nav-link text-dark p-0">
-                        <b>@orderDetail.Product.Category:</b> @orderDetail.Product.Company @orderDetail.Product.Name
+                    <a asp-controller="Catalog" asp-action="Product" asp-route-name="@orderDetail.Product.ProductType.Name.Replace(" ", "-")" asp-route-id="@orderDetail.Product.Id" class="nav-link text-dark p-0">
+                        <b>@orderDetail.Product.ProductType.Category:</b> @orderDetail.Product.ProductType.Company @orderDetail.Product.ProductType.Name
                     </a>
                 }
             </div>

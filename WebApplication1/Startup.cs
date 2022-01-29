@@ -139,8 +139,9 @@ namespace InternetShop
             services.AddTransient<IShopCart, ShopCartRepository>();
             services.AddTransient<INewsRepository, NewsRepository>();
             services.AddTransient<ISiteRatingRepository, SiteRatingRepository>();
-            services.AddTransient<IAttributeCategoryRepository, AttributeCategoryRepository>();
-            services.AddTransient<IProductAttributeRepository, ProductAttributeRepository>();
+            services.AddTransient<IAttributeRepository, AttributeRepository>();
+            services.AddTransient<IAttributeValueRepository, AttributeValueRepository>();
+            services.AddTransient<IProductTypesRepository, ProductTypesRepository>();
         }
     }
 }

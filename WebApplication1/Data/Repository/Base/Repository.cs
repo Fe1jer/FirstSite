@@ -9,7 +9,7 @@ using InternetShop.Data.Interfaces;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
 
-namespace InternetShop.Data.Repository
+namespace InternetShop.Data.Repository.Base
 {
     public class Repository<T> : IRepository<T> where T : Entity
     {

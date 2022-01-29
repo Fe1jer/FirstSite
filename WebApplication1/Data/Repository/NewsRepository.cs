@@ -7,6 +7,7 @@ using InternetShop.Data.Services;
 using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
 using InternetShop.ViewModels;
+using InternetShop.Data.Repository.Base;
 
 namespace InternetShop.Data.Repository
 {

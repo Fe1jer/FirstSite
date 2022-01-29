@@ -4,14 +4,16 @@ using InternetShop.Data;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 
 namespace InternetShop.Migrations
 {
     [DbContext(typeof(AppDBContext))]
-    partial class AppDBContextModelSnapshot : ModelSnapshot
+    [Migration("20220129161334_addattribute")]
+    partial class addattribute
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -31,7 +33,7 @@ namespace InternetShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("Attributes");
+                    b.ToTable("AttributeCategory");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.AttributeValue", b =>
@@ -56,7 +58,7 @@ namespace InternetShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("AttributeValues");
+                    b.ToTable("AttributeValue");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.News", b =>
@@ -168,7 +170,7 @@ namespace InternetShop.Migrations
 
                     b.HasIndex("CourierId");
 
-                    b.ToTable("Orders");
+                    b.ToTable("Order");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.OrderDetail", b =>
@@ -193,7 +195,7 @@ namespace InternetShop.Migrations
 
                     b.HasIndex("ProductId");
 
-                    b.ToTable("OrderDetails");
+                    b.ToTable("OrderDetail");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.Product", b =>
@@ -203,14 +205,29 @@ namespace InternetShop.Migrations
                         .HasColumnType("int")
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
-                    b.Property<int>("Count")
-                        .HasColumnType("int");
+                    b.Property<bool>("Available")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("Category")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<string>("Company")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Country")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
                     b.Property<string>("Img")
+                        .IsRequired()
+                        .HasColumnType("nvarchar(max)");
+
+                    b.Property<bool>("IsFavourite")
+                        .HasColumnType("bit");
+
+                    b.Property<string>("LongDesc")
                         .IsRequired()
                         .HasColumnType("nvarchar(max)");
 
@@ -228,7 +245,7 @@ namespace InternetShop.Migrations
 
                     b.HasIndex("ProductTypeId");
 
-                    b.ToTable("Products");
+                    b.ToTable("Product");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.ProductType", b =>
@@ -252,7 +269,7 @@ namespace InternetShop.Migrations
 
                     b.HasKey("Id");
 
-                    b.ToTable("ProductTypes");
+                    b.ToTable("ProductType");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.ShopCartItem", b =>
@@ -280,7 +297,7 @@ namespace InternetShop.Migrations
 
                     b.HasIndex("UserId");
 
-                    b.ToTable("ShopCartItems");
+                    b.ToTable("ShopCartItem");
                 });
 
             modelBuilder.Entity("InternetShop.Data.Models.SiteRating", b =>

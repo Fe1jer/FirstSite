@@ -10,10 +10,12 @@ namespace InternetShop.Data.Specifications
         public ShopCartSpecification() : base()
         {
             AddInclude(shopCart => shopCart.Product);
+            AddInclude(shopCart => shopCart.Product.ProductType);
         }
         public ShopCartSpecification(Expression<Func<ShopCartItem, bool>> expression) : base(expression)
         {
             AddInclude(shopCart => shopCart.Product);
+            AddInclude(shopCart => shopCart.Product.ProductType);
         }
 
         public ShopCartSpecification WhereProduct(int id)

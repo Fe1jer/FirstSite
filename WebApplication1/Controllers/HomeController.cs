@@ -179,7 +179,7 @@ namespace InternetShop.Controllers
                 {
                     LastModified = DateTime.UtcNow,
                     Priority = 0.8,
-                    Url = Url.ActionLink("Index") + "Catalog/" + product.Name.Replace(" ", "-") + "?id=" + product.Id,
+                    Url = Url.ActionLink("Index") + "Catalog/" + product.ProductType.Name.Replace(" ", "-") + "?id=" + product.Id,
                     Frequency = SitemapFrequency.Weekly
                 };
                 list.Add(sitemapNode);

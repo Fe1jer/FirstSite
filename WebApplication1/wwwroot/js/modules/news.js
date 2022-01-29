@@ -75,8 +75,8 @@ $(document).ready(function () {
 });
 
 function ShowProduct(item) {
-    var name = JSON.stringify(item.name).slice(1, -1);
-    var company = JSON.stringify(item.company).slice(1, -1);
+    var name = JSON.stringify(item.productType.name).slice(1, -1);
+    var company = JSON.stringify(item.productType.company).slice(1, -1);
     var a = "'";
     var msg = '<li onclick="setProduct(' + JSON.stringify(item.id) + ',' + a + name + a + ',' + a + company + a + ')" class="my-2 dropdown-item p-0" style="height: 40px; overflow: hidden; display: flex; cursor:pointer">' +
         '<img src=' + JSON.stringify(item.img) + ' alt=' + name + ' style="width:40px;height:40px;object-fit: contain;" />' +

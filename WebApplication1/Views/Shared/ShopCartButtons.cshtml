@@ -1,7 +1,7 @@
 ﻿@model ShowProductViewModel
 
 <div id="cardButtons">
-    @if (Model.Product.Available != false)
+    @if (Model.Product.Count != 0)
     {
         @if (Model.IsInCart)
         {

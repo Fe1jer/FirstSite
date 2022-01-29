@@ -8,19 +8,23 @@ namespace InternetShop.Data.Specifications
 {
     public class ProductSpecification : Specification<Product>
     {
-        public ProductSpecification() : base() { }
-        public ProductSpecification(Expression<Func<Product, bool>> expression) : base(expression) { }
+        public ProductSpecification() : base() {
+            IncludeAttribute();
+            IncludeType();
+        }
+        public ProductSpecification(Expression<Func<Product, bool>> expression) : base(expression) {
+            IncludeAttribute();
+            IncludeType();
+        }
 
         public ProductSpecification SortByName()
         {
-            AddDescendingOrdering(product => product.Name);
+            AddDescendingOrdering(product => product.ProductType.Name);
             return this;
         }
 
         public ProductSpecification SortByRelevance()
         {
-            AddDescendingOrdering(product => product.Available);
-            AddDescendingOrdering(product => product.IsFavourite);
             AddDescendingOrdering(product => product.Id);
             return this;
         }
@@ -41,14 +45,9 @@ namespace InternetShop.Data.Specifications
             return this;
         }
 
-        public ProductSpecification WhereAvailable(bool isAvailable)
-        {
-            AddWhere(product => product.Available == isAvailable);
-            return this;
-        }
         public ProductSpecification WhereName(string name)
         {
-            AddWhere(product => product.Name.ToLower().Contains(name.ToLower()));
+            AddWhere(product => product.ProductType.Name.ToLower().Contains(name.ToLower()));
             return this;
         }
         public ProductSpecification SortByPrice()
@@ -59,12 +58,14 @@ namespace InternetShop.Data.Specifications
 
         public ProductSpecification IncludeAttribute()
         {
-            AddInclude("ProductAttributes.AttributeCategory");
+            AddInclude(p => p.AttributeValues);
+            AddInclude("AttributeValues.Attribute");
+
             return this;
         }
-        public ProductSpecification IncludeCategory()
+        public ProductSpecification IncludeType()
         {
-            AddInclude(product => product.Category);
+            AddInclude(product => product.ProductType);
             return this;
         }
         public ProductSpecification WithoutTracking()
