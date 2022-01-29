@@ -164,7 +164,7 @@ namespace InternetShop.Controlles
 
         [HttpPost]
         [Route("Catalog/SearchAjax")]
-        public async Task<IActionResult> SearchAjax(string q, List<string> filters, int? page)
+        public async Task<IActionResult> GetPartialSearchProduct(string q, List<string> filters, int? page)
         {
             var products = await _productRepository.SearchProductsAsync(q);
             products = _productRepository.SortProducts(products.ToList(), filters);
@@ -186,6 +186,14 @@ namespace InternetShop.Controlles
                 i++;
             }
             return PartialView("ProductsListPartial", productsPagingList);
+        }
+
+        [HttpPost]
+        [Route("Catalog/SearchAjax1")]
+        public async Task<IActionResult> GetSearchProduct(string q)
+        {
+            var products = await _productRepository.SearchProductsAsync(q);
+            return Json(products);
         }
     }
 }

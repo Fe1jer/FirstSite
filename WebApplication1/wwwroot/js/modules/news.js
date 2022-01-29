@@ -21,6 +21,7 @@ $('#caruselCheck').change(function () {
 $(document).ready(function () {
     var xhr;
     $('#search__news').on('keyup', function () {
+        console.log("sa");
         var $result = $(this).siblings('#search_box-result');
         var search = $(this).val();
         if (xhr) {
@@ -29,7 +30,7 @@ $(document).ready(function () {
         if ((search != '') && (search.length > 1)) {
             xhr = $.ajax({
                 type: "POST",
-                url: "/Catalog/SearchAjax",
+                url: "/Catalog/GetSearchProduct",
                 data: { q: search },
                 success: function (msg) {
                     $result.html('<ul class="search_result" id="search_result"></ul>')
@@ -74,11 +75,11 @@ $(document).ready(function () {
 });
 
 function ShowProduct(item) {
-    var name = JSON.stringify(item.product.name).slice(1, -1);
-    var company = JSON.stringify(item.product.company).slice(1, -1);
+    var name = JSON.stringify(item.name).slice(1, -1);
+    var company = JSON.stringify(item.company).slice(1, -1);
     var a = "'";
-    var msg = '<li onclick="setProduct(' + JSON.stringify(item.product.id) + ',' + a + name + a + ',' + a + company + a + ')" class="my-2 dropdown-item p-0" style="height: 40px; overflow: hidden; display: flex; cursor:pointer">' +
-        '<img src=' + JSON.stringify(item.product.img) + ' alt=' + name + ' style="width:40px;height:40px;object-fit: contain;" />' +
+    var msg = '<li onclick="setProduct(' + JSON.stringify(item.id) + ',' + a + name + a + ',' + a + company + a + ')" class="my-2 dropdown-item p-0" style="height: 40px; overflow: hidden; display: flex; cursor:pointer">' +
+        '<img src=' + JSON.stringify(item.img) + ' alt=' + name + ' style="width:40px;height:40px;object-fit: contain;" />' +
         '<p class="my-auto ms-2">' + company + ' ' + name + '</p>' +
         '</li>';
     return msg;

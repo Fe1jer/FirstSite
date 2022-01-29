@@ -19,7 +19,7 @@ function searchAjax(list, numPage) {
     searchName == undefined ? "" : searchName;
     return xhr = $.ajax({
         type: 'POST',
-        url: '/Catalog/SearchAjax',
+        url: '/Catalog/GetPartialSearchProduct',
         beforeSend: function () {
             $("#loaderDiv").show();
         },
