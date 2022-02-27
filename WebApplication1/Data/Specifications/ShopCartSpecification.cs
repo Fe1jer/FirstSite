@@ -34,6 +34,7 @@ namespace InternetShop.Data.Specifications
         {
             AddInclude(shopCart => shopCart.User);
             AddWhere(shopCart => shopCart.User.Email == email);
+            AddWhere(shopCart => shopCart.Product.Count != 0);
             return this;
         }
 

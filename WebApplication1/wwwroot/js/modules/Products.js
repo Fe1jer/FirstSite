@@ -8,11 +8,14 @@ function resultProductsEmpty() {
     return (msg);
 }
 
-var searchName;
 var xhr;
 var url;
 
 function searchAjax(list, numPage) {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const searchName = urlParams.get('q')
+
     if (xhr) {
         xhr.abort();
     }

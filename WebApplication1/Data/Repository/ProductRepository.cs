@@ -252,18 +252,12 @@ namespace InternetShop.Data.Repository
                         break;
                     }
                 }
-                if (itemInCart)
-                {
-                    showProduct.IsInCart = true;
-                }
-                else
-                {
-                    showProduct.IsInCart = false;
-                }
+                showProduct.IsInCart = itemInCart;
+                showProduct.IsAvailable = product.Count > 0;
                 showProducts.Add(showProduct);
             }
 
-            return showProducts;
+            return showProducts.OrderByDescending(p=>p.IsAvailable).ToList();
         }
 
         public async Task<ShowProductViewModel> FindProductInTheCart(Product product, string email)
@@ -298,9 +292,7 @@ namespace InternetShop.Data.Repository
         public async Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string email)
         {
             var cartItems = (await _shopCart.GetAllAsync(
-                new ShopCartSpecification().
-               WhereUserEmail(email))
-               ).ToList();
+                new ShopCartSpecification().WhereUserEmail(email))).ToList();
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
             foreach (Product product in products)
@@ -325,6 +317,15 @@ namespace InternetShop.Data.Repository
             }
 
             return showProducts;
+        }
+
+        public async Task BuyGoods(List<Product> products)
+        {
+            foreach (Product product in products)
+            {
+                product.Count -= 1;
+                await UpdateAsync(product);
+            }
         }
     }
 }

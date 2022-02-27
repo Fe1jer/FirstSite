@@ -9,7 +9,6 @@ using InternetShop.Data.Specifications;
 using InternetShop.ViewModels;
 using ReflectionIT.Mvc.Paging;
 using Microsoft.AspNetCore.Routing;
-using System;
 
 namespace InternetShop.Controlles
 {

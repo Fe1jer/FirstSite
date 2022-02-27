@@ -25,22 +25,13 @@ function filterProducts() {
 };
 
 window.onpopstate = history.onpushstate = function () {
+    const queryString = window.location.search;
+    const urlParams = new URLSearchParams(queryString);
+    const page = urlParams.get('page')
+
     var list = URLToArray('filters');
     getFilterFromUrl(list);
-    searchAjax(list);
-}
-
-function getUrlParameter(sParam) {
-    var sPageURL = decodeURIComponent(window.location.search.substring(1));
-    var array = []
-    var sURLVariables = sPageURL.split('&');
-    for (var i = 0; i < sURLVariables.length; i++) {
-        var sParameterName = sURLVariables[i].split('=');
-        if (sParameterName[0] == sParam) {
-            array.push(sParameterName[1]);
-        }
-    }
-    return array;
+    searchAjax(list, page);
 }
 
 function URLToArray(sParam) {

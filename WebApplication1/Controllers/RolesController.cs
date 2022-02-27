@@ -81,9 +81,9 @@ namespace InternetShop.Controllers
             return NotFound();
         }
 
-        public async Task<IActionResult> Delete(string userId)
+        public async Task<IActionResult> Delete(int userId)
         {
-            User user = await _userManager.FindByIdAsync(userId);
+            User user = await _userManager.FindByIdAsync(userId.ToString());
             if (user != null)
             {
                 await _userManager.DeleteAsync(user);

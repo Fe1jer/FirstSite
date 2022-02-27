@@ -6,5 +6,6 @@ namespace InternetShop.ViewModels
     {
         public Product Product { get; set; }
         public bool IsInCart { get; set; }
+        public bool IsAvailable{ get; set; }
     }
 }

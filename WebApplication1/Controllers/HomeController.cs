@@ -48,7 +48,6 @@ namespace InternetShop.Controllers
         }
         public async Task<ViewResult> Index()
         {
-            await SitemapXml();
             double rating = await _siteRatingRepository.OverallSiteRating();
             HomeViewModel model = new HomeViewModel()
             {
@@ -57,14 +56,14 @@ namespace InternetShop.Controllers
             return View(model);
         }
 
-        [Authorize(Roles = "admin, moderator")]
+        [Authorize(Roles = "moderator")]
         public ActionResult Create()
         {
             return View();
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
+        [ValidateAntiForgeryToken, Authorize(Roles = "moderator")]
         public async Task<IActionResult> Create(CreateNewsViewModel model)
         {
             if (ModelState.IsValid)
@@ -83,7 +82,7 @@ namespace InternetShop.Controllers
             return View(news);
         }
 
-        [Authorize(Roles = "admin, moderator")]
+        [Authorize(Roles = "moderator")]
         public async Task<IActionResult> Edit(int id)
         {
             News news = await _newsRepository.GetByIdAsync(id);
@@ -92,7 +91,7 @@ namespace InternetShop.Controllers
         }
 
         [HttpPost]
-        [ValidateAntiForgeryToken, Authorize(Roles = "admin, moderator")]
+        [ValidateAntiForgeryToken, Authorize(Roles = "moderator")]
         public async Task<IActionResult> Edit(ChangeNewsViewModel news)
         {
             try
@@ -104,7 +103,7 @@ namespace InternetShop.Controllers
                     return RedirectToAction(nameof(News));
                 }
             }
-            catch(Exception ex)
+            catch (Exception ex)
             {
                 return View(news);
             }
@@ -112,7 +111,7 @@ namespace InternetShop.Controllers
             return View(news);
         }
 
-        [Authorize(Roles = "admin, moderator")]
+        [Authorize(Roles = "moderator")]
         public async Task<RedirectToActionResult> Delete(int id)
         {
             await _newsRepository.DeleteAsync(id);
@@ -156,7 +155,6 @@ namespace InternetShop.Controllers
                 new SitemapNode { LastModified = DateTime.UtcNow, Priority = 1, Url = Url.ActionLink("Index", "Catalog"), Frequency = SitemapFrequency.Weekly   },
                 new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0, Url = Url.ActionLink("Search", "Catalog"), Frequency = SitemapFrequency.Weekly   },
                 new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.7, Url = Url.ActionLink("Login", "Account"), Frequency = SitemapFrequency.Weekly   },
-                new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.2, Url = Url.ActionLink("ForgotPassword", "Account"), Frequency = SitemapFrequency.Weekly   },
                 new SitemapNode { LastModified = DateTime.UtcNow, Priority = 0.7, Url = Url.ActionLink("Register", "Account"), Frequency = SitemapFrequency.Weekly   },
             };
             foreach (var news in await _newsRepository.GetAllAsync())

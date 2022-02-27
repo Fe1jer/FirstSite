@@ -21,5 +21,6 @@ namespace InternetShop.Data.Interfaces
         Task<List<ShowProductViewModel>> FindProductsInTheCart(List<Product> products, string userName);
         Task<ShowProductViewModel> FindProductInTheCart(Product product, string userName);
         Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string userName);
+        Task BuyGoods(List<Product> products);
     }
 }

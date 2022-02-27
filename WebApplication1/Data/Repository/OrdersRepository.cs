@@ -67,7 +67,7 @@ namespace InternetShop.Data.Repository
 
         public async Task UpdateCourierOrdersAsync(int idOrder, User courier)
         {
-            var orders = await base.GetAllAsync(new OrderSpecification());
+            var orders = await base.GetAllAsync(new OrderSpecification().IncludeCourier());
             Order order = orders.FirstOrDefault(n => n.Id == idOrder);
             order.Courier = courier;
             await UpdateAsync(order);

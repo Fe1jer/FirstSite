@@ -15,11 +15,13 @@ namespace InternetShop.Controllers
     {
         private readonly IOrdersRepository _ordersRepository;
         private readonly IShopCart _shopCart;
+        private readonly IProductRepository _productRepository;
 
-        public OrderController(IShopCart shopCart, IOrdersRepository IOrdersRepository)
+        public OrderController(IShopCart shopCart, IOrdersRepository IOrdersRepository, IProductRepository productRepository)
         {
             _shopCart = shopCart;
             _ordersRepository = IOrdersRepository;
+            _productRepository = productRepository;
         }
 
         public async Task<IActionResult> Checkout()
@@ -58,6 +60,8 @@ namespace InternetShop.Controllers
 
         public async Task<IActionResult> Complete()
         {
+            var shopCartItems = await _shopCart.GetAllAsync(new ShopCartSpecification().WhereUserEmail(User.Identity.Name));
+            await _productRepository.BuyGoods(shopCartItems.Select(p => p.Product).ToList());
             await _shopCart.EmptyTheCart(User.Identity.Name);
             ViewBag.Message = "Заказ успешно обработан";
             return View();

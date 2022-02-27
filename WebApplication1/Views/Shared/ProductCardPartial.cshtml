@@ -29,7 +29,7 @@
                         </font>
                     </font>
                 </a>
-                @if (User.IsInRole("admin") || User.IsInRole("moderator"))
+                @if (User.IsInRole("moderator"))
                 {
                     <a type="button nav-link" icon="buttonCart" class="text-end btn btn-outline-success" asp-controller="Catalog" asp-action="Edit" asp-route-id="@Model.Product.Id">
                         <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-pencil-square" viewBox="0 0 16 16">

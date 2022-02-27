@@ -65,7 +65,7 @@ namespace InternetShop.Data.Specifications
 
         private OrderSpecification IncludeDetails()
         {
-            AddInclude("OrderDetails.Product");
+            AddInclude("OrderDetails.Product.ProductType");
             return this;
         }
 
