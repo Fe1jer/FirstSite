@@ -13,18 +13,18 @@
         <div class="row">
             <div class="col-lg-6 product__slider">
                 <div class="slider-for">
-                    @for (int i = 0; i <= 3; i++)
+                    @foreach(var img in Model.Product.ProductImages)
                     {
                         <div>
-                            <img height="455" width="455" src="@Model.Product.Img" />
+                            <img height="455" width="455" src="@img.pathImg" />
                         </div>
                     }
                 </div>
                 <div class="slider-nav">
-                    @for (int i = 0; i <= 3; i++)
+                    @foreach(var img in Model.Product.ProductImages)
                     {
                         <div class="product__slider-item">
-                            <img src="@Model.Product.Img" />
+                            <img src="@img.pathImg" />
                         </div>
                     }
                 </div>

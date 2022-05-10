@@ -61,12 +61,15 @@ namespace InternetShop.Controlles
         public async Task<IActionResult> Edit(int id)
         {
             Product obj = await _productRepository.GetByIdAsync(id);
-
-            return View(obj);
+            CreateChangeProductViewModel model = new CreateChangeProductViewModel()
+            {
+                Product = obj
+            };
+            return View(model);
         }
 
         [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Edit")]
-        public async Task<IActionResult> Edit(Product obj)
+        public async Task<IActionResult> Edit(CreateChangeProductViewModel obj)
         {
             if (ModelState.IsValid)
             {
@@ -93,7 +96,7 @@ namespace InternetShop.Controlles
         }
 
         [HttpPost, ValidateAntiForgeryToken, Route("Catalog/Create")]
-        public async Task<IActionResult> Create(Product obj)
+        public async Task<IActionResult> Create(CreateChangeProductViewModel obj)
         {
             if (ModelState.IsValid)
             {

@@ -8,22 +8,28 @@ using InternetShop.Data.Specifications;
 using InternetShop.Data.Specifications.Base;
 using InternetShop.ViewModels;
 using InternetShop.Data.Repository.Base;
+using System.IO;
+using Microsoft.AspNetCore.Hosting;
 
 namespace InternetShop.Data.Repository
 {
     public class ProductRepository : Repository<Product>, IProductRepository
     {
+        private readonly IWebHostEnvironment _appEnvironment;
         private readonly IShopCart _shopCart;
         private readonly IAttributeRepository _attributeCategory;
         private readonly IAttributeValueRepository _productAttribute;
+        private readonly IProductImagesRepository _productImagesRepository;
         private readonly IProductTypesRepository _productTypes;
 
-        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IAttributeRepository attributeCategory, IAttributeValueRepository productAttribute, IProductTypesRepository productTypes) : base(appDBContext)
+        public ProductRepository(AppDBContext appDBContext, IShopCart shopCart, IAttributeRepository attributeCategory, IAttributeValueRepository productAttribute, IProductTypesRepository productTypes, IWebHostEnvironment appEnvironment, IProductImagesRepository productImagesRepository) : base(appDBContext)
         {
+            _productImagesRepository = productImagesRepository;
             _productAttribute = productAttribute;
             _attributeCategory = attributeCategory;
             _shopCart = shopCart;
             _productTypes = productTypes;
+            _appEnvironment = appEnvironment;
         }
 
         public new async Task<IReadOnlyList<Product>> GetAllAsync()
@@ -48,43 +54,88 @@ namespace InternetShop.Data.Repository
             await DeleteAsync(product);
         }
 
-        public new async Task UpdateAsync(Product product)
+        private async Task<Product> UpdateProductImages(CreateChangeProductViewModel model)
         {
-            var type = await _productTypes.FindByType(product.ProductType);
+            if (model.Uploads != null && model.Uploads.Count != 0)
+            {
+                if (model.Product.ProductImages != null)
+                {
+                    foreach (var img in model.Product?.ProductImages)
+                    {
+                        if (File.Exists($"wwwroot{img}"))
+                        {
+                            File.Delete($"wwwroot{img}");
+                        }
+                    }
+                }
+                await _productImagesRepository.DeleteListAsync(model.Product.ProductImages);
+                model.Product.ProductImages = new List<ProductImage>();
+                foreach (var upload in model.Uploads)
+                {
+                    string path = "\\img\\Products\\" + model.Product.Id;
+                    // сохраняем файл в папку Files в каталоге wwwroot
+
+                    Directory.GetCurrentDirectory();
+                    var a = $"{_appEnvironment.WebRootPath + path}";
+                    Directory.CreateDirectory(a);
+                    path += "\\" + upload.FileName;
+
+                    using (var fileStream = new FileStream(_appEnvironment.WebRootPath + path, FileMode.Create))
+                    {
+                        await upload.CopyToAsync(fileStream);
+                    }
+
+                    ProductImage image = new ProductImage()
+                    {
+                        pathImg = path
+                    };
+                    model.Product.ProductImages.Add(image);
+                }
+                model.Product.Img = model.Product.ProductImages.FirstOrDefault().pathImg;
+            }
+
+            return model.Product;
+        }
+
+        public async Task UpdateAsync(CreateChangeProductViewModel model)
+        {
+            var type = await _productTypes.FindByType(model.Product.ProductType);
             if (type != null)
             {
-                product.ProductType = type;
+                model.Product.ProductType = type;
             }
-            var productAttributes = await _productAttribute.GetAllAsync(new AttributeValuesSpecification().WhereProductId(product.Id));
+            var productAttributes = await _productAttribute.GetAllAsync(new AttributeValuesSpecification().WhereProductId(model.Product.Id));
             List<AttributeValue> notProductAttributes;
 
-            if (product.AttributeValues != null)
+            if (model.Product.AttributeValues != null)
             {
                 var attributeCategories = await _attributeCategory.GetAllAsync();
 
-                for (int i = 0; i < product.AttributeValues.Count; i++)
+                for (int i = 0; i < model.Product.AttributeValues.Count; i++)
                 {
-                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == product.AttributeValues[i]?.Id);
-                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == product.AttributeValues[i].Attribute.Name);
+                    var productAttribute = productAttributes.FirstOrDefault(a => a.Id == model.Product.AttributeValues[i]?.Id);
+                    var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == model.Product.AttributeValues[i].Attribute.Name);
 
                     if (productAttribute != null)
                     {
-                        productAttribute.Value = product.AttributeValues[i].Value;
-                        product.AttributeValues[i] = productAttribute;
+                        productAttribute.Value = model.Product.AttributeValues[i].Value;
+                        model.Product.AttributeValues[i] = productAttribute;
                     }
                     if (attributeCategory != null)
                     {
-                        product.AttributeValues[i].Attribute = attributeCategory;
+                        model.Product.AttributeValues[i].Attribute = attributeCategory;
                     }
                 }
-                notProductAttributes = productAttributes.Where(p => !product.AttributeValues.Select(p => p?.Id).Contains(p?.Id)).ToList();
+                notProductAttributes = productAttributes.Where(p => !model.Product.AttributeValues.Select(p => p?.Id).Contains(p?.Id)).ToList();
             }
             else
             {
                 notProductAttributes = productAttributes.ToList();
             }
             await _productAttribute.DeleteListAsync(notProductAttributes);
-            await base.UpdateAsync(product);
+            model.Product = await UpdateProductImages(model);
+
+            await UpdateAsync(model.Product);
         }
 
         public async Task<Product> GetByNameAsync(string name)
@@ -110,17 +161,17 @@ namespace InternetShop.Data.Repository
             return products;
         }
 
-        public async Task AddProductAsync(Product product)
+        public async Task AddProductAsync(CreateChangeProductViewModel model)
         {
-            var type = await _productTypes.FindByType(product.ProductType);
+            var type = await _productTypes.FindByType(model.Product.ProductType);
             if (type != null)
             {
-                product.ProductType = type;
+                model.Product.ProductType = type;
             }
-            if (product.AttributeValues != null)
+            if (model.Product.AttributeValues != null)
             {
                 var attributeCategories = await _attributeCategory.GetAllAsync();
-                foreach (var attribute in product.AttributeValues)
+                foreach (var attribute in model.Product.AttributeValues)
                 {
                     var attributeCategory = attributeCategories.FirstOrDefault(a => a.Name == attribute.Attribute.Name);
                     if (attributeCategory != null)
@@ -129,7 +180,10 @@ namespace InternetShop.Data.Repository
                     }
                 }
             }
-            await AddAsync(product);
+
+            model.Product = await UpdateProductImages(model);
+
+            await AddAsync(model.Product);
         }
 
         public List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products)
@@ -232,63 +286,40 @@ namespace InternetShop.Data.Repository
 
         public async Task<List<ShowProductViewModel>> FindProductsInTheCart(List<Product> products, string email)
         {
-            var cartItems = _shopCart.GetAllAsync(
-                new ShopCartSpecification().
-                WhereUserEmail(email)).GetAwaiter().GetResult().ToList();
-
             List<ShowProductViewModel> showProducts = new List<ShowProductViewModel>();
 
             foreach (Product product in products)
             {
-                ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
-                bool itemInCart = false;
-
-                foreach (ShopCartItem shopCart in cartItems)
-                {
-                    if (shopCart.Product == product)
-                    {
-                        itemInCart = true;
-                        cartItems.Remove(shopCart);
-                        break;
-                    }
-                }
-                showProduct.IsInCart = itemInCart;
-                showProduct.IsAvailable = product.Count > 0;
-                showProducts.Add(showProduct);
+                showProducts.Add(await FindProductInTheCart(product, email));
             }
 
-            return showProducts.OrderByDescending(p=>p.IsAvailable).ToList();
+            return showProducts.OrderByDescending(p => p.IsAvailable).ToList();
         }
 
         public async Task<ShowProductViewModel> FindProductInTheCart(Product product, string email)
         {
             var cartItems = (await _shopCart.GetAllAsync(
-               new ShopCartSpecification().
-               WhereUserEmail(email))
-               ).ToList();
+               new ShopCartSpecification().WhereUserEmail(email))).ToList();
             ShowProductViewModel showProduct = new ShowProductViewModel() { Product = product };
-            bool itemInCart = false;
 
+            showProduct.IsInCart = IsProductInTheCart(ref cartItems, product);
+            showProduct.IsAvailable = product.Count > 0;
+
+            return showProduct;
+        }
+
+        public bool IsProductInTheCart(ref List<ShopCartItem> cartItems, Product product)
+        {
             foreach (ShopCartItem shopCart in cartItems)
             {
                 if (shopCart.Product == product)
                 {
-                    itemInCart = true;
-                    cartItems.Remove(shopCart);
-                    break;
+                    return true;
                 }
             }
-            if (itemInCart)
-            {
-                showProduct.IsInCart = true;
-            }
-            else
-            {
-                showProduct.IsInCart = false;
-            }
-
-            return showProduct;
+            return false;
         }
+
         public async Task<List<ShowProductViewModel>> RemoveIfInCart(List<Product> products, string email)
         {
             var cartItems = (await _shopCart.GetAllAsync(

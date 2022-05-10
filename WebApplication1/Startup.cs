@@ -142,6 +142,7 @@ namespace InternetShop
             services.AddTransient<IAttributeRepository, AttributeRepository>();
             services.AddTransient<IAttributeValueRepository, AttributeValueRepository>();
             services.AddTransient<IProductTypesRepository, ProductTypesRepository>();
+            services.AddTransient<IProductImagesRepository, ProductImagesRepository>();
         }
     }
 }

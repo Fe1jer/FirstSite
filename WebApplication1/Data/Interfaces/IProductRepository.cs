@@ -12,8 +12,8 @@ namespace InternetShop.Data.Interfaces
         Task<IReadOnlyList<Product>> GetAllAsync();
         Task<IReadOnlyList<Product>> GetAllAsync(ISpecification<Product> specification);
         Task<IReadOnlyList<Product>> SearchProductsAsync(string searchText);
-        Task AddProductAsync(Product product);
-        Task UpdateAsync(Product product);
+        Task AddProductAsync(CreateChangeProductViewModel product);
+        Task UpdateAsync(CreateChangeProductViewModel product);
         Task<Product> GetByNameAsync(string name);
         Task DeleteAsync(int id);
         List<FilterCategoryVM> GetFilterCategoriesByProducts(List<Product> products);

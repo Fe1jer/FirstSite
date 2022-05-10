@@ -30,5 +30,8 @@ namespace InternetShop.Data.Models
 
         [Display(Name = "Характеристики")]
         public List<AttributeValue> AttributeValues { set; get; }
+
+        [Display(Name = "Изображения")]
+        public List<ProductImage> ProductImages { set; get; }
     }
 }

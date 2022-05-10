@@ -29,11 +29,11 @@ namespace InternetShop.Controllers
                 UserId = p.Id,
                 Username = p.Name,
                 Email = p.Email,
-                Role = string.Join(", ", _userManager.GetRolesAsync(p).Result),
+                Role = string.Join(", ", _userManager.GetRolesAsync(p).Result.OrderBy(p => p)),
                 Img = p.Img,
                 IsValid = p.EmailConfirmed != false || p.LockoutEnd > DateTime.Now
             }).ToList();
-            usersWithRoles.OrderBy(p => p.Role);
+            usersWithRoles = usersWithRoles.OrderBy(p => p.Role).ToList();
             return View(usersWithRoles);
         }
 
@@ -66,6 +66,19 @@ namespace InternetShop.Controllers
             User user = await _userManager.FindByIdAsync(userId);
             if (user != null)
             {
+                if (roles.Count == 0)
+                {
+                    ModelState.AddModelError(string.Empty, "Роли пользователя отсутствуют");
+                    var allRoles = _roleManager.Roles;
+                    ChangeRoleViewModel model = new ChangeRoleViewModel
+                    {
+                        UserId = user.Id,
+                        UserEmail = user.Email,
+                        UserRoles = roles,
+                        AllRoles = allRoles.ToList()
+                    };
+                    return View(model);
+                }
                 // получем список ролей пользователя
                 var userRoles = await _userManager.GetRolesAsync(user);
                 // получаем список ролей, которые были добавлены

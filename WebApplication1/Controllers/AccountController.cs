@@ -59,7 +59,7 @@ namespace InternetShop.Controllers
                     await emailService.SendEmailAsync(model.Email, "Confirm your account",
                         $"Подтвердите регистрацию, перейдя по ссылке: <a href='{callbackUrl}'>link</a>");
 
-                    return View("ForgotPasswordConfirmation");
+                    return View("RegisterConfirmation");
                 }
                 else
                 {

@@ -1,4 +1,4 @@
-﻿@model Product
+﻿@model CreateChangeProductViewModel
 @{
     ViewData["Title"] = "Изменение товара";
 }
@@ -7,62 +7,72 @@
 }
 <section class="product-details mb-4 mt-2">
     <div class="container-fluid">
-        <form asp-controller="Catalog" asp-action="Edit" asp-route-id="@Model.Id" method="post">
+        <form asp-controller="Catalog" asp-action="Edit" asp-route-id="@Model.Product.Id" method="post" enctype="multipart/form-data">
+            <input asp-for="Product.Id" hidden class="form-control" />
+            @for(int n = 0; n < Model.Product.ProductImages.Count; n++)
+            {
+                <input asp-for="@Model.Product.ProductImages[n].pathImg" hidden class="form-control" />
+                <input asp-for="@Model.Product.ProductImages[n].Id" hidden class="form-control" />
+            }
             <div class="row">
                 <div class="col-lg-6 order-2 order-lg-1">
                     <div class="col-sm-6">
-                        <label asp-for="Img" class="form-label"></label>
+                        <label asp-for="Product.Img" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="Img" class="form-control" />
-                            <span asp-validation-for="Img" class="text-danger"></span>
+                            <input asp-for="Product.Img" class="form-control" />
+                            <span asp-validation-for="Product.Img" class="text-danger"></span>
+                        </div>
+                        <div class="input-group">
+                            <input asp-for="Uploads" multiple="" type="file" class="form-control" accept=".jpg, .jpeg, .png" style="display: revert; width:290px">
+                            <span asp-validation-for="Uploads" class="text-danger"></span>
                         </div>
                     </div>
-                    <img class="w-100 py-3" src="@Model?.Img" />
+                    <img class="w-100 py-3" src="@Model?.Product.Img" />
                 </div>
                 <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
                     <div class="row">
                         <div class="col-sm-4">
-                            <label asp-for="ProductType.Category" class="form-label"></label>
+                            <label asp-for="Product.ProductType.Category" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="ProductType.Category" class="form-control" />
-                                <span asp-validation-for="ProductType.Category" class="text-danger"></span>
+                                <input asp-for="Product.ProductType.Category" class="form-control" />
+                                <span asp-validation-for="Product.ProductType.Category" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label asp-for="ProductType.Company" class="form-label"></label>
+                            <label asp-for="Product.ProductType.Company" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="ProductType.Company" class="form-control" />
-                                <span asp-validation-for="ProductType.Company" class="text-danger"></span>
+                                <input asp-for="Product.ProductType.Company" class="form-control" />
+                                <span asp-validation-for="Product.ProductType.Company" class="text-danger"></span>
                             </div>
                         </div>
                         <div class="col-sm-4">
-                            <label asp-for="ProductType.Name" class="form-label"></label>
+                            <label asp-for="Product.ProductType.Name" class="form-label"></label>
                             <div class="input-group">
-                                <input asp-for="ProductType.Name" class="form-control" />
-                                <span asp-validation-for="ProductType.Name" class="text-danger"></span>
+                                <input asp-for="Product.ProductType.Name" class="form-control" />
+                                <span asp-validation-for="Product.ProductType.Name" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
                     <div class="input-group">
-                        <label asp-for="ShortDesc" class="form-label"></label>
+                        <label asp-for="Product.ShortDesc" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="ShortDesc" class="form-control" />
-                            <span asp-validation-for="ShortDesc" class="text-danger"></span>
+                            <input asp-for="Product.ShortDesc" class="form-control" />
+                            <span asp-validation-for="Product.ShortDesc" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="col-sm-6">
-                        <label asp-for="Country" class="form-label"></label>
+                        <label asp-for="Product.Country" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="Country" class="form-control" />
-                            <span asp-validation-for="Country" class="text-danger"></span>
+                            <input asp-for="Product.Country" class="form-control" />
+                            <span asp-validation-for="Product.Country" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
                         <div class="col-sm-6">
-                            <label asp-for="Price" class="form-label"></label> $
+                            <label asp-for="Product.Price" class="form-label"></label> $
                             <div class="input-group">
-                                <input asp-for="Price" class="form-control" />
-                                <span asp-validation-for="Price" class="text-danger"></span>
+                                <input asp-for="Product.Price" min="0" class="form-control" />
+                                <span asp-validation-for="Product.Price" class="text-danger"></span>
                             </div>
                         </div>
                     </div>
@@ -74,13 +84,13 @@
                     <div class="div_product_attributes">
                         @{
                             int i = 0;
-                            foreach (var att in Model.AttributeValues)
+                            foreach (var att in Model.Product.AttributeValues)
                             {
                                 <div class="attribute">
                                     <p>@att.Attribute.Name</p>
-                                    <input type="text" class="attributesValue" asp-for="AttributeValues[i].Value" />
-                                    <input type="hidden" class="categoryName" asp-for="AttributeValues[i].Attribute.Name" />
-                                    <input type="hidden" class="attributesId" asp-for="AttributeValues[i].Id" />
+                                    <input type="text" class="attributesValue" asp-for="Product.AttributeValues[i].Value" />
+                                    <input type="hidden" class="categoryName" asp-for="Product.AttributeValues[i].Attribute.Name" />
+                                    <input type="hidden" class="attributesId" asp-for="Product.AttributeValues[i].Id" />
                                     <input type="button" id="delete_button_attribute" value="Удалить" />
                                 </div>
                                 i++;
@@ -88,10 +98,10 @@
                         }
                     </div>
                     <div class="col-sm-6">
-                        <label asp-for="Count" class="form-label"></label>
+                        <label asp-for="Product.Count" class="form-label"></label>
                         <div class="input-group">
-                            <input asp-for="Count" class="form-control" />
-                            <span asp-validation-for="Count" class="text-danger"></span>
+                            <input asp-for="Product.Count" min="0" class="form-control" />
+                            <span asp-validation-for="Product.Count" class="text-danger"></span>
                         </div>
                     </div>
                     <div class="row">
@@ -141,7 +151,7 @@
                         </div>
                         <div class="modal-footer">
                             <button type="button" class="btn btn-secondary" data-bs-dismiss="modal">Закрыть</button>
-                            <a class="btn btn-danger" asp-controller="Catalog" asp-action="DeleteProduct" asp-route-id="@Model.Id">Удалить</a>
+                            <a class="btn btn-danger" asp-controller="Catalog" asp-action="DeleteProduct" asp-route-id="@Model.Product.Id">Удалить</a>
                         </div>
                     </div>
                 </div>

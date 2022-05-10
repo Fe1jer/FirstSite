@@ -47,6 +47,7 @@
 	<ItemGroup>
 		<Folder Include="Resources\Views\Home\" />
 		<Folder Include="wwwroot\img\news\" />
+		<Folder Include="wwwroot\img\UsersAvatar\" />
 		<Folder Include="wwwroot\jquery\" />
 		<Folder Include="wwwroot\lib\jquery-ajax-unobtrusive\" />
 	</ItemGroup>

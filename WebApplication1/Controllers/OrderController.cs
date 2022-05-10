@@ -39,7 +39,7 @@ namespace InternetShop.Controllers
         {
             if (ModelState.IsValid)
             {
-                if (countShopCartItems != 0)
+                if (countShopCartItems > 0)
                 {
                     await _ordersRepository.AddAsync(User.Identity.Name, order);
                     return RedirectToAction("Complete");
@@ -49,6 +49,7 @@ namespace InternetShop.Controllers
                     return RedirectToAction("Failed");
                 }
             }
+
             OrderViewModel orderR = new OrderViewModel
             {
                 Order = order,

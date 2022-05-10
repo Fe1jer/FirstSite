@@ -7,7 +7,7 @@
 
 <form asp-action="Edit" method="post">
     <input type="hidden" name="userId" value="@Model.UserId" />
-
+     <div class="validation" asp-validation-summary="ModelOnly"></div>
     <div class="form-check">
         @foreach (IdentityRole<int> role in Model.AllRoles)
         {

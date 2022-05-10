@@ -17,5 +17,6 @@ namespace InternetShop.Data
         public DbSet<Attribute> Attributes { get; set; }
         public DbSet<AttributeValue> AttributeValues { get; set; }
         public DbSet<ProductType> ProductTypes { get; set; }
+        public DbSet<ProductImage> ProductImages { get; set; }
     }
 }

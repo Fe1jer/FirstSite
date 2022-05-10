@@ -50,3 +50,35 @@ function searchAjax(list, numPage) {
         }
     });
 }
+
+function addAttribute() {
+    var msg = '<div class="attribute">' +
+        '<p>' + $("#name_attribute").val() + '</p>' +
+        '<input type="text" class="attributesValue"  name="Product.AttributeValues[' + $('.attribute').length + '].Value" />' +
+        '<input type="hidden" class="categoryName" name="Product.AttributeValues[' + $('.attribute').length + '].Attribute.Name" value="' + $("#name_attribute").val() + '" />' +
+        '<input type="button" id="delete_button_attribute" value="Удалить" />' +
+        '</div>';
+    return msg;
+}
+
+$(document).ready(function () {
+    $(document).on('click', '#delete_button_attribute', function () {
+        $(this).parent(".attribute").remove();
+        changingIndices();
+    });
+
+    $("#add_button_attribute").click(function () {
+        if ($("#name_attribute").val() != '') {
+            $('.div_product_attributes').append(addAttribute());
+        }
+        $("#name_attribute").val('');
+    });
+})
+
+function changingIndices() {
+    $('.attribute').each(function (i) {
+        $(this).children(".attributesValue").attr("name", "Product.AttributeValues[" + i + "].Value");
+        $(this).children(".categoryName").attr("name", "Product.AttributeValues[" + i + "].Attribute.Name");
+        $(this).children(".attributesId").attr("name", "Product.AttributeValues[" + i + "].Id");
+    });
+}

@@ -11,10 +11,12 @@ namespace InternetShop.Data.Specifications
         public ProductSpecification() : base() {
             IncludeAttribute();
             IncludeType();
+            IncludeImages();
         }
         public ProductSpecification(Expression<Func<Product, bool>> expression) : base(expression) {
             IncludeAttribute();
             IncludeType();
+            IncludeImages();
         }
 
         public ProductSpecification SortByName()
@@ -66,6 +68,11 @@ namespace InternetShop.Data.Specifications
         public ProductSpecification IncludeType()
         {
             AddInclude(product => product.ProductType);
+            return this;
+        }
+        public ProductSpecification IncludeImages()
+        {
+            AddInclude(product => product.ProductImages);
             return this;
         }
         public ProductSpecification WithoutTracking()
