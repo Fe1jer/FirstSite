@@ -4,122 +4,123 @@
 }
 @section Css{
 <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+<link rel="stylesheet" href="~/css/product.css" type="text/css" asp-append-version="true" />
+
 }
 <section class="product-details mb-4 mt-2">
     <div class="container-fluid">
         <form asp-controller="Catalog" asp-action="Edit" asp-route-id="@Model.Product.Id" method="post" enctype="multipart/form-data">
             <input asp-for="Product.Id" hidden class="form-control" />
-            @for(int n = 0; n < Model.Product.ProductImages.Count; n++)
+            @for (int n = 0; n < Model.Product.ProductImages.Count; n++)
             {
                 <input asp-for="@Model.Product.ProductImages[n].pathImg" hidden class="form-control" />
                 <input asp-for="@Model.Product.ProductImages[n].Id" hidden class="form-control" />
             }
+            <h1 class="product__title">@Model.Product.ProductType.Category @Model.Product.ProductType.Company @Model.Product.ProductType.Name</h1>
             <div class="row">
-                <div class="col-lg-6 order-2 order-lg-1">
-                    <div class="col-sm-6">
-                        <label asp-for="Product.Img" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Product.Img" class="form-control" />
-                            <span asp-validation-for="Product.Img" class="text-danger"></span>
-                        </div>
-                        <div class="input-group">
-                            <input asp-for="Uploads" multiple="" type="file" class="form-control" accept=".jpg, .jpeg, .png" style="display: revert; width:290px">
-                            <span asp-validation-for="Uploads" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <img class="w-100 py-3" src="@Model?.Product.Img" />
-                </div>
-                <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
-                    <div class="row">
-                        <div class="col-sm-4">
-                            <label asp-for="Product.ProductType.Category" class="form-label"></label>
-                            <div class="input-group">
-                                <input asp-for="Product.ProductType.Category" class="form-control" />
-                                <span asp-validation-for="Product.ProductType.Category" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label asp-for="Product.ProductType.Company" class="form-label"></label>
-                            <div class="input-group">
-                                <input asp-for="Product.ProductType.Company" class="form-control" />
-                                <span asp-validation-for="Product.ProductType.Company" class="text-danger"></span>
-                            </div>
-                        </div>
-                        <div class="col-sm-4">
-                            <label asp-for="Product.ProductType.Name" class="form-label"></label>
-                            <div class="input-group">
-                                <input asp-for="Product.ProductType.Name" class="form-control" />
-                                <span asp-validation-for="Product.ProductType.Name" class="text-danger"></span>
-                            </div>
-                        </div>
-                    </div>
-                    <div class="input-group">
-                        <label asp-for="Product.ShortDesc" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Product.ShortDesc" class="form-control" />
-                            <span asp-validation-for="Product.ShortDesc" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="col-sm-6">
-                        <label asp-for="Product.Country" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Product.Country" class="form-control" />
-                            <span asp-validation-for="Product.Country" class="text-danger"></span>
-                        </div>
-                    </div>
-                    <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
+                <div class="mr-5 px-2 col-lg-6">
+                    <div class="shadow-lg p-3 mb-2 bg-white rounded">
                         <div class="col-sm-6">
+                            <label asp-for="Product.Img" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Product.Img" class="form-control" />
+                                <span asp-validation-for="Product.Img" class="text-danger"></span>
+                            </div>
+                            <div class="input-group">
+                                <input asp-for="Uploads" multiple="" type="file" class="form-control" accept=".jpg, .jpeg, .png" style="display: revert; width:290px">
+                                <span asp-validation-for="Uploads" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <img class="w-25 py-3" src="@Model?.Product.Img" />
+                        <div class="row mt-2">
+                            <div class="col-sm-4">
+                                <label asp-for="Product.ProductType.Category" class="form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Product.ProductType.Category" class="form-control" />
+                                    <span asp-validation-for="Product.ProductType.Category" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label asp-for="Product.ProductType.Company" class="form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Product.ProductType.Company" class="form-control" />
+                                    <span asp-validation-for="Product.ProductType.Company" class="text-danger"></span>
+                                </div>
+                            </div>
+                            <div class="col-sm-4">
+                                <label asp-for="Product.ProductType.Name" class="form-label"></label>
+                                <div class="input-group">
+                                    <input asp-for="Product.ProductType.Name" class="form-control" />
+                                    <span asp-validation-for="Product.ProductType.Name" class="text-danger"></span>
+                                </div>
+                            </div>
+                        </div>
+                        <div class="input-group mt-2">
+                            <label asp-for="Product.ShortDesc" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Product.ShortDesc" class="form-control" />
+                                <span asp-validation-for="Product.ShortDesc" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-2">
+                            <label asp-for="Product.Country" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Product.Country" class="form-control" />
+                                <span asp-validation-for="Product.Country" class="text-danger"></span>
+                            </div>
+                        </div>
+                        <div class="col-sm-6 mt-2">
                             <label asp-for="Product.Price" class="form-label"></label> $
                             <div class="input-group">
                                 <input asp-for="Product.Price" min="0" class="form-control" />
                                 <span asp-validation-for="Product.Price" class="text-danger"></span>
                             </div>
                         </div>
-                    </div>
-
-                    <div class="">
-                        <input type="text" id="name_attribute" />
-                        <input type="button" id="add_button_attribute" value="Добавить" />
-                    </div>
-                    <div class="div_product_attributes">
-                        @{
-                            int i = 0;
-                            foreach (var att in Model.Product.AttributeValues)
-                            {
-                                <div class="attribute">
-                                    <p>@att.Attribute.Name</p>
-                                    <input type="text" class="attributesValue" asp-for="Product.AttributeValues[i].Value" />
-                                    <input type="hidden" class="categoryName" asp-for="Product.AttributeValues[i].Attribute.Name" />
-                                    <input type="hidden" class="attributesId" asp-for="Product.AttributeValues[i].Id" />
-                                    <input type="button" id="delete_button_attribute" value="Удалить" />
-                                </div>
-                                i++;
-                            }
-                        }
-                    </div>
-                    <div class="col-sm-6">
-                        <label asp-for="Product.Count" class="form-label"></label>
-                        <div class="input-group">
-                            <input asp-for="Product.Count" min="0" class="form-control" />
-                            <span asp-validation-for="Product.Count" class="text-danger"></span>
+                        <div class="col-sm-6 mt-2">
+                            <label asp-for="Product.Count" class="form-label"></label>
+                            <div class="input-group">
+                                <input asp-for="Product.Count" min="0" class="form-control" />
+                                <span asp-validation-for="Product.Count" class="text-danger"></span>
+                            </div>
                         </div>
                     </div>
-                    <div class="row">
+                </div>
+                <div class=" ml-5  px-2 col-lg-6 pl-lg-5 mb-2">
+                    <div class="shadow-lg p-2 mb-5 bg-white rounded">
+                        <div class="mb-2 p-2 pl-0 d-flex">
+                            <input class="form-control me-2" type="text" id="name_attribute" placeholder="Имя характеристики" />
+                            <input type="button" id="add_button_attribute" class="btn btn-outline-success" value="Добавить" />
+                        </div>
+                        <div class="div_product_attributes ">
+                            @{
+                                int i = 0;
+                                foreach (var att in Model.Product.AttributeValues)
+                                {
+                                    <div class="attribute p-2 shadow-none rounded d-flex row">
+                                        <p class="col-sm-3 align-self-center">@att.Attribute.Name</p>
+                                        <div class="col-sm-9 d-flex attribute__inputs">
+                                            <input type="text" class="attributesValue form-control me-2" asp-for="Product.AttributeValues[i].Value" />
+                                            <input type="hidden" class="categoryName" asp-for="Product.AttributeValues[i].Attribute.Name" />
+                                            <input type="hidden" class="attributesId" asp-for="Product.AttributeValues[i].Id" />
+                                            <input type="button" id="delete_button_attribute" class="btn btn-outline-danger" value="Удалить" />
+                                        </div>
+                                    </div>
+                                    i++;
+                                }
+                            }
+                        </div>
+
                     </div>
                 </div>
             </div>
-            <button type="button" class="btn btn-primary" data-bs-toggle="modal" data-bs-target="#ChangeProduct">
-                Сохранить изменения
-            </button>
-            <button type="button" class="text-end btn btn-danger" data-bs-toggle="modal" data-bs-target="#DeleteProduct">
-                <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-trash" viewBox="0 0 16 16">
-                    <path d="M5.5 5.5A.5.5 0 0 1 6 6v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm2.5 0a.5.5 0 0 1 .5.5v6a.5.5 0 0 1-1 0V6a.5.5 0 0 1 .5-.5zm3 .5a.5.5 0 0 0-1 0v6a.5.5 0 0 0 1 0V6z" />
-                    <path fill-rule="evenodd" d="M14.5 3a1 1 0 0 1-1 1H13v9a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2V4h-.5a1 1 0 0 1-1-1V2a1 1 0 0 1 1-1H6a1 1 0 0 1 1-1h2a1 1 0 0 1 1 1h3.5a1 1 0 0 1 1 1v1zM4.118 4L4 4.059V13a1 1 0 0 0 1 1h6a1 1 0 0 0 1-1V4.059L11.882 4H4.118zM2.5 3V2h11v1h-11z" />
-                </svg>
-                <font style="vertical-align: inherit;">
-                    <font style="vertical-align: inherit;">Удалить товар</font>
-                </font>
-            </button>
+            <div class="col text-center">
+                <button type="button" class="btn btn-outline-secondary btn-lg" data-bs-toggle="modal" data-bs-target="#ChangeProduct">
+                    Сохранить изменения
+                </button>
+                <button type="button" class="btn btn-outline-danger btn-lg" data-bs-toggle="modal" data-bs-target="#DeleteProduct">
+                    Удалить товар
+                </button>
+            </div>
             <div class="modal fade" id="ChangeProduct" tabindex="-1" aria-labelledby="ChangeProduct" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
@@ -140,7 +141,7 @@
             <div class="modal fade" id="DeleteProduct" tabindex="-1" aria-labelledby="DeleteProduct" style="display: none;" aria-hidden="true">
                 <div class="modal-dialog">
                     <div class="modal-content">
-                        <div class="modal-header">
+                        <div class="modal-header ">
                             <h5 class="modal-title" id="DeleteProduct">Удалить товар</h5>
                             <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
                         </div>

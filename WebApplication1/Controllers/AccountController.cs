@@ -45,9 +45,9 @@ namespace InternetShop.Controllers
                 User user = new User { Email = model.Email, UserName = model.Email, Name = model.Name, Gender = model.Gender, Img = "https://encrypted-tbn0.gstatic.com/images?q=tbn:ANd9GcScY-9qDVs2yQiXkeEHGQfvxEPLWHh-o53ZuQ&usqp=CAU" };
                 // добавляем пользователя
                 var result = await _userManager.CreateAsync(user, model.Password);
-                await _userManager.AddToRoleAsync(user, "user");
                 if (result.Succeeded)
                 {
+                    await _userManager.AddToRoleAsync(user, "user");
                     // генерация токена для пользователя
                     var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
                     var callbackUrl = Url.Action(

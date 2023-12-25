@@ -3,51 +3,87 @@
     ViewData["Title"] = "Регистрация";
 }
 @section Css{
+    <link rel="stylesheet" href="~/css/registr.css" type="text/css" asp-append-version="true" />
     <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
 }
-<main class="bg-white shadow">
-    <form asp-action="Register" method="post" class="justify-content-center form-horizontal row g-3">
-        <h1 class="text-center">Регистрация пользователя</h1>
-        <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
-        <div class="col-md-4 row g-3">
-            <div class="col-md-12">
-                <label asp-for="Email" class="form-label"></label><sup>*</sup>
-                <input asp-for="Email" class="form-control" />
-                <span asp-validation-for="Email" class="text-danger"></span>
-            </div>
-            <div class="col-md-12">
-                <label asp-for="Password" class="form-label"></label><sup>*</sup>
-                <input asp-for="Password" class="form-control" />
-                <span asp-validation-for="Password" class="text-danger"></span>
-            </div>
-            <div class="col-md-12">
-                <label asp-for="PasswordConfirm" class="form-label"></label><sup>*</sup>
-                <input asp-for="PasswordConfirm" class="form-control" />
-                <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
-            </div>
-        </div>
-        <div class="col-md-4 offset-md-1 row g-3">
-            <div class="col-md-12">
-                <label asp-for="Name" class="form-label"></label><sup>*</sup>
-                <input asp-for="Name" class="form-control" />
-                <span asp-validation-for="Name" class="text-danger"></span>
-            </div>
-            <div class="col-md-12">
-                <label asp-for="Gender" class="form-label"></label><sup>*</sup>
-                <div class="slider-radio elegant">
-                    <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
-                    <input asp-for="Gender" type="radio" id="None" checked value="None"><label for="None">None</label>
-                    <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
+
+    <main class="bshadow-lg py-3 mb-3 rounded ">
+        <div class="bform py-3 shadow-lg bg-white rounded ">
+            <!-- Row -->
+            <div class="row">
+                <div class="container d-flex justify-content-center pb-3">
+                    <div class="col-lg-6 align-justify-center contact-form">
+                        <div class="">
+                            <h1 class="mb-3 fw-bold text-center">Регистрация</h1>
+                            <form asp-action="Register" method="post" class="mt-3">
+                                <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
+                                <div class="row">
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label asp-for="Name" class="form-label"></label><sup>*</sup>
+                                            <input asp-for="Name" class="form-control" type="text" placeholder="Полное имя" />
+                                            <span asp-validation-for="Name" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-12">
+                                        <div class="mb-3">
+                                            <label asp-for="Email" class="form-label"></label><sup>*</sup>
+                                            <input asp-for="Email" class="form-control" placeholder="Email address" />
+                                            <span asp-validation-for="Email" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Password" class="form-label"></label><sup>*</sup>
+                                            <input asp-for="Password" class="form-control" type="password" placeholder="Пароль" />
+                                            <span asp-validation-for="Password" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label asp-for="PasswordConfirm" class="form-label"></label><sup>*</sup>
+                                            <input asp-for="PasswordConfirm" class="form-control" type="password" placeholder="Повторить пароль" />
+                                            <span asp-validation-for="PasswordConfirm" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="col-lg-6">
+                                        <div class="mb-3">
+                                            <label asp-for="Gender" class="form-label"></label><sup>*</sup>
+                                            <div class="slider-radio elegant">
+                                                <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
+                                                <input asp-for="Gender" type="radio" id="None" checked value="None"><label for="None">None</label>
+                                                <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
+                                            </div>
+                                            <span asp-validation-for="Gender" class="text-danger"></span>
+                                        </div>
+                                    </div>
+                                    <div class="text-center mb-2">
+                                        <button type="submit" class="btn btn-lg btn-primary">Зарегистрироваться</button>
+                                    </div>
+                                </div>
+                            </form>
+                            @*                    <div class="row">
+                        <div class="col-lg-12 text-center mt-4">
+                        <h6 class="font-weight-normal">Signup with Social Accounts</h6>
+                        <div class="row">
+                        <div class="col-lg-6 col-md-6">
+                        <a href="#" class="btn btn-block bg-facebook text-white mt-3">Facebook</a>
+                        </div>
+                        <div class="col-lg-6 col-md-6">
+                        <a href="#" class="btn btn-block bg-twitter text-white mt-3">Twitter</a>
+                        </div>
+                        </div>
+                        </div>
+                        <div class="col-lg-12 text-center mt-4">
+                        Already have an account? <a href="#" class="text-danger">Sign In</a>
+                        </div>
+                        </div>*@
+                        </div>
+                    </div>
                 </div>
-                <span asp-validation-for="Gender" class="text-danger"></span>
             </div>
         </div>
-        <div class="text-center">
-            <button class="btn btn-primary btn-lg mb-4" type="submit"><font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Зарегистрироваться</font></font></button>
-        </div>
-    </form>
-</main>
-@section Scripts{
+    </main>
+    @section Scripts{
     <script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
 }
-

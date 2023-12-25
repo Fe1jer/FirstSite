@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Http;
+using Microsoft.AspNetCore.Mvc;
 
 namespace InternetShop.Controllers
 {
@@ -7,11 +8,13 @@ namespace InternetShop.Controllers
         [Route("/Error/404")]
         public IActionResult PageNotFound()
         {
-            string originalPath = "unknown";
-            if (HttpContext.Items.ContainsKey("originalPath"))
-            {
-                originalPath = HttpContext.Items["originalPath"] as string;
-            }
+        //    var a = Request.GetTypedHeaders().Referer.ToString();
+        //    var b = Request.Headers["Referer"].ToString();
+        //    string originalPath = "unknown";
+        //    if (HttpContext.Items.ContainsKey("originalPath"))
+        //    {
+        //        originalPath = HttpContext.Items["originalPath"] as string;
+        //    }
             return View();
         }
         [Route("/Error/535")]

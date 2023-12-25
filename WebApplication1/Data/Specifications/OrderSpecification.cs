@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Linq;
 using System.Linq.Expressions;
 using InternetShop.Data.Models;
 using InternetShop.Data.Specifications.Base;
@@ -65,7 +66,7 @@ namespace InternetShop.Data.Specifications
 
         private OrderSpecification IncludeDetails()
         {
-            AddInclude("OrderDetails.Product.ProductType");
+           AddInclude("OrderDetails.Product.ProductType");
             return this;
         }
 

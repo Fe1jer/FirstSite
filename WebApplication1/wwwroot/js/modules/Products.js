@@ -52,19 +52,22 @@ function searchAjax(list, numPage) {
 }
 
 function addAttribute() {
-    var msg = '<div class="attribute">' +
-        '<p>' + $("#name_attribute").val() + '</p>' +
-        '<input type="text" class="attributesValue"  name="Product.AttributeValues[' + $('.attribute').length + '].Value" />' +
+    var msg = '<div class="attribute p-2 shadow-none rounded d-flex row">' +
+        '<p class="col-sm-3 align-self-center">' + $("#name_attribute").val() + '</p>' +
+        '<div class="col-sm-9 d-flex attribute__inputs">' +
+        '<input type="text" class="attributesValue form-control me-2"  name="Product.AttributeValues[' + $('.attribute').length + '].Value" />' +
         '<input type="hidden" class="categoryName" name="Product.AttributeValues[' + $('.attribute').length + '].Attribute.Name" value="' + $("#name_attribute").val() + '" />' +
-        '<input type="button" id="delete_button_attribute" value="Удалить" />' +
+        '<input type="button" id="delete_button_attribute" class="btn btn-outline-danger" value="Удалить" />' +
+        '</div >' +
         '</div>';
     return msg;
 }
 
 $(document).ready(function () {
     $(document).on('click', '#delete_button_attribute', function () {
-        $(this).parent(".attribute").remove();
+        $(this).closest(".attribute").remove();
         changingIndices();
+
     });
 
     $("#add_button_attribute").click(function () {
@@ -77,8 +80,8 @@ $(document).ready(function () {
 
 function changingIndices() {
     $('.attribute').each(function (i) {
-        $(this).children(".attributesValue").attr("name", "Product.AttributeValues[" + i + "].Value");
-        $(this).children(".categoryName").attr("name", "Product.AttributeValues[" + i + "].Attribute.Name");
-        $(this).children(".attributesId").attr("name", "Product.AttributeValues[" + i + "].Id");
+        $(this).children(".attribute__inputs").children(".attributesValue").attr("name", "Product.AttributeValues[" + i + "].Value");
+        $(this).children(".attribute__inputs").children(".categoryName").attr("name", "Product.AttributeValues[" + i + "].Attribute.Name");
+        $(this).children(".attribute__inputs").children(".attributesId").attr("name", "Product.AttributeValues[" + i + "].Id");
     });
 }

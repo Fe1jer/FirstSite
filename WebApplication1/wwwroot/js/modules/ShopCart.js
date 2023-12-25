@@ -75,15 +75,64 @@ function removeItemToCart(item, id, idParent) {
         url: '/ShopCart/RemoveToCart',
         data: { IdProduct: id },
         success: function (count) {
-            console.log($(item).parent(idParent))
             $(item).parent(idParent).remove();
             if (JSON.stringify(count) === '0') {
                 $('#shopCart').append(resultShopCartEmpty());
-                $('#orderButton').remove();
+                $('.order_total').remove();
             }
+            changeOrderTotalSum();
         },
         error: function () {
             window.location = '/Account/Login'
         }
     });
 };
+$(document).ready(function () {
+
+    $('li').each(function () {
+
+        var asd = $(this);
+
+
+        asd.find('.minus').click(function (event, ui) {
+
+            var data = asd.find('.count').val();
+            if (data > 1) {
+                asd.find('.count').val(parseInt(data) - 1);
+            }
+            calculateOrderProductSum(asd);
+            changeOrderTotalSum();
+            return false
+
+        });
+        asd.find('.plus').click(function (event, ui) {
+
+            var data = asd.find('.count').val();
+            asd.find('.count').val(parseInt(data) + 1);
+            calculateOrderProductSum(asd);
+            changeOrderTotalSum();
+            return false
+
+        });
+    });
+});
+
+function calculateOrderProductSum(asd) {
+    data = asd.find('.count').val();
+    var price = parseInt(asd.find(".price").html());
+    var total_price = price * data;
+    asd.find("#count_price").html(total_price);
+}
+
+function changeOrderTotalSum() {
+    var summ = 0;
+    $('.count_price').each(function (id, el) {
+        summ += parseInt(el.textContent);
+    });
+    $('.cprice').html(summ);
+}
+
+$(document).ready(function () {
+    changeOrderTotalSum()
+});
+

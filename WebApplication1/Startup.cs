@@ -71,10 +71,10 @@ namespace InternetShop
 
         public void Configure(IApplicationBuilder app, IHostEnvironment env)
         {
-            if (env.IsDevelopment())
-            {
+            /*if (env.IsDevelopment())
+            {*/
                 app.UseDeveloperExceptionPage();
-            }
+            //
             app.Use(async (context, next) =>
             {
                 await next();

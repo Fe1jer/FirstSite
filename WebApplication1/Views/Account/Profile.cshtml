@@ -4,7 +4,7 @@
 }
 
 @section Css{
-    <link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
+<link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
 }
 <main class="col-md-12 ">
     <form asp-action="Profile" method="post" class="form-horizontal" enctype="multipart/form-data">
@@ -17,45 +17,50 @@
                 <input asp-for="Img" type="file" class="form-control" accept=".jpg, .jpeg, .png" style="display: revert; width:290px">
                 <span asp-validation-for="Img" class="text-danger"></span>
             </div>
-            <div class="col-md-4 mt-0 row g-3">
-                <div class="col-md-12">
+            <div class="col-md-8 mt-0 row gy-3 gx-5">
+                <div class="col-md-6">
                     <label asp-for="Name" class="form-label"></label><sup>*</sup>
                     <input asp-for="Name" class="form-control" />
                     <span asp-validation-for="Name" class="text-danger"></span>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <label asp-for="Email" class="form-label"></label><sup>*</sup>
+                    <input asp-for="Email" class="form-control" />
+                    <span asp-validation-for="Email" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-8 row mt-0 gy-3 gx-5">
+                <div class="col-md-6">
                     <label asp-for="Surname" class="form-label"></label>
                     <input asp-for="Surname" class="form-control" />
                     <span asp-validation-for="Surname" class="text-danger"></span>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <label asp-for="PhoneNumber" class="form-label"></label>
+                    <input asp-for="PhoneNumber" class="form-control" />
+                </div>
+
+            </div>
+            <div class="col-md-8 row mt-0 gy-3 gx-5">
+                <div class="col-md-6">
                     <label asp-for="Patronymic" class="form-label"></label>
                     <input asp-for="Patronymic" class="form-control" />
                     <span asp-validation-for="Patronymic" class="text-danger"></span>
                 </div>
-                <div class="col-md-12">
+                <div class="col-md-6">
+                    <label asp-for="DateOfBirth" class="form-label"></label>
+                    <input asp-for="DateOfBirth" class="form-control" />
+                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
+                </div>
+            </div>
+            <div class="col-md-8 mb-3 row mt-0 gy-3 gx-5">
+                <div class="col-md-6">
                     <label asp-for="Gender" class="form-label"></label><sup>*</sup>
                     <div class="slider-radio elegant">
                         <input asp-for="Gender" type="radio" id="Male" value="Male"><label for="Male">Male</label>
                         <input asp-for="Gender" type="radio" id="Female" value="Female"><label for="Female">Female</label>
                     </div>
                     <span asp-validation-for="Gender" class="text-danger"></span>
-                </div>
-            </div>
-            <div class="col-md-4 offset-md-1 row mt-0 g-3">
-                <div class="col-md-12">
-                    <label asp-for="Email" class="form-label"></label><sup>*</sup>
-                    <input asp-for="Email" class="form-control" />
-                    <span asp-validation-for="Email" class="text-danger"></span>
-                </div>
-                <div class="col-md-12">
-                    <label asp-for="PhoneNumber" class="form-label"></label>
-                    <input asp-for="PhoneNumber" class="form-control" />
-                </div>
-                <div class="col-md-12">
-                    <label asp-for="DateOfBirth" class="form-label"></label>
-                    <input asp-for="DateOfBirth" class="form-control" />
-                    <span asp-validation-for="DateOfBirth" class="text-danger"></span>
                 </div>
             </div>
             <div class="text-center">
@@ -65,5 +70,5 @@
     </form>
 </main>
 @section Scripts{
-    <script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
+<script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
 }

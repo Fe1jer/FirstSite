@@ -31,7 +31,6 @@ namespace InternetShop
             var context = scope.ServiceProvider.GetRequiredService<AppDBContext>();
             var userManager = scope.ServiceProvider.GetRequiredService<UserManager<User>>();
             var rolesManager = scope.ServiceProvider.GetRequiredService<RoleManager<IdentityRole<int>>>();
-            var configuration = scope.ServiceProvider.GetRequiredService<IConfiguration>();
 
             await AppDBContextInit.InitDbContextAsync(userManager, rolesManager, context);
         }

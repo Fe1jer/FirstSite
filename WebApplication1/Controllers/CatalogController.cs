@@ -117,7 +117,7 @@ namespace InternetShop.Controlles
             {
                 ShowProductViewModel showProducts = await _productRepository.FindProductInTheCart(obj, User.Identity.Name);
 
-                return View("Test", showProducts);
+                return View(showProducts);
             }
             else
             {

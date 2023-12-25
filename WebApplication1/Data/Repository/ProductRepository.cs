@@ -67,8 +67,9 @@ namespace InternetShop.Data.Repository
                             File.Delete($"wwwroot{img}");
                         }
                     }
+                    await _productImagesRepository.DeleteListAsync(model.Product.ProductImages);
                 }
-                await _productImagesRepository.DeleteListAsync(model.Product.ProductImages);
+               
                 model.Product.ProductImages = new List<ProductImage>();
                 foreach (var upload in model.Uploads)
                 {

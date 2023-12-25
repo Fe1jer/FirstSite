@@ -3,38 +3,77 @@
     ViewData["Title"] = "Корзина";
 }
 @section Css{
+
+    <link rel="stylesheet" href="~/css/shopCart.css" type="text/css" asp-append-version="true" />
     <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
-}
-<div class="mt-2" id="shopCart">
-    <h1>@ViewData["Title"]</h1>
-    @if (Model.Count != 0)
-    {
-        foreach (ShopCartItem el in Model)
-        {
-            <div id="shopCartItem" class="d-flex row form-horizontal justify-content-between align-items-center alert alert-warning mt-3">
-                <div class="h-auto col-sm-9">
-                    <b>@el.Category </b>@el.Product.ProductType.Company @el.Product.ProductType.Name<br />
-                    <b>Цена: </b>@el.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))
-                </div>
-                <div class="col-sm-3">
-                    <a class="text-end btn btn-outline-danger float-end" onclick="removeItemToCart($(this).parent(), @el.Product.Id, shopCartItem)">
-                        <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-bag-x" viewBox="0 0 16 16">
-                            <path fill-rule="evenodd" d="M6.146 8.146a.5.5 0 0 1 .708 0L8 9.293l1.146-1.147a.5.5 0 1 1 .708.708L8.707 10l1.147 1.146a.5.5 0 0 1-.708.708L8 10.707l-1.146 1.147a.5.5 0 0 1-.708-.708L7.293 10 6.146 8.854a.5.5 0 0 1 0-.708z" />
-                            <path d="M8 1a2.5 2.5 0 0 1 2.5 2.5V4h-5v-.5A2.5 2.5 0 0 1 8 1zm3.5 3v-.5a3.5 3.5 0 1 0-7 0V4H1v10a2 2 0 0 0 2 2h10a2 2 0 0 0 2-2V4h-3.5zM2 5h12v9a1 1 0 0 1-1 1H3a1 1 0 0 1-1-1V5z" />
-                        </svg>
-                        <font style="vertical-align: inherit;"><font style="vertical-align: inherit;">Удалить</font></font>
-                    </a>
-                </div>
-            </div>
-        }
-        <a id="orderButton" class="btn btn-danger" asp-controller="Order" asp-action="Checkout">Оформить заказ</a>
+    @*<link rel="stylesheet" href="https://stackpath.bootstrapcdn.com/bootstrap/4.1.1/css/bootstrap.min.css" type="text/css" asp-append-version="true" />*@
     }
-    else
-    {
-        <h2 class="text-center mt-3">Добавьте что-нибудь в корзину, чтобы она не была пустая</h2>
-    }
+    <div class="mt-2" id="shopCart">
+
+        <h1>@ViewData["Title"]</h1>
+
+        <div class="cart_items">
+            <ul>
+
+            @if (Model.Count != 0)
+            {
+                foreach (ShopCartItem el in Model)
+                {
+                    <li id="shopCartItem" class="cart_item clearfix shadow-sm card text-center" style="flex-direction: row">
+                        <a class="cart_item_image" asp-controller="Catalog" asp-action="Product" asp-route-name="@el.Product.ProductType.Name.Replace(" ", "-")" asp-route-id="@el.Product.Id"><img src="@el.Product.Img" alt=""></a>
+                        <div class="px-2 cart_item_info d-flex flex-md-row flex-column justify-content-between">
+                            <div class="col-lg-3 cart_info_col">
+                                <div class="cart_item_title">Наименование</div>
+                                <div class="cart_item_text">
+                                    <a class="text-dark" asp-controller="Catalog" asp-action="Product" asp-route-name="@el.Product.ProductType.Name.Replace(" ", "-")" asp-route-id="@el.Product.Id">@el.Product.ProductType.Name</a>
+                                </div>
+                            </div>
+                            <div class="col-lg-3" style="text-align: -webkit-center;">
+                                <div class="cart_item_title">Количество</div>
+                                <div class="qty">
+                                    <span class="minus bg-dark">-</span>
+                                    <input type="number" class="count cart_item_text mt-0" min="1" value="1">
+                                    <span class="plus bg-dark">+</span>
+                                </div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="cart_item_title">Цена</div>
+                                <div class="cart_item_text price" id="price">@el.Price</div>
+                            </div>
+                            <div class="col-lg-3">
+                                <div class="cart_item_title">Сумма</div>
+                                <div class="cart_item_text count_price" id="count_price">@el.Price</div>
+                            </div>
+                        </div>
+                        <a class="btn float-end ps-0" onclick="removeItemToCart($(this), @el.Product.Id, shopCartItem)">
+                            <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" class="bi bi-x-lg" viewBox="0 0 16 16">
+                                <path fill-rule="evenodd" d="M13.854 2.146a.5.5 0 0 1 0 .708l-11 11a.5.5 0 0 1-.708-.708l11-11a.5.5 0 0 1 .708 0Z" />
+                                <path fill-rule="evenodd" d="M2.146 2.146a.5.5 0 0 0 0 .708l11 11a.5.5 0 0 0 .708-.708l-11-11a.5.5 0 0 0-.708 0Z" />
+                            </svg>
+                        </a>
+                    </li>
+                }
+                <div class="order_total d-flex justify-content-between align-items-center">
+                    <div>
+                        <a id="orderButton" class="btn btn-danger position-right btn-lg" asp-controller="Order" asp-action="Checkout">Оформить заказ</a>
+                    </div>
+                    <div class="order_total_content text-right">
+                        <div class="order_total_title p-0">Сумма заказа:</div>
+                        <div class="cprice order_total_amount p-0">0</div>
+                    </div>
+                </div>
+
+            }
+            else
+            {
+                <h2 class="text-center mt-3">Добавьте что-нибудь в корзину, чтобы она не была пустая</h2>
+            }
+
+        </ul>
+    </div>
 </div>
 @section Scripts{
     <script src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
     <script src="~/js/modules/ShopCart.js"></script>
 }
+

@@ -3,37 +3,49 @@
     ViewData["Title"] = "Вход";
 }
 @section Css{
-    <link href="/css/signin.css" rel="stylesheet" asp-append-version="true">
+<link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
+<link rel="stylesheet" href="~/css/login.css" type="text/css" asp-append-version="true" />
+<link href="/css/slider-radio.css" rel="stylesheet" asp-append-version="true">
 }
-<main class="form-signin text-center">
-    <form asp-action="Login" method="post" asp-route-returnUrl="@Model.ReturnUrl">
-        <h1 class="mb-4" width="72" height="57">
-            Интернет-магазин
-        </h1>
-        <h1 class="h3 mb-3 fw-normal">Пожалуйста войдите</h1>
-        <div class="validation" asp-validation-summary="ModelOnly"></div>
-        <div class="form-floating">
-            <input asp-for="Email" id="floatingInput" class="form-control" />
-            <label asp-for="Email"></label>
-            <span asp-validation-for="Email" class="text-danger"></span>
+<h1 class="mb-4 text-center" width="72" height="57">
+    Интернет-магазин
+</h1>
+    <main class="shadow-lg bg-white rounded login_card">
+    <form asp-action="Login" style="display: flex; justify-content: center; align-items:center; flex-direction: column; padding-top: 15px;" method="post" asp-route-returnUrl="@Model.ReturnUrl">
+        <h1 class="text-center fw-bold">Авторизация</h1>
+        <div class="validation text-center text-danger" asp-validation-summary="ModelOnly"></div>
+        <div class="col-lg-4 row g-3 mx-2">
+            <div class="col-md-12">
+                <label asp-for="Email"></label>
+                <input asp-for="Email" id="floatingInput" class="form-control" />
+                <span asp-validation-for="Email" class="text-danger"></span>
+            </div>
+            <div class="col-md-12">
+                <label asp-for="Password"></label>
+                <input asp-for="Password" id="floatingInput" class="form-control" />
+                <span asp-validation-for="Password" class="text-danger"></span>
+            </div>
+            <div class="checkbox mb-1 ">
+                <input style="width: 35px" asp-for="RememberMe" />
+                <label asp-for="RememberMe"></label>
+            </div>
+            <div class="text-center mb-2">
+                <button class="w-75 btn btn-lg btn-primary" type="submit">Войти</button>
+            </div>
         </div>
-        <div class="form-floating">
-            <input asp-for="Password" id="floatingInput" class="form-control" />
-            <label asp-for="Password"></label>
-            <span asp-validation-for="Password" class="text-danger"></span>
-        </div>
-        <div class="checkbox mb-1">
-            <input asp-for="RememberMe" />
-            <label asp-for="RememberMe"></label>
-        </div>
-        <a asp-action="Register" asp-controller="Account">
-            Регистрация
-        </a>
-        <br>
-        <a asp-action="ForgotPassword" asp-controller="Account">
-            Забыли пароль?
-        </a>
-        <button class="w-100 btn btn-lg btn-primary" type="submit">Войти</button>
-        <p class="mt-5 mb-3 text-muted">&copy; 2020-2021</p>
+            <div class="d-flex justify-content-center links">
+                <a asp-action="Register" asp-controller="Account">
+                    Регистрация
+                </a>
+            </div>
+            <div class="d-flex justify-content-center mb-4 mt-0">
+                <a asp-action="ForgotPassword" asp-controller="Account">
+                    Забыли пароль?
+                </a>
+            </div>
     </form>
 </main>
+@section Scripts{
+<script src="~/js/modules/slider-radio.js" asp-append-version="true"></script>
+}
+

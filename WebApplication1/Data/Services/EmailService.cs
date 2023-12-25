@@ -1,5 +1,7 @@
 ﻿using MailKit.Net.Smtp;
+using MailKit.Security;
 using MimeKit;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace InternetShop.Data.Services
@@ -8,6 +10,7 @@ namespace InternetShop.Data.Services
     {
         public async Task SendEmailAsync(string email, string subject, string message)
         {
+            ServicePointManager.SecurityProtocol = SecurityProtocolType.Tls12;
             var emailMessage = new MimeMessage();
 
             emailMessage.From.Add(new MailboxAddress("Подтверждение почты", "electroshopf@gmail.com"));
@@ -20,7 +23,7 @@ namespace InternetShop.Data.Services
 
             using var client = new SmtpClient();
             await client.ConnectAsync("smtp.gmail.com", 465, true);
-            await client.AuthenticateAsync("electroshopf@gmail.com", "elshop12");
+            await client.AuthenticateAsync("electroshopf@gmail.com", "qsxzebhcgtnyizbo");
             await client.SendAsync(emailMessage);
 
             await client.DisconnectAsync(true);

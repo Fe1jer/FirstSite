@@ -346,3 +346,4 @@ healthchecksdb
 /WebApplication1/appsettings.json
 /WebApplication1/appsettings.json
 *.json
+/WebApplication1/wwwroot/img/Products/42

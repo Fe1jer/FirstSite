@@ -3,82 +3,103 @@
     ViewData["Title"] = Model.Product.ProductType.Company + " " + Model.Product.ProductType.Name;
 }
 @section Css{
-    <link rel="stylesheet" href="~/css/StyleSheet1.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/css/product.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/slick/slick-theme.css" type="text/css" asp-append-version="true" />
+    <link rel="stylesheet" href="~/slick/slick.css" type="text/css" asp-append-version="true" />
 }
 <section class="product-details mt-2">
     <div class="container-fluid">
+        <h1 class="product__title">@Model.Product.ProductType.Category @Model.Product.ProductType.Company @Model.Product.ProductType.Name</h1>
         <div class="row">
-            <div class="col-lg-6 py-3 order-2 order-lg-1">
-                <img class="w-100" src="@Model.Product.Img" />
+            <div class="col-lg-6 product__slider">
+                <div class="slider-for">
+                    @foreach(var img in Model.Product.ProductImages)
+                    {
+                        <div>
+                            <img height="455" width="455" src="@img.pathImg" />
+                        </div>
+                    }
+                </div>
+                <div class="slider-nav">
+                    @foreach(var img in Model.Product.ProductImages)
+                    {
+                        <div class="product__slider-item">
+                            <img src="@img.pathImg" />
+                        </div>
+                    }
+                </div>
             </div>
-            <div class="col-lg-6 pl-lg-5 mb-5 order-1 order-lg-2">
-                <h1 class="mb-4">@Model.Product.ProductType.Category @Model.Product.ProductType.Company @Model.Product.ProductType.Name</h1>
-                <h5 class="mb-4 text-muted">@Model.Product.ShortDesc</h5>
-                <div class="d-flex flex-column flex-sm-row align-items-sm-center justify-content-sm-between mb-4">
-                    <ul class="list-inline mb-2 mb-sm-0">
-                        <li class="list-inline-item h4 font-weight-light mb-0">@Model.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))</li>
-                    </ul>
+            <div class="col-lg-6 product__desc">
+                <div class="title">Краткое описание</div>
+                <div class="desc">
+                    @Model.Product.ShortDesc
+                </div>
+                <div class="prices">
+                    <span>Цена</span>
+                    <p>
+                        @Model.Product.Price.ToString("C0", CultureInfo.CreateSpecificCulture("en-US"))
+                    </p>
                 </div>
                 <form action="#">
-                    @*<div class="row">
-                            <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                                <h6 class="detail-option-heading">Размер <span>(обязательно)</span></h6>
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_0">
-                                    Small
-                                    <input class="input-invisible" type="radio" name="size" value="value_0" id="size_0" required="">
-                                </label>
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_1">
-                                    Medium
-                                    <input class="input-invisible" type="radio" name="size" value="value_1" id="size_1" required="">
-                                </label>
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="size_2">
-                                    Large
-                                    <input class="input-invisible" type="radio" name="size" value="value_2" id="size_2" required="">
-                                </label>
-                            </div>
-                            <div class="col-sm-6 col-lg-12 detail-option mb-3">
-                                <h6 class="detail-option-heading">Тип <span>(обязательно)</span></h6>
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_0">
-                                    Hoodie
-                                    <input class="input-invisible" type="radio" name="material" value="value_0" id="material_0" required="">
-                                </label>
-                                <label class="btn btn-sm btn-outline-secondary detail-option-btn-label" for="material_1">
-                                    College
-                                    <input class="input-invisible" type="radio" name="material" value="value_1" id="material_1" required="">
-                                </label>
-                            </div>
-                            <div class="col-12 detail-option mb-3">
-                                <h6 class="detail-option-heading">Цвет <span>(обязательно)</span></h6>
-                                <ul class="list-inline mb-0 colours-wrapper">
-                                    <li class="list-inline-item">
-                                        <label class="btn-colour" for="colour_Blue" style="background-color: #668cb9"> </label>
-                                        <input class="input-invisible" type="radio" name="colour" value="value_Blue" id="colour_Blue" required="">
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <label class="btn-colour" for="colour_White" style="background-color: #fff"> </label>
-                                        <input class="input-invisible" type="radio" name="colour" value="value_White" id="colour_White" required="">
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <label class="btn-colour" for="colour_Violet" style="background-color: #8b6ea4"> </label>
-                                        <input class="input-invisible" type="radio" name="colour" value="value_Violet" id="colour_Violet" required="">
-                                    </li>
-                                    <li class="list-inline-item">
-                                        <label class="btn-colour" for="colour_Red" style="background-color: #dd6265"> </label>
-                                        <input class="input-invisible" type="radio" name="colour" value="value_Red" id="colour_Red" required="">
-                                    </li>
-                                </ul>
-                            </div>
-                            <div class="col-12 col-lg-6 detail-option mb-5">
-                                <label class="">Количество <span>(обязательно)</span></label>
-                                <input class="form-control" type="number" value="1" min="1">
-                            </div>
-                        </div>*@
                     @await Html.PartialAsync("ShopCartButtons", Model)
                 </form>
             </div>
         </div>
+        <section class="bg-light py-2 ">
+            <div class="main-options__title">
+                Основные характеристики
+            </div>
+            <div class="main-options__content row">
+                <div class="col-lg-8">
+                    @foreach (var att in Model.Product.AttributeValues)
+                    {
+                        <div class="row m-0 py-2 attribute">
+                            <p class="col-sm-5" style="align-self: center;">@att.Attribute.Name</p>
+                            <p class="col-sm-5">@att.Value</p>
+                        </div>
+                    }
+                </div>
+                <div class="col-lg-4">
+                    
+                </div>
+            </div>
+        </section>
     </div>
 </section>
+
 @section Scripts{
-    <script src="~/js/modules/shopCart.js"></script>
+    <script type="text/javascript" src="~/lib/jquery-ajax-unobtrusive/jquery.unobtrusive-ajax.min.js"></script>
+    <script type="text/javascript" src="~/slick/slick.min.js"></script>
+    <script>
+        $('.slider-for').slick({
+            slidesToShow: 1,
+            slidesToScroll: 1,
+            arrows: false,
+            fade: true,
+            asNavFor: '.slider-nav',
+            responsive: [
+                {
+                    breakpoint: 550,
+                    settings: {
+                        slidesToShow: 1,
+                        dots: true,
+                        arrows: false
+                    }
+                }
+            ]
+        });
+
+        $('.slider-nav').slick({
+            slidesToShow: 3,
+            slidesToScroll: 1,
+            asNavFor: '.slider-for',
+            dots: false,
+            focusOnSelect: true,
+            vertical: true,
+            verticalSwiping: true,
+            nextArrow: '<div class="slider-b slider-b-right"><i class="fa fa-angle-down car-arrow-left car-arrow"></i></div>',
+            prevArrow: '<div class="slider-b slider-b-left"><i class="fa fa-angle-up car-arrow-right car-arrow"></i></div>'
+        });
+    </script>
+    <script type="text/javascript" src="~/js/modules/shopCart.js" asp-append-version="true"></script>
 }
